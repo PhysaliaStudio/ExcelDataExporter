@@ -2,8 +2,8 @@
     <ui:Label text="Data Folder Path:" display-tooltip-when-elided="true" />
     <ui:VisualElement style="flex-direction: row;">
         <ui:VisualElement style="flex-grow: 1;">
-            <ui:TextField picking-mode="Ignore" readonly="true" />
+            <ui:TextField picking-mode="Ignore" readonly="true" name="data-folder-field" />
         </ui:VisualElement>
-        <ui:Button text="..." display-tooltip-when-elided="true" style="width: 24px;" />
+        <ui:Button text="..." display-tooltip-when-elided="true" name="browse-data-folder-button" style="width: 24px;" />
     </ui:VisualElement>
 </ui:UXML>
