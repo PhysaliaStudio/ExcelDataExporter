@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Label text="Data Folder Path:" display-tooltip-when-elided="true" />
+    <ui:VisualElement style="flex-direction: row;">
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:TextField picking-mode="Ignore" readonly="true" />
+        </ui:VisualElement>
+        <ui:Button text="..." display-tooltip-when-elided="true" style="width: 24px;" />
+    </ui:VisualElement>
+</ui:UXML>
