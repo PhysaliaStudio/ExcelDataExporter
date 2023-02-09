@@ -13,6 +13,7 @@ namespace Physalia.ExcelDataExporter
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataLoader excelDataLoader = new();
+        private readonly SheetParser sheetParser = new();
 
         public void Load(string path)
         {
@@ -62,7 +63,8 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        Debug.Log(sheetRawDatas[j].ToString());
+                        string json = sheetParser.ExportDataTableAsJson(sheetRawDatas[j]);
+                        Debug.Log(json);
                     }
                 }
             }
