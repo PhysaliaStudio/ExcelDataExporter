@@ -10,10 +10,26 @@ namespace Physalia.ExcelDataExporter
         public event Action Reloaded;
 
         public string path;
+
+        private string codePath;
+        private string exportPath;
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataLoader excelDataLoader = new();
         private readonly SheetParser sheetParser = new();
+
+        public string CodePath => codePath;
+        public string ExportPath => exportPath;
+
+        public void SetCodePath(string path)
+        {
+            codePath = path;
+        }
+
+        public void SetExportPath(string path)
+        {
+            exportPath = path;
+        }
 
         public void Load(string path)
         {

@@ -44,8 +44,48 @@ namespace Physalia.ExcelDataExporter
 
             gameDatabase.Reloaded += SetupList;
 
+            var browseCodeFolderbutton = visualElement.Q<Button>("browse-code-folder-button");
+            browseCodeFolderbutton.clicked += BrowseCodeFolder;
+
+            var browseExportFolderbutton = visualElement.Q<Button>("browse-export-folder-button");
+            browseExportFolderbutton.clicked += BrowseExportFolder;
+
             var exportButton = visualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
+        }
+
+        private void BrowseCodeFolder()
+        {
+            string fullPath = EditorUtility.OpenFolderPanel("Select Code Folder", Application.dataPath, "");
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+
+            gameDatabase.SetCodePath(fullPath);
+
+            var pathField = visualElement.Q<TextField>("code-folder-field");
+            if (pathField != null)
+            {
+                pathField.value = fullPath;
+            }
+        }
+
+        private void BrowseExportFolder()
+        {
+            string fullPath = EditorUtility.OpenFolderPanel("Select Export Folder", Application.dataPath, "");
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+
+            gameDatabase.SetExportPath(fullPath);
+
+            var pathField = visualElement.Q<TextField>("export-folder-field");
+            if (pathField != null)
+            {
+                pathField.value = fullPath;
+            }
         }
 
         public void SetupList()
