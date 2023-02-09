@@ -14,6 +14,11 @@
             </ui:VisualElement>
             <ui:Button text="..." name="browse-export-folder-button" style="width: 24px;" />
         </ui:VisualElement>
+        <ui:VisualElement style="height: 20px;" />
+        <ui:VisualElement style="flex-direction: row;">
+            <ui:Label text="Namespace:" style="width: 80px; -unity-text-align: middle-left;" />
+            <ui:TextField picking-mode="Ignore" binding-path="namespaceName" name="namespace-field" style="flex-grow: 1;" />
+        </ui:VisualElement>
         <ui:Button text="Generate Code" name="code-generate-button" style="width: 100px;" />
         <ui:VisualElement style="height: 20px;" />
         <ui:VisualElement style="align-items: center;">
