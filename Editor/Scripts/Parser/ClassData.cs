@@ -19,7 +19,6 @@ namespace Physalia.ExcelDataExporter
         public static string Generate(string namespaceName, string className, ClassData classData)
         {
             var fieldBuilder = new StringBuilder();
-            var propertyBuilder = new StringBuilder();
 
             bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
             string tab = "    ";
@@ -28,20 +27,6 @@ namespace Physalia.ExcelDataExporter
                 FieldData fieldData = classData.fieldDatas[i];
                 string typeName = fieldData.typeName;
                 string fieldName = fieldData.name;
-                string propertyName = fieldData.PropertyName;
-
-                // Write field
-                if (hasNamespace)
-                {
-                    fieldBuilder.Append(tab);
-                    fieldBuilder.Append(tab);
-                }
-                else
-                {
-                    fieldBuilder.Append(tab);
-                }
-
-                fieldBuilder.AppendLine("[SerializeField]");
 
                 if (hasNamespace)
                 {
@@ -53,29 +38,11 @@ namespace Physalia.ExcelDataExporter
                     fieldBuilder.Append(tab);
                 }
 
-                fieldBuilder.Append($"private {typeName} {fieldName};");
+                fieldBuilder.Append($"public {typeName} {fieldName};");
 
                 if (i != classData.fieldDatas.Count - 1)
                 {
                     fieldBuilder.AppendLine();
-                }
-
-                // Write property
-                if (hasNamespace)
-                {
-                    propertyBuilder.Append(tab);
-                    propertyBuilder.Append(tab);
-                }
-                else
-                {
-                    propertyBuilder.Append(tab);
-                }
-
-                propertyBuilder.Append($"public {typeName} {propertyName} => {fieldName};");
-
-                if (i != classData.fieldDatas.Count - 1)
-                {
-                    propertyBuilder.AppendLine();
                 }
             }
 
@@ -91,8 +58,6 @@ namespace {namespaceName}
 {tab}public class {className}
 {tab}{{
 {fieldBuilder}
-
-{propertyBuilder}
 {tab}}}
 }}
 ";
@@ -106,8 +71,6 @@ using UnityEngine;
 public class {className}
 {{
 {fieldBuilder}
-
-{propertyBuilder}
 }}
 ";
             }
