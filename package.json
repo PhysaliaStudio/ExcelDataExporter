@@ -11,5 +11,8 @@
   "author": {
     "name": "Wen Taichi",
     "email": "daleth90@gmail.com"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
   }
 }
