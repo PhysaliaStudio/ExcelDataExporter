@@ -36,6 +36,11 @@ namespace Physalia.ExcelDataExporter
         private void BrowseDataFolder()
         {
             string fullPath = EditorUtility.OpenFolderPanel("Select Data Folder", Application.dataPath, "");
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+
             gameDatabase.Load(fullPath);
 
             var pathField = rootVisualElement.Q<TextField>("data-folder-field");
