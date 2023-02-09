@@ -7,6 +7,7 @@
         </ui:VisualElement>
         <ui:Button text="..." display-tooltip-when-elided="true" name="browse-data-folder-button" style="width: 24px;" />
     </ui:VisualElement>
+    <ui:Button text="Reload" name="reload-button" style="width: 60px;" />
     <ui:VisualElement style="height: 20px;" />
     <ui:Instance template="DataTablePanel" name="DataTablePanel" style="flex-grow: 1;" />
 </ui:UXML>

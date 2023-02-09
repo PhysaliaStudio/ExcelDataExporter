@@ -14,12 +14,20 @@ namespace Physalia.ExcelDataExporter
 
         public void Load(string path)
         {
-            if (this.path != path)
+            this.path = path;
+            CollectAllWorksheetDatas();
+            Reloaded?.Invoke();
+        }
+
+        public void Reload()
+        {
+            if (string.IsNullOrEmpty(path))
             {
-                this.path = path;
-                CollectAllWorksheetDatas();
-                Reloaded?.Invoke();
+                return;
             }
+
+            CollectAllWorksheetDatas();
+            Reloaded?.Invoke();
         }
 
         private void CollectAllWorksheetDatas()

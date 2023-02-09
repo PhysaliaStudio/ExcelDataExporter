@@ -26,8 +26,11 @@ namespace Physalia.ExcelDataExporter
 
             uiAsset.CloneTree(rootVisualElement);
 
-            var button = rootVisualElement.Q<Button>("browse-data-folder-button");
-            button.clicked += BrowseDataFolder;
+            var browseDataFolderbutton = rootVisualElement.Q<Button>("browse-data-folder-button");
+            browseDataFolderbutton.clicked += BrowseDataFolder;
+
+            var reloadButton = rootVisualElement.Q<Button>("reload-button");
+            reloadButton.clicked += Reload;
 
             var dataTablePanelElement = rootVisualElement.Q<TemplateContainer>(nameof(DataTablePanel));
             dataTablePanel = new DataTablePanel(gameDatabase, dataTablePanelElement);
@@ -48,6 +51,11 @@ namespace Physalia.ExcelDataExporter
             {
                 pathField.value = fullPath;
             }
+        }
+
+        private void Reload()
+        {
+            gameDatabase.Reload();
         }
     }
 }
