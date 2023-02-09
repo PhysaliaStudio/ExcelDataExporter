@@ -3,14 +3,14 @@
         <ui:VisualElement style="flex-direction: row;">
             <ui:Label text="Code Path:" style="width: 80px; -unity-text-align: middle-left;" />
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:TextField picking-mode="Ignore" readonly="true" name="code-folder-field" />
+                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="codePath" />
             </ui:VisualElement>
             <ui:Button text="..." name="browse-code-folder-button" style="width: 24px;" />
         </ui:VisualElement>
         <ui:VisualElement style="flex-direction: row;">
             <ui:Label text="Export Path:" style="width: 80px; -unity-text-align: middle-left;" />
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:TextField picking-mode="Ignore" readonly="true" name="export-folder-field" />
+                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="exportPath" />
             </ui:VisualElement>
             <ui:Button text="..." name="browse-export-folder-button" style="width: 24px;" />
         </ui:VisualElement>

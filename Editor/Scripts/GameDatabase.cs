@@ -10,8 +10,11 @@ namespace Physalia.ExcelDataExporter
     {
         public event Action Reloaded;
 
+        [SerializeField]
         private string dataPath;
+        [SerializeField]
         private string codePath;
+        [SerializeField]
         private string exportPath;
 
         public List<WorksheetData> dataTables = new();
