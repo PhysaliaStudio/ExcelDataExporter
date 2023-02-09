@@ -14,10 +14,13 @@ namespace Physalia.ExcelDataExporter
             var classData = new ClassData();
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
+                string name = nameRow[i];
+                string typeName = typeNameRow[i];
+
                 var fieldData = new FieldData
                 {
-                    name = nameRow[i],
-                    typeName = typeNameRow[i],
+                    name = name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString(),
+                    typeName = typeName,
                 };
                 classData.fieldDatas.Add(fieldData);
             }

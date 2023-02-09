@@ -14,6 +14,7 @@
             </ui:VisualElement>
             <ui:Button text="..." name="browse-export-folder-button" style="width: 24px;" />
         </ui:VisualElement>
+        <ui:Button text="Generate Code" name="code-generate-button" style="width: 100px;" />
         <ui:VisualElement style="height: 20px;" />
         <ui:VisualElement style="align-items: center;">
             <ui:Button text="Export" name="export-button" style="height: 40px; max-width: 200px; font-size: 18px; -unity-font-style: bold; width: 100%;" />

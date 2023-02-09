@@ -19,5 +19,7 @@ namespace Physalia.ExcelDataExporter
                 return typeName;
             }
         }
+
+        public string PropertyName => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
     }
 }

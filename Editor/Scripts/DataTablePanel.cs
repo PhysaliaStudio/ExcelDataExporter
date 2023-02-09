@@ -50,6 +50,9 @@ namespace Physalia.ExcelDataExporter
             var browseExportFolderbutton = visualElement.Q<Button>("browse-export-folder-button");
             browseExportFolderbutton.clicked += BrowseExportFolder;
 
+            var codeGenerateButton = visualElement.Q<Button>("code-generate-button");
+            codeGenerateButton.clicked += GenerateCode;
+
             var exportButton = visualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
         }
@@ -87,6 +90,11 @@ namespace Physalia.ExcelDataExporter
                 var element = new DataTableButton(worksheetData);
                 container.Add(element);
             }
+        }
+
+        private void GenerateCode()
+        {
+            gameDatabase.GenerateCodeForSelectedTables();
         }
 
         private void Export()
