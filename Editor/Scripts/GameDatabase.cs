@@ -12,6 +12,8 @@ namespace Physalia.ExcelDataExporter
         public string path;
         public List<WorksheetData> dataTables = new();
 
+        private readonly ExcelDataLoader excelDataLoader = new();
+
         public void Load(string path)
         {
             this.path = path;
@@ -48,6 +50,21 @@ namespace Physalia.ExcelDataExporter
 
                 var worksheetData = new WorksheetData(path, fileInfo);
                 dataTables.Add(worksheetData);
+            }
+        }
+
+        public void ExportSelectedTables()
+        {
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                if (dataTables[i].IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        Debug.Log(sheetRawDatas[j].ToString());
+                    }
+                }
             }
         }
     }

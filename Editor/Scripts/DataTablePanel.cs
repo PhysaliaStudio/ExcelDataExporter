@@ -43,6 +43,9 @@ namespace Physalia.ExcelDataExporter
             this.visualElement = visualElement;
 
             gameDatabase.Reloaded += SetupList;
+
+            var exportButton = visualElement.Q<Button>("export-button");
+            exportButton.clicked += Export;
         }
 
         public void SetupList()
@@ -56,6 +59,11 @@ namespace Physalia.ExcelDataExporter
                 var element = new DataTableButton(worksheetData);
                 container.Add(element);
             }
+        }
+
+        private void Export()
+        {
+            gameDatabase.ExportSelectedTables();
         }
     }
 }
