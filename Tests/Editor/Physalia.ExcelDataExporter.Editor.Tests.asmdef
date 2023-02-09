@@ -1,7 +1,9 @@
 {
-    "name": "Physalia.ExcelDataExporter.Editor",
-    "rootNamespace": "Physalia.ExcelDataExporter",
-    "references": [],
+    "name": "Physalia.ExcelDataExporter.Editor.Tests",
+    "rootNamespace": "Physalia.ExcelDataExporter.Tests",
+    "references": [
+        "GUID:436ca06a8e0117d4fa41a329121bafe5"
+    ],
     "includePlatforms": [
         "Editor"
     ],
@@ -9,8 +11,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "ExcelDataReader.dll",
-        "Newtonsoft.Json.dll"
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

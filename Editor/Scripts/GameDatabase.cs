@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
@@ -9,19 +10,61 @@ namespace Physalia.ExcelDataExporter
     {
         public event Action Reloaded;
 
-        public string path;
+        [SerializeField]
+        private string dataPath;
+        [SerializeField]
+        private string codePath;
+        [SerializeField]
+        private string exportPath;
+        [SerializeField]
+        private string namespaceName;
+
         public List<WorksheetData> dataTables = new();
+
+        private readonly ExcelDataLoader excelDataLoader = new();
+        private readonly SheetParser sheetParser = new();
+
+        public string DataPath => dataPath;
+        public string CodePath => codePath;
+        public string ExportPath => exportPath;
+
+        private void Awake()
+        {
+            dataPath = PlayerPrefs.GetString("ExcelDataExporter.DataPath", null);
+            codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
+            exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
+            namespaceName = PlayerPrefs.GetString("ExcelDataExporter.NamespaceName", null);
+        }
+
+        public void SetCodePath(string path)
+        {
+            codePath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.CodePath", path);
+        }
+
+        public void SetExportPath(string path)
+        {
+            exportPath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.ExportPath", path);
+        }
+
+        public void SaveNamespace()
+        {
+            PlayerPrefs.SetString("ExcelDataExporter.NamespaceName", namespaceName);
+        }
 
         public void Load(string path)
         {
-            this.path = path;
+            this.dataPath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.DataPath", path);
+
             CollectAllWorksheetDatas();
             Reloaded?.Invoke();
         }
 
         public void Reload()
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(dataPath))
             {
                 return;
             }
@@ -35,7 +78,7 @@ namespace Physalia.ExcelDataExporter
             dataTables.Clear();
 
             // Get all Excel files
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            DirectoryInfo directoryInfo = new DirectoryInfo(dataPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories);
 
             foreach (FileInfo fileInfo in fileInfos)
@@ -46,9 +89,61 @@ namespace Physalia.ExcelDataExporter
                     continue;
                 }
 
-                var worksheetData = new WorksheetData(path, fileInfo);
+                var worksheetData = new WorksheetData(dataPath, fileInfo);
                 dataTables.Add(worksheetData);
             }
+        }
+
+        public void GenerateCodeForSelectedTables()
+        {
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                if (dataTables[i].IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        ClassData classData = sheetParser.ExportClassData(sheetRawDatas[j]);
+                        string className = dataTables[i].Name.EndsWith("Table") ? dataTables[i].Name[..^"Table".Length] + "Data" : dataTables[i].Name + "Data";
+                        string scriptText = DataTableCodeGenerator.Generate(namespaceName, className, classData);
+
+                        string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder[..^"Table".Length] + "Data" : dataTables[i].NameWithFolder + "Data";
+                        string path = $"{codePath}{relativePath}.cs";
+                        SaveFile(path, scriptText);
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        public void ExportSelectedTables()
+        {
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                if (dataTables[i].IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        string json = sheetParser.ExportDataTableAsJson(sheetRawDatas[j]);
+                        string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
+                        SaveFile(path, json);
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        private void SaveFile(string path, string data)
+        {
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+            using var stream = new FileStream(path, FileMode.Create);
+            using var writer = new StreamWriter(stream);
+            writer.Write(data);
         }
     }
 }

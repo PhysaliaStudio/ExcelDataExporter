@@ -43,6 +43,43 @@ namespace Physalia.ExcelDataExporter
             this.visualElement = visualElement;
 
             gameDatabase.Reloaded += SetupList;
+
+            var browseCodeFolderbutton = visualElement.Q<Button>("browse-code-folder-button");
+            browseCodeFolderbutton.clicked += BrowseCodeFolder;
+
+            var browseExportFolderbutton = visualElement.Q<Button>("browse-export-folder-button");
+            browseExportFolderbutton.clicked += BrowseExportFolder;
+
+            var namespaceField = visualElement.Q<TextField>("namespace-field");
+            namespaceField.RegisterValueChangedCallback(evt => gameDatabase.SaveNamespace());
+
+            var codeGenerateButton = visualElement.Q<Button>("code-generate-button");
+            codeGenerateButton.clicked += GenerateCode;
+
+            var exportButton = visualElement.Q<Button>("export-button");
+            exportButton.clicked += Export;
+        }
+
+        private void BrowseCodeFolder()
+        {
+            string fullPath = EditorUtility.OpenFolderPanel("Select Code Folder", Application.dataPath, "");
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+
+            gameDatabase.SetCodePath(fullPath);
+        }
+
+        private void BrowseExportFolder()
+        {
+            string fullPath = EditorUtility.OpenFolderPanel("Select Export Folder", Application.dataPath, "");
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+
+            gameDatabase.SetExportPath(fullPath);
         }
 
         public void SetupList()
@@ -56,6 +93,16 @@ namespace Physalia.ExcelDataExporter
                 var element = new DataTableButton(worksheetData);
                 container.Add(element);
             }
+        }
+
+        private void GenerateCode()
+        {
+            gameDatabase.GenerateCodeForSelectedTables();
+        }
+
+        private void Export()
+        {
+            gameDatabase.ExportSelectedTables();
         }
     }
 }

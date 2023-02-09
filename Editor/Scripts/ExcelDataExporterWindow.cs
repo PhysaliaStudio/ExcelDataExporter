@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,6 +11,7 @@ namespace Physalia.ExcelDataExporter
         private VisualTreeAsset uiAsset;
 
         private GameDatabase gameDatabase;
+        private SerializedObject serializedObject;
         private DataTablePanel dataTablePanel;
 
         [MenuItem("Tools/Excel Data Exporter")]
@@ -23,8 +25,10 @@ namespace Physalia.ExcelDataExporter
         private void CreateGUI()
         {
             gameDatabase = CreateInstance<GameDatabase>();
+            serializedObject = new SerializedObject(gameDatabase);
 
             uiAsset.CloneTree(rootVisualElement);
+            rootVisualElement.Bind(serializedObject);
 
             var browseDataFolderbutton = rootVisualElement.Q<Button>("browse-data-folder-button");
             browseDataFolderbutton.clicked += BrowseDataFolder;
@@ -34,6 +38,11 @@ namespace Physalia.ExcelDataExporter
 
             var dataTablePanelElement = rootVisualElement.Q<TemplateContainer>(nameof(DataTablePanel));
             dataTablePanel = new DataTablePanel(gameDatabase, dataTablePanelElement);
+
+            if (!string.IsNullOrEmpty(gameDatabase.DataPath))
+            {
+                Reload();
+            }
         }
 
         private void BrowseDataFolder()
@@ -45,12 +54,6 @@ namespace Physalia.ExcelDataExporter
             }
 
             gameDatabase.Load(fullPath);
-
-            var pathField = rootVisualElement.Q<TextField>("data-folder-field");
-            if (pathField != null)
-            {
-                pathField.value = fullPath;
-            }
         }
 
         private void Reload()
