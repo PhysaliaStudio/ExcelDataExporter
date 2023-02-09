@@ -9,38 +9,50 @@ namespace Physalia.ExcelDataExporter
     {
         public event Action Reloaded;
 
-        public string path;
-
+        private string dataPath;
         private string codePath;
         private string exportPath;
+
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataLoader excelDataLoader = new();
         private readonly SheetParser sheetParser = new();
 
+        public string DataPath => dataPath;
         public string CodePath => codePath;
         public string ExportPath => exportPath;
+
+        private void Awake()
+        {
+            dataPath = PlayerPrefs.GetString("ExcelDataExporter.DataPath", null);
+            codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
+            exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
+        }
 
         public void SetCodePath(string path)
         {
             codePath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.CodePath", path);
         }
 
         public void SetExportPath(string path)
         {
             exportPath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.ExportPath", path);
         }
 
         public void Load(string path)
         {
-            this.path = path;
+            this.dataPath = path;
+            PlayerPrefs.SetString("ExcelDataExporter.DataPath", path);
+
             CollectAllWorksheetDatas();
             Reloaded?.Invoke();
         }
 
         public void Reload()
         {
-            if (string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(dataPath))
             {
                 return;
             }
@@ -54,7 +66,7 @@ namespace Physalia.ExcelDataExporter
             dataTables.Clear();
 
             // Get all Excel files
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            DirectoryInfo directoryInfo = new DirectoryInfo(dataPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories);
 
             foreach (FileInfo fileInfo in fileInfos)
@@ -65,7 +77,7 @@ namespace Physalia.ExcelDataExporter
                     continue;
                 }
 
-                var worksheetData = new WorksheetData(path, fileInfo);
+                var worksheetData = new WorksheetData(dataPath, fileInfo);
                 dataTables.Add(worksheetData);
             }
         }

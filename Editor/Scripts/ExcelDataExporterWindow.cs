@@ -29,11 +29,22 @@ namespace Physalia.ExcelDataExporter
             var browseDataFolderbutton = rootVisualElement.Q<Button>("browse-data-folder-button");
             browseDataFolderbutton.clicked += BrowseDataFolder;
 
+            var dataFolderField = rootVisualElement.Q<TextField>("data-folder-field");
+            if (dataFolderField != null)
+            {
+                dataFolderField.value = gameDatabase.DataPath;
+            }
+
             var reloadButton = rootVisualElement.Q<Button>("reload-button");
             reloadButton.clicked += Reload;
 
             var dataTablePanelElement = rootVisualElement.Q<TemplateContainer>(nameof(DataTablePanel));
             dataTablePanel = new DataTablePanel(gameDatabase, dataTablePanelElement);
+
+            if (!string.IsNullOrEmpty(gameDatabase.DataPath))
+            {
+                Reload();
+            }
         }
 
         private void BrowseDataFolder()

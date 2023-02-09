@@ -50,6 +50,18 @@ namespace Physalia.ExcelDataExporter
             var browseExportFolderbutton = visualElement.Q<Button>("browse-export-folder-button");
             browseExportFolderbutton.clicked += BrowseExportFolder;
 
+            var codeFolderField = visualElement.Q<TextField>("code-folder-field");
+            if (codeFolderField != null)
+            {
+                codeFolderField.value = gameDatabase.CodePath;
+            }
+
+            var exportFolderField = visualElement.Q<TextField>("export-folder-field");
+            if (exportFolderField != null)
+            {
+                exportFolderField.value = gameDatabase.ExportPath;
+            }
+
             var exportButton = visualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
         }
