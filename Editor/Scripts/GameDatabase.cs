@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
@@ -92,10 +93,22 @@ namespace Physalia.ExcelDataExporter
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
                         string json = sheetParser.ExportDataTableAsJson(sheetRawDatas[j]);
-                        Debug.Log(json);
+                        string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
+                        SaveFile(path, json);
                     }
                 }
             }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        private void SaveFile(string path, string data)
+        {
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(path));
+            using var stream = new FileStream(path, FileMode.Create);
+            using var writer = new StreamWriter(stream);
+            writer.Write(data);
         }
     }
 }
