@@ -10,6 +10,7 @@ namespace Physalia.ExcelDataExporter
         private VisualTreeAsset uiAsset;
 
         private GameDatabase gameDatabase;
+        private DataTablePanel dataTablePanel;
 
         [MenuItem("Tools/Excel Data Exporter")]
         private static void Open()
@@ -27,6 +28,9 @@ namespace Physalia.ExcelDataExporter
 
             var button = rootVisualElement.Q<Button>("browse-data-folder-button");
             button.clicked += BrowseDataFolder;
+
+            var dataTablePanelElement = rootVisualElement.Q<TemplateContainer>(nameof(DataTablePanel));
+            dataTablePanel = new DataTablePanel(gameDatabase, dataTablePanelElement);
         }
 
         private void BrowseDataFolder()

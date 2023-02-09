@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -6,6 +7,8 @@ namespace Physalia.ExcelDataExporter
 {
     public class GameDatabase : ScriptableObject
     {
+        public event Action Reloaded;
+
         public string path;
         public List<WorksheetData> dataTables = new();
 
@@ -15,6 +18,7 @@ namespace Physalia.ExcelDataExporter
             {
                 this.path = path;
                 CollectAllWorksheetDatas();
+                Reloaded?.Invoke();
             }
         }
 

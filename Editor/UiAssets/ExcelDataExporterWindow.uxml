@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="DataTablePanel" src="project://database/Packages/studio.physalia.excel-data-exporter/Editor/UiAssets/DataTablePanel.uxml?fileID=9197481963319205126&amp;guid=090cd0ed2481fdf4cb7328e43248a877&amp;type=3#DataTablePanel" />
     <ui:Label text="Data Folder Path:" display-tooltip-when-elided="true" />
     <ui:VisualElement style="flex-direction: row;">
         <ui:VisualElement style="flex-grow: 1;">
@@ -6,4 +7,6 @@
         </ui:VisualElement>
         <ui:Button text="..." display-tooltip-when-elided="true" name="browse-data-folder-button" style="width: 24px;" />
     </ui:VisualElement>
+    <ui:VisualElement style="height: 20px;" />
+    <ui:Instance template="DataTablePanel" name="DataTablePanel" style="flex-grow: 1;" />
 </ui:UXML>
