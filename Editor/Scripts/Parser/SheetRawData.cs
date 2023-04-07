@@ -40,14 +40,14 @@ namespace Physalia.ExcelDataExporter
 
         public void SetRow(int rowIndex, params string[] texts)
         {
-            if (texts.Length != columnCount)
+            if (texts.Length > columnCount)
             {
                 Debug.LogError($"[{nameof(SheetRawData)}] The column count of the inserted row doesn't match.\n" +
-                    $"Expected: {columnCount}  But was: {texts.Length}");
+                    $"Expected: <={columnCount}  But was: {texts.Length}");
                 return;
             }
 
-            for (var i = 0; i < columnCount; i++)
+            for (var i = 0; i < texts.Length; i++)
             {
                 table[rowIndex][i] = texts[i];
             }
