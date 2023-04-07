@@ -84,7 +84,12 @@ namespace Physalia.ExcelDataExporter
             foreach (FileInfo fileInfo in fileInfos)
             {
                 // Skip if the file is a temp file
-                if (fileInfo.Name.Contains("$"))
+                if (fileInfo.Name.StartsWith("~"))
+                {
+                    continue;
+                }
+
+                if (fileInfo.Name == Const.CustomTypeTableName)
                 {
                     continue;
                 }
@@ -92,6 +97,37 @@ namespace Physalia.ExcelDataExporter
                 var worksheetData = new WorksheetData(dataPath, fileInfo);
                 dataTables.Add(worksheetData);
             }
+        }
+
+        public void GenerateCodeForCustomTypes()
+        {
+            // Get CustomTypeTable file
+            var fileInfo = new FileInfo($"{dataPath}/{Const.CustomTypeTableName}");
+            if (!fileInfo.Exists)
+            {
+                Debug.LogWarning($"{Const.CustomTypeTableName} not found.");
+                return;
+            }
+
+            // Load sheet
+            var worksheetData = new WorksheetData(dataPath, fileInfo);
+            List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
+            if (sheetRawDatas.Count == 0)
+            {
+                Debug.LogWarning($"The count of sheet in {Const.CustomTypeTableName}");
+                return;
+            }
+
+            // Generate codes
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
+            foreach (ClassData customType in customTypeTable.CustomTypes)
+            {
+                string scriptText = DataTableCodeGenerator.Generate(namespaceName, customType);
+                string path = $"{codePath}/CustomTypes/{customType.name}.cs";
+                SaveFile(path, scriptText);
+            }
+
+            AssetDatabase.Refresh();
         }
 
         public void GenerateCodeForSelectedTables()

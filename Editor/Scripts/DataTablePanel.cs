@@ -53,6 +53,9 @@ namespace Physalia.ExcelDataExporter
             var namespaceField = visualElement.Q<TextField>("namespace-field");
             namespaceField.RegisterValueChangedCallback(evt => gameDatabase.SaveNamespace());
 
+            var codeGenerateCustomTypeButton = visualElement.Q<Button>("code-generate-custom-type-button");
+            codeGenerateCustomTypeButton.clicked += GenerateCodeForCustomTypes;
+
             var codeGenerateButton = visualElement.Q<Button>("code-generate-button");
             codeGenerateButton.clicked += GenerateCode;
 
@@ -93,6 +96,11 @@ namespace Physalia.ExcelDataExporter
                 var element = new DataTableButton(worksheetData);
                 container.Add(element);
             }
+        }
+
+        private void GenerateCodeForCustomTypes()
+        {
+            gameDatabase.GenerateCodeForCustomTypes();
         }
 
         private void GenerateCode()

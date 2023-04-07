@@ -8,6 +8,7 @@ namespace Physalia.ExcelDataExporter
         private readonly Dictionary<string, ClassData> typeTable = new();
 
         public int Count => typeTable.Count;
+        public IEnumerable<ClassData> CustomTypes => typeTable.Values;
 
         public static CustomTypeTable Parse(SheetRawData sheetRawData)
         {
