@@ -5,6 +5,7 @@ namespace Physalia.ExcelDataExporter
 {
     public class ClassData
     {
+        public string name;
         public List<FieldData> fieldDatas = new();
     }
 
