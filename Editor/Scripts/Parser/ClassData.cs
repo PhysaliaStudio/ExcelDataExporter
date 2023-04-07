@@ -17,7 +17,7 @@ namespace Physalia.ExcelDataExporter
 // ###############################################
 ";
 
-        public static string Generate(string namespaceName, string className, ClassData classData)
+        public static string Generate(string namespaceName, ClassData classData)
         {
             var fieldBuilder = new StringBuilder();
 
@@ -56,7 +56,7 @@ using UnityEngine;
 
 namespace {namespaceName}
 {{
-{tab}public class {className}
+{tab}public class {classData.name}
 {tab}{{
 {fieldBuilder}
 {tab}}}
@@ -69,7 +69,7 @@ namespace {namespaceName}
 $@"{WARNING_COMMENT}
 using UnityEngine;
 
-public class {className}
+public class {classData.name}
 {{
 {fieldBuilder}
 }}
