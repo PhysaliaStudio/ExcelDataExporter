@@ -6,6 +6,20 @@ namespace Physalia.ExcelDataExporter
     {
         private static readonly Dictionary<string, TypeData> DefaultTypeTable = new()
         {
+            { "string", new TypeData { name = "string" } },
+            { "bool", new TypeData { name = "bool" } },
+            { "byte", new TypeData { name = "byte" } },
+            { "sbyte", new TypeData { name = "sbyte" } },
+            { "short", new TypeData { name = "short" } },
+            { "ushort", new TypeData { name = "ushort" } },
+            { "int", new TypeData { name = "int"} },
+            { "uint", new TypeData { name = "uint"} },
+            { "long", new TypeData { name = "long" } },
+            { "ulong", new TypeData { name = "ulong" } },
+            { "float", new TypeData { name = "float" } },
+            { "double", new TypeData { name = "double" } },
+            { "decimal", new TypeData { name = "decimal" } },
+
             { "Vector2Int", new TypeData
                 {
                     name = "Vector2Int",
@@ -31,21 +45,10 @@ namespace Physalia.ExcelDataExporter
 
         public static bool IsDefaultType(string typeName)
         {
-            if (IsSystemType(typeName))
-            {
-                return true;
-            }
-
-            TypeData typeData = GetUnityType(typeName);
-            if (typeData != null)
-            {
-                return true;
-            }
-
-            return false;
+            return DefaultTypeTable.ContainsKey(typeName);
         }
 
-        public static TypeData GetUnityType(string typeName)
+        public static TypeData GetDefaultType(string typeName)
         {
             bool success = DefaultTypeTable.TryGetValue(typeName, out TypeData typeData);
             if (success)
