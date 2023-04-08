@@ -6,21 +6,21 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetParser
     {
-        public ClassData ExportClassData(string className, SheetRawData sheetRawData)
+        public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
             string[] nameRow = sheetRawData.GetRow(0);
             string[] typeNameRow = sheetRawData.GetRow(1);
 
-            var classData = new ClassData { name = className };
+            var classData = new TypeData { name = typeName };
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
-                string name = nameRow[i];
-                string typeName = typeNameRow[i];
+                string fieldName = nameRow[i];
+                string fieldTypeName = typeNameRow[i];
 
                 var fieldData = new FieldData
                 {
-                    name = name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString(),
-                    typeName = typeName,
+                    name = fieldName.Length > 1 ? char.ToLower(fieldName[0]) + fieldName[1..] : char.ToLower(fieldName[0]).ToString(),
+                    typeName = fieldTypeName,
                 };
                 classData.fieldDatas.Add(fieldData);
             }
@@ -32,10 +32,10 @@ namespace Physalia.ExcelDataExporter
         {
             var sb = new StringBuilder();
 
-            ClassData classData = ExportClassData("", sheetRawData);  // TODO: class name
+            TypeData typeData = ExportTypeData("", sheetRawData);  // TODO: class name
             for (var i = 2; i < sheetRawData.RowCount; i++)
             {
-                string json = ExportDataRowAsJson(classData, sheetRawData.GetRow(i));
+                string json = ExportDataRowAsJson(typeData, sheetRawData.GetRow(i));
                 sb.Append(json);
                 sb.Append('\n');
             }
@@ -43,7 +43,7 @@ namespace Physalia.ExcelDataExporter
             return sb.ToString();
         }
 
-        private string ExportDataRowAsJson(ClassData classData, string[] dataRow)
+        private string ExportDataRowAsJson(TypeData typeData, string[] dataRow)
         {
             var sb = new StringBuilder();
             using var sw = new StringWriter(sb);
@@ -53,7 +53,7 @@ namespace Physalia.ExcelDataExporter
 
             for (var i = 0; i < dataRow.Length; i++)
             {
-                FieldData fieldData = classData.fieldDatas[i];
+                FieldData fieldData = typeData.fieldDatas[i];
 
                 writer.WritePropertyName(fieldData.name);
                 if (fieldData.IsArray)
