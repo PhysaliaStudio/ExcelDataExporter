@@ -20,8 +20,12 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldTypeName = fieldData.typeData.name;
                 string fieldName = fieldData.name;
+                string fieldTypeName = fieldData.typeData.name;
+                if (fieldData.IsArray)
+                {
+                    fieldTypeName += "[]";
+                }
 
                 if (hasNamespace)
                 {
