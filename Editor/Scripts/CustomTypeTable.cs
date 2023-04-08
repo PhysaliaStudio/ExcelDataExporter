@@ -55,7 +55,8 @@ namespace Physalia.ExcelDataExporter
                             failed = true;
                             break;
                         }
-                        currentTypeData.fieldDatas[j].typeName = typeName;
+
+                        currentTypeData.fieldDatas[j].typeData = TypeUtility.GetDefaultType(typeName);
                     }
 
                     if (!failed)

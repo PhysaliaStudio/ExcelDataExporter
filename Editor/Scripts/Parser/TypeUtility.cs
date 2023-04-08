@@ -4,29 +4,43 @@ namespace Physalia.ExcelDataExporter
 {
     public static class TypeUtility
     {
+        private static readonly TypeData TypeDataString = new() { name = "string" };
+        private static readonly TypeData TypeDataBool = new() { name = "bool" };
+        private static readonly TypeData TypeDataByte = new() { name = "byte" };
+        private static readonly TypeData TypeDataSByte = new() { name = "sbyte" };
+        private static readonly TypeData TypeDataShort = new() { name = "short" };
+        private static readonly TypeData TypeDataUShort = new() { name = "ushort" };
+        private static readonly TypeData TypeDataInt = new() { name = "int" };
+        private static readonly TypeData TypeDataUInt = new() { name = "uint" };
+        private static readonly TypeData TypeDataLong = new() { name = "long" };
+        private static readonly TypeData TypeDataULong = new() { name = "ulong" };
+        private static readonly TypeData TypeDataFloat = new() { name = "float" };
+        private static readonly TypeData TypeDataDouble = new() { name = "double" };
+        private static readonly TypeData TypeDataDecimal = new() { name = "decimal" };
+
         private static readonly Dictionary<string, TypeData> DefaultTypeTable = new()
         {
-            { "string", new TypeData { name = "string" } },
-            { "bool", new TypeData { name = "bool" } },
-            { "byte", new TypeData { name = "byte" } },
-            { "sbyte", new TypeData { name = "sbyte" } },
-            { "short", new TypeData { name = "short" } },
-            { "ushort", new TypeData { name = "ushort" } },
-            { "int", new TypeData { name = "int"} },
-            { "uint", new TypeData { name = "uint"} },
-            { "long", new TypeData { name = "long" } },
-            { "ulong", new TypeData { name = "ulong" } },
-            { "float", new TypeData { name = "float" } },
-            { "double", new TypeData { name = "double" } },
-            { "decimal", new TypeData { name = "decimal" } },
+            { TypeDataString.name, TypeDataString },
+            { TypeDataBool.name, TypeDataBool },
+            { TypeDataByte.name, TypeDataByte },
+            { TypeDataSByte.name, TypeDataSByte },
+            { TypeDataShort.name, TypeDataShort },
+            { TypeDataUShort.name, TypeDataUShort },
+            { TypeDataInt.name, TypeDataInt },
+            { TypeDataUInt.name, TypeDataUInt },
+            { TypeDataLong.name, TypeDataLong },
+            { TypeDataULong.name, TypeDataULong },
+            { TypeDataFloat.name, TypeDataFloat },
+            { TypeDataDouble.name, TypeDataDouble },
+            { TypeDataDecimal.name, TypeDataDecimal },
 
             { "Vector2Int", new TypeData
                 {
                     name = "Vector2Int",
                     fieldDatas = new List<FieldData>
                     {
-                        new FieldData { name = "x", typeName = "int" },
-                        new FieldData { name = "y", typeName = "int" },
+                        new FieldData { name = "x", typeData = TypeDataInt },
+                        new FieldData { name = "y", typeData = TypeDataInt },
                     }
                 }
             },
@@ -35,9 +49,9 @@ namespace Physalia.ExcelDataExporter
                     name = "Vector3Int",
                     fieldDatas = new List<FieldData>
                     {
-                        new FieldData { name = "x", typeName = "int" },
-                        new FieldData { name = "y", typeName = "int" },
-                        new FieldData { name = "z", typeName = "int" },
+                        new FieldData { name = "x", typeData = TypeDataInt },
+                        new FieldData { name = "y", typeData = TypeDataInt },
+                        new FieldData { name = "z", typeData = TypeDataInt },
                     }
                 }
             },
@@ -78,6 +92,20 @@ namespace Physalia.ExcelDataExporter
                 case "float":
                 case "double":
                 case "decimal":
+                    return true;
+            }
+        }
+
+        public static bool IsUnityType(string typeName)
+        {
+            switch (typeName)
+            {
+                default:
+                    return false;
+                case "Vector2":
+                case "Vector3":
+                case "Vector2Int":
+                case "Vector3Int":
                     return true;
             }
         }

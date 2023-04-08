@@ -20,7 +20,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string typeName = fieldData.typeName;
+                string fieldTypeName = fieldData.typeData.name;
                 string fieldName = fieldData.name;
 
                 if (hasNamespace)
@@ -33,7 +33,7 @@ namespace Physalia.ExcelDataExporter
                     fieldBuilder.Append(tab);
                 }
 
-                fieldBuilder.Append($"public {typeName} {fieldName};");
+                fieldBuilder.Append($"public {fieldTypeName} {fieldName};");
 
                 if (i != typeData.fieldDatas.Count - 1)
                 {
@@ -77,8 +77,8 @@ $@"{WARNING_COMMENT}
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string typeName = fieldData.typeName;
-                if (typeName == "Vector2" || typeName == "Vector3" || typeName == "Vector4")
+                string typeName = fieldData.typeData.name;
+                if (TypeUtility.IsUnityType(typeName))
                 {
                     sb.AppendLine("using UnityEngine;");
                     break;

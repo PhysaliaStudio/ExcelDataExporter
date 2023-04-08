@@ -8,19 +8,19 @@ namespace Physalia.ExcelDataExporter
     {
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
-            string[] nameRow = sheetRawData.GetRow(0);
-            string[] typeNameRow = sheetRawData.GetRow(1);
+            string[] fieldNameRow = sheetRawData.GetRow(0);
+            string[] fieldTypeNameRow = sheetRawData.GetRow(1);
 
             var classData = new TypeData { name = typeName };
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
-                string fieldName = nameRow[i];
-                string fieldTypeName = typeNameRow[i];
+                string fieldName = fieldNameRow[i];
+                string fieldTypeName = fieldTypeNameRow[i];
 
                 var fieldData = new FieldData
                 {
                     name = fieldName.Length > 1 ? char.ToLower(fieldName[0]) + fieldName[1..] : char.ToLower(fieldName[0]).ToString(),
-                    typeName = fieldTypeName,
+                    typeData = null,
                 };
                 classData.fieldDatas.Add(fieldData);
             }

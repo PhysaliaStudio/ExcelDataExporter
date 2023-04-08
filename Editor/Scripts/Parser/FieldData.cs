@@ -3,22 +3,12 @@ namespace Physalia.ExcelDataExporter
     public class FieldData
     {
         public string name;
-        public string typeName;
+        public TypeData typeData;
+        public bool isArray;
 
-        public bool IsArray => typeName.EndsWith("[]");
-
-        public string BaseTypeName
-        {
-            get
-            {
-                if (typeName.EndsWith("[]"))
-                {
-                    return typeName[..^2];
-                }
-
-                return typeName;
-            }
-        }
+        public bool IsArray => isArray;
+        public string TypeName => isArray ? $"{typeData.name}[]" : typeData.name;
+        public string BaseTypeName => typeData.name;
 
         public string PropertyName => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
     }
