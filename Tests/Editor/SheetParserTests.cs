@@ -5,7 +5,7 @@ namespace Physalia.ExcelDataExporter.Tests
     public class SheetParserTests
     {
         [Test]
-        public void ExportTypeData_AllFieldsAreBuiltInTypes()
+        public void ExportTypeData_SystemTypes()
         {
             var sheetRawData = new SheetRawData(2, 3);
             sheetRawData.SetRow(0, "Field1", "Field2", "Field3");
@@ -20,7 +20,7 @@ namespace Physalia.ExcelDataExporter.Tests
         }
 
         [Test]
-        public void ExportTypeData_AllFieldsAreArrayOfBuiltInTypes()
+        public void ExportTypeData_SystemTypeArrays()
         {
             var sheetRawData = new SheetRawData(2, 2);
             sheetRawData.SetRow(0, "Field1", "Field2");
@@ -31,6 +31,36 @@ namespace Physalia.ExcelDataExporter.Tests
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual(TypeUtility.GetDefaultType("int"), typeData.fieldDatas[0].typeData);
             Assert.AreEqual(TypeUtility.GetDefaultType("bool"), typeData.fieldDatas[1].typeData);
+            Assert.AreEqual(true, typeData.fieldDatas[0].IsArray);
+            Assert.AreEqual(true, typeData.fieldDatas[1].IsArray);
+        }
+
+        [Test]
+        public void ExportTypeData_UnityTypes()
+        {
+            var sheetRawData = new SheetRawData(2, 5);
+            sheetRawData.SetRow(0, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
+            sheetRawData.SetRow(1, "Vector2Int", "", "Vector3Int", "", "");
+
+            var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            Assert.AreEqual(2, typeData.fieldDatas.Count);
+            Assert.AreEqual("Vector2Int", typeData.fieldDatas[0].typeData.name);
+            Assert.AreEqual("Vector3Int", typeData.fieldDatas[1].typeData.name);
+        }
+
+        [Test]
+        public void ExportTypeData_UnityTypeArrays()
+        {
+            var sheetRawData = new SheetRawData(2, 7);
+            sheetRawData.SetRow(0, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
+            sheetRawData.SetRow(1, "Vector2Int", "", "", "", "Vector3Int", "", "");
+
+            var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            Assert.AreEqual(2, typeData.fieldDatas.Count);
+            Assert.AreEqual("Vector2Int", typeData.fieldDatas[0].typeData.name);
+            Assert.AreEqual("Vector3Int", typeData.fieldDatas[1].typeData.name);
             Assert.AreEqual(true, typeData.fieldDatas[0].IsArray);
             Assert.AreEqual(true, typeData.fieldDatas[1].IsArray);
         }

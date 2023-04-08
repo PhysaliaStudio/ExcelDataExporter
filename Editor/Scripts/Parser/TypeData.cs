@@ -6,5 +6,7 @@ namespace Physalia.ExcelDataExporter
     {
         public string name;
         public List<FieldData> fieldDatas = new();
+
+        public bool IsSystemType => TypeUtility.IsSystemType(name);
     }
 }
