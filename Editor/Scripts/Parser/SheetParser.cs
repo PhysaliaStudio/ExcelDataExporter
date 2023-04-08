@@ -81,79 +81,8 @@ namespace Physalia.ExcelDataExporter
 
         private void WriteForBuiltInTypes(JsonTextWriter writer, string typeName, string text)
         {
-            object value = ParseBuiltInValue(typeName, text);
+            object value = TypeUtility.ParseValueToSystemType(typeName, text);
             writer.WriteValue(value);
-        }
-
-        public static object ParseBuiltInValue(string typeName, string text)
-        {
-            switch (typeName)
-            {
-                default:
-                    return null;
-                case "string":
-                    return text;
-                case "bool":
-                    {
-                        bool success = bool.TryParse(text, out bool result);
-                        return success ? result : default;
-                    }
-                case "byte":
-                    {
-                        bool success = byte.TryParse(text, out byte result);
-                        return success ? result : default;
-                    }
-                case "sbyte":
-                    {
-                        bool success = sbyte.TryParse(text, out sbyte result);
-                        return success ? result : default;
-                    }
-                case "short":
-                    {
-                        bool success = short.TryParse(text, out short result);
-                        return success ? result : default;
-                    }
-                case "ushort":
-                    {
-                        bool success = ushort.TryParse(text, out ushort result);
-                        return success ? result : default;
-                    }
-                case "int":
-                    {
-                        bool success = int.TryParse(text, out int result);
-                        return success ? result : default;
-                    }
-                case "uint":
-                    {
-                        bool success = uint.TryParse(text, out uint result);
-                        return success ? result : default;
-                    }
-                case "long":
-                    {
-                        bool success = long.TryParse(text, out long result);
-                        return success ? result : default;
-                    }
-                case "ulong":
-                    {
-                        bool success = ulong.TryParse(text, out ulong result);
-                        return success ? result : default;
-                    }
-                case "float":
-                    {
-                        bool success = float.TryParse(text, out float result);
-                        return success ? result : default;
-                    }
-                case "double":
-                    {
-                        bool success = double.TryParse(text, out double result);
-                        return success ? result : default;
-                    }
-                case "decimal":
-                    {
-                        bool success = decimal.TryParse(text, out decimal result);
-                        return success ? result : default;
-                    }
-            }
         }
     }
 }
