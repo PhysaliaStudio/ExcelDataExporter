@@ -6,6 +6,18 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetParser
     {
+        private readonly CustomTypeTable customTypeTable;
+
+        public SheetParser()
+        {
+            customTypeTable = new CustomTypeTable();
+        }
+
+        public SheetParser(CustomTypeTable customTypeTable)
+        {
+            this.customTypeTable = customTypeTable;
+        }
+
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
             string[] fieldNameRow = sheetRawData.GetRow(0);
@@ -16,11 +28,19 @@ namespace Physalia.ExcelDataExporter
             {
                 string fieldName = fieldNameRow[i];
                 string fieldTypeName = fieldTypeNameRow[i];
+                bool isArray = fieldTypeName.EndsWith("[]");
+                if (isArray)
+                {
+                    fieldTypeName = fieldTypeName[0..^2];
+                }
+
+                TypeData fieldTypeData = customTypeTable.GetTypeData(fieldTypeName);
 
                 var fieldData = new FieldData
                 {
                     name = fieldName.Length > 1 ? char.ToLower(fieldName[0]) + fieldName[1..] : char.ToLower(fieldName[0]).ToString(),
-                    typeData = null,
+                    typeData = fieldTypeData,
+                    isArray = isArray,
                 };
                 classData.fieldDatas.Add(fieldData);
             }

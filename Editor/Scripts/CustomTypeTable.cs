@@ -80,6 +80,12 @@ namespace Physalia.ExcelDataExporter
                 return typeData;
             }
 
+            typeData = TypeUtility.GetDefaultType(typeName);
+            if (typeData != null)
+            {
+                return typeData;
+            }
+
             return null;
         }
     }
