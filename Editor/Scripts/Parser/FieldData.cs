@@ -5,6 +5,7 @@ namespace Physalia.ExcelDataExporter
         public string name;
         public TypeData typeData;
         public bool isArray;
+        public int arraySize = -1;
 
         public bool IsArray => isArray;
         public string TypeName => isArray ? $"{typeData.name}[]" : typeData.name;

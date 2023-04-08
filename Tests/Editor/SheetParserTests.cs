@@ -63,6 +63,8 @@ namespace Physalia.ExcelDataExporter.Tests
             Assert.AreEqual("Vector3Int", typeData.fieldDatas[1].typeData.name);
             Assert.AreEqual(true, typeData.fieldDatas[0].IsArray);
             Assert.AreEqual(true, typeData.fieldDatas[1].IsArray);
+            Assert.AreEqual(2, typeData.fieldDatas[0].arraySize);
+            Assert.AreEqual(1, typeData.fieldDatas[1].arraySize);
         }
 
         [Test]

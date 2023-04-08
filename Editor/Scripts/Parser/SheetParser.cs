@@ -10,19 +10,23 @@ namespace Physalia.ExcelDataExporter
     {
         private class TypeFieldIterator
         {
+            private readonly FieldData fieldData;
             private readonly string fieldName;
             private readonly TypeData typeData;
 
             private int arrayIndex = -1;
             private int memberIndex;
 
+            internal FieldData FieldData => fieldData;
             internal bool IsArray => arrayIndex >= 0;
+            internal int ArrayIndex => arrayIndex;
 
-            internal TypeFieldIterator(string fieldName, TypeData typeData, bool isArray)
+            internal TypeFieldIterator(FieldData fieldData)
             {
-                this.fieldName = fieldName;
-                this.typeData = typeData;
-                arrayIndex = isArray ? 0 : -1;
+                this.fieldData = fieldData;
+                fieldName = fieldData.name;
+                typeData = fieldData.typeData;
+                arrayIndex = fieldData.IsArray ? 0 : -1;
             }
 
             internal bool IsAtFirstMember()
@@ -125,7 +129,7 @@ namespace Physalia.ExcelDataExporter
                     // Start new nested type if necessary
                     if (!newFieldData.typeData.IsSystemType)
                     {
-                        var iterator = new TypeFieldIterator(newFieldData.name, newFieldData.typeData, newFieldData.isArray);
+                        var iterator = new TypeFieldIterator(newFieldData);
                         iterators.Push(iterator);
                     }
                 }
@@ -252,6 +256,7 @@ namespace Physalia.ExcelDataExporter
                         }
                         else
                         {
+                            iterator.FieldData.arraySize = iterator.ArrayIndex + 1;
                             _ = iterators.Pop();
                         }
                     }
