@@ -84,7 +84,12 @@ namespace Physalia.ExcelDataExporter
             foreach (FileInfo fileInfo in fileInfos)
             {
                 // Skip if the file is a temp file
-                if (fileInfo.Name.Contains("$"))
+                if (fileInfo.Name.StartsWith("~"))
+                {
+                    continue;
+                }
+
+                if (fileInfo.Name == Const.CustomTypeTableName)
                 {
                     continue;
                 }
@@ -92,6 +97,37 @@ namespace Physalia.ExcelDataExporter
                 var worksheetData = new WorksheetData(dataPath, fileInfo);
                 dataTables.Add(worksheetData);
             }
+        }
+
+        public void GenerateCodeForCustomTypes()
+        {
+            // Get CustomTypeTable file
+            var fileInfo = new FileInfo($"{dataPath}/{Const.CustomTypeTableName}");
+            if (!fileInfo.Exists)
+            {
+                Debug.LogWarning($"{Const.CustomTypeTableName} not found.");
+                return;
+            }
+
+            // Load sheet
+            var worksheetData = new WorksheetData(dataPath, fileInfo);
+            List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
+            if (sheetRawDatas.Count == 0)
+            {
+                Debug.LogWarning($"The count of sheet in {Const.CustomTypeTableName}");
+                return;
+            }
+
+            // Generate codes
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
+            foreach (ClassData customType in customTypeTable.CustomTypes)
+            {
+                string scriptText = DataTableCodeGenerator.Generate(namespaceName, customType);
+                string path = $"{codePath}/CustomTypes/{customType.name}.cs";
+                SaveFile(path, scriptText);
+            }
+
+            AssetDatabase.Refresh();
         }
 
         public void GenerateCodeForSelectedTables()
@@ -103,9 +139,9 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        ClassData classData = sheetParser.ExportClassData(sheetRawDatas[j]);
                         string className = dataTables[i].Name.EndsWith("Table") ? dataTables[i].Name[..^"Table".Length] + "Data" : dataTables[i].Name + "Data";
-                        string scriptText = DataTableCodeGenerator.Generate(namespaceName, className, classData);
+                        ClassData classData = sheetParser.ExportClassData(className, sheetRawDatas[j]);
+                        string scriptText = DataTableCodeGenerator.Generate(namespaceName, classData);
 
                         string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder[..^"Table".Length] + "Data" : dataTables[i].NameWithFolder + "Data";
                         string path = $"{codePath}{relativePath}.cs";

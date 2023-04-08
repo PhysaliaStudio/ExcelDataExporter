@@ -6,12 +6,12 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetParser
     {
-        public ClassData ExportClassData(SheetRawData sheetRawData)
+        public ClassData ExportClassData(string className, SheetRawData sheetRawData)
         {
             string[] nameRow = sheetRawData.GetRow(0);
             string[] typeNameRow = sheetRawData.GetRow(1);
 
-            var classData = new ClassData();
+            var classData = new ClassData { name = className };
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
                 string name = nameRow[i];
@@ -32,7 +32,7 @@ namespace Physalia.ExcelDataExporter
         {
             var sb = new StringBuilder();
 
-            ClassData classData = ExportClassData(sheetRawData);
+            ClassData classData = ExportClassData("", sheetRawData);  // TODO: class name
             for (var i = 2; i < sheetRawData.RowCount; i++)
             {
                 string json = ExportDataRowAsJson(classData, sheetRawData.GetRow(i));

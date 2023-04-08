@@ -5,6 +5,7 @@ namespace Physalia.ExcelDataExporter
 {
     public class ClassData
     {
+        public string name;
         public List<FieldData> fieldDatas = new();
     }
 
@@ -13,11 +14,12 @@ namespace Physalia.ExcelDataExporter
         private const string WARNING_COMMENT =
 @"// ###############################################
 // #### AUTO GENERATED CODE, DO NOT MODIFIE!! ####
-// ###############################################
-";
+// ###############################################";
 
-        public static string Generate(string namespaceName, string className, ClassData classData)
+        public static string Generate(string namespaceName, ClassData classData)
         {
+            string usingBlock = CreateUsingBlock(classData);
+
             var fieldBuilder = new StringBuilder();
 
             bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
@@ -51,11 +53,10 @@ namespace Physalia.ExcelDataExporter
             {
                 scriptText =
 $@"{WARNING_COMMENT}
-using UnityEngine;
 
-namespace {namespaceName}
+{usingBlock}namespace {namespaceName}
 {{
-{tab}public class {className}
+{tab}public class {classData.name}
 {tab}{{
 {fieldBuilder}
 {tab}}}
@@ -66,9 +67,8 @@ namespace {namespaceName}
             {
                 scriptText =
 $@"{WARNING_COMMENT}
-using UnityEngine;
 
-public class {className}
+{usingBlock}public class {classData.name}
 {{
 {fieldBuilder}
 }}
@@ -76,6 +76,28 @@ public class {className}
             }
 
             return scriptText;
+        }
+
+        private static string CreateUsingBlock(ClassData classData)
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < classData.fieldDatas.Count; i++)
+            {
+                FieldData fieldData = classData.fieldDatas[i];
+                string typeName = fieldData.typeName;
+                if (typeName == "Vector2" || typeName == "Vector3" || typeName == "Vector4")
+                {
+                    sb.AppendLine("using UnityEngine;");
+                    break;
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
     }
 }
