@@ -20,24 +20,24 @@ namespace Physalia.ExcelDataExporter.Tests
 
             Assert.AreEqual(2, customTypeTable.Count);
             {
-                ClassData classData = customTypeTable.GetClassData("Vector2");
-                Assert.AreEqual("Vector2", classData.name);
-                Assert.AreEqual(2, classData.fieldDatas.Count);
-                Assert.AreEqual("x", classData.fieldDatas[0].name);
-                Assert.AreEqual("y", classData.fieldDatas[1].name);
-                Assert.AreEqual("int", classData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[1].typeName);
+                TypeData typeData = customTypeTable.GetTypeData("Vector2");
+                Assert.AreEqual("Vector2", typeData.name);
+                Assert.AreEqual(2, typeData.fieldDatas.Count);
+                Assert.AreEqual("x", typeData.fieldDatas[0].name);
+                Assert.AreEqual("y", typeData.fieldDatas[1].name);
+                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
             }
             {
-                ClassData classData = customTypeTable.GetClassData("Vector3");
-                Assert.AreEqual("Vector3", classData.name);
-                Assert.AreEqual(3, classData.fieldDatas.Count);
-                Assert.AreEqual("x", classData.fieldDatas[0].name);
-                Assert.AreEqual("y", classData.fieldDatas[1].name);
-                Assert.AreEqual("z", classData.fieldDatas[2].name);
-                Assert.AreEqual("int", classData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[2].typeName);
+                TypeData typeData = customTypeTable.GetTypeData("Vector3");
+                Assert.AreEqual("Vector3", typeData.name);
+                Assert.AreEqual(3, typeData.fieldDatas.Count);
+                Assert.AreEqual("x", typeData.fieldDatas[0].name);
+                Assert.AreEqual("y", typeData.fieldDatas[1].name);
+                Assert.AreEqual("z", typeData.fieldDatas[2].name);
+                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
             }
         }
 
@@ -55,24 +55,24 @@ namespace Physalia.ExcelDataExporter.Tests
 
             Assert.AreEqual(2, customTypeTable.Count);
             {
-                ClassData classData = customTypeTable.GetClassData("Vector2");
-                Assert.AreEqual("Vector2", classData.name);
-                Assert.AreEqual(2, classData.fieldDatas.Count);
-                Assert.AreEqual("x", classData.fieldDatas[0].name);
-                Assert.AreEqual("y", classData.fieldDatas[1].name);
-                Assert.AreEqual("int", classData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[1].typeName);
+                TypeData typeData = customTypeTable.GetTypeData("Vector2");
+                Assert.AreEqual("Vector2", typeData.name);
+                Assert.AreEqual(2, typeData.fieldDatas.Count);
+                Assert.AreEqual("x", typeData.fieldDatas[0].name);
+                Assert.AreEqual("y", typeData.fieldDatas[1].name);
+                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
             }
             {
-                ClassData classData = customTypeTable.GetClassData("Vector3");
-                Assert.AreEqual("Vector3", classData.name);
-                Assert.AreEqual(3, classData.fieldDatas.Count);
-                Assert.AreEqual("x", classData.fieldDatas[0].name);
-                Assert.AreEqual("y", classData.fieldDatas[1].name);
-                Assert.AreEqual("z", classData.fieldDatas[2].name);
-                Assert.AreEqual("int", classData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[2].typeName);
+                TypeData typeData = customTypeTable.GetTypeData("Vector3");
+                Assert.AreEqual("Vector3", typeData.name);
+                Assert.AreEqual(3, typeData.fieldDatas.Count);
+                Assert.AreEqual("x", typeData.fieldDatas[0].name);
+                Assert.AreEqual("y", typeData.fieldDatas[1].name);
+                Assert.AreEqual("z", typeData.fieldDatas[2].name);
+                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
             }
         }
 
@@ -90,15 +90,15 @@ namespace Physalia.ExcelDataExporter.Tests
 
             Assert.AreEqual(1, customTypeTable.Count);
             {
-                ClassData classData = customTypeTable.GetClassData("Vector3");
-                Assert.AreEqual("Vector3", classData.name);
-                Assert.AreEqual(3, classData.fieldDatas.Count);
-                Assert.AreEqual("x", classData.fieldDatas[0].name);
-                Assert.AreEqual("y", classData.fieldDatas[1].name);
-                Assert.AreEqual("z", classData.fieldDatas[2].name);
-                Assert.AreEqual("int", classData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", classData.fieldDatas[2].typeName);
+                TypeData typeData = customTypeTable.GetTypeData("Vector3");
+                Assert.AreEqual("Vector3", typeData.name);
+                Assert.AreEqual(3, typeData.fieldDatas.Count);
+                Assert.AreEqual("x", typeData.fieldDatas[0].name);
+                Assert.AreEqual("y", typeData.fieldDatas[1].name);
+                Assert.AreEqual("z", typeData.fieldDatas[2].name);
+                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
             }
 
             LogAssert.Expect(LogType.Error, new Regex(".+"));

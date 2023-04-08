@@ -5,17 +5,17 @@ namespace Physalia.ExcelDataExporter
 {
     public class CustomTypeTable
     {
-        private readonly Dictionary<string, ClassData> typeTable = new();
+        private readonly Dictionary<string, TypeData> typeTable = new();
 
         public int Count => typeTable.Count;
-        public IEnumerable<ClassData> CustomTypes => typeTable.Values;
+        public IEnumerable<TypeData> CustomTypes => typeTable.Values;
 
         public static CustomTypeTable Parse(SheetRawData sheetRawData)
         {
             var table = new CustomTypeTable();
 
             var readyForTypeRow = false;
-            ClassData currentClassData = null;
+            TypeData currentTypeData = null;
 
             for (var i = 0; i < sheetRawData.RowCount; i++)
             {
@@ -28,7 +28,7 @@ namespace Physalia.ExcelDataExporter
                     }
 
                     string typeName = row[0];
-                    currentClassData = new ClassData { name = typeName };
+                    currentTypeData = new TypeData { name = typeName };
                     for (var j = 1; j < row.Length; j++)
                     {
                         string fieldName = row[j];
@@ -38,7 +38,7 @@ namespace Physalia.ExcelDataExporter
                         }
 
                         var fieldData = new FieldData { name = fieldName };
-                        currentClassData.fieldDatas.Add(fieldData);
+                        currentTypeData.fieldDatas.Add(fieldData);
                     }
 
                     readyForTypeRow = true;
@@ -46,24 +46,24 @@ namespace Physalia.ExcelDataExporter
                 else
                 {
                     var failed = false;
-                    for (var j = 0; j < currentClassData.fieldDatas.Count; j++)
+                    for (var j = 0; j < currentTypeData.fieldDatas.Count; j++)
                     {
                         string typeName = row[j + 1];
                         if (string.IsNullOrWhiteSpace(typeName))
                         {
-                            Debug.LogError($"Parse type failed! Invalid format. Type: {currentClassData.name}");
+                            Debug.LogError($"Parse type failed! Invalid format. Type: {currentTypeData.name}");
                             failed = true;
                             break;
                         }
-                        currentClassData.fieldDatas[j].typeName = typeName;
+                        currentTypeData.fieldDatas[j].typeName = typeName;
                     }
 
                     if (!failed)
                     {
-                        table.typeTable.Add(currentClassData.name, currentClassData);
+                        table.typeTable.Add(currentTypeData.name, currentTypeData);
                     }
 
-                    currentClassData = null;
+                    currentTypeData = null;
                     readyForTypeRow = false;
                 }
             }
@@ -71,12 +71,12 @@ namespace Physalia.ExcelDataExporter
             return table;
         }
 
-        public ClassData GetClassData(string typeName)
+        public TypeData GetTypeData(string typeName)
         {
-            bool success = typeTable.TryGetValue(typeName, out ClassData classData);
+            bool success = typeTable.TryGetValue(typeName, out TypeData typeData);
             if (success)
             {
-                return classData;
+                return typeData;
             }
 
             return null;
