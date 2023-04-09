@@ -114,7 +114,7 @@ namespace Physalia.ExcelDataExporter
                 rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
             }
 
-            var classData = new TypeData { name = typeName };
+            var typeData = new TypeData { name = typeName };
             var iterators = new Stack<TypeFieldIterator>();
 
             for (var i = 0; i < rawFields.Count; i++)
@@ -125,7 +125,7 @@ namespace Physalia.ExcelDataExporter
                 if (iterators.Count == 0)
                 {
                     FieldData newFieldData = RecordNewField(rawField);
-                    classData.fieldDatas.Add(newFieldData);
+                    typeData.fieldDatas.Add(newFieldData);
 
                     // Start new nested type if necessary
                     if (!newFieldData.typeData.IsSystemType)
@@ -149,12 +149,12 @@ namespace Physalia.ExcelDataExporter
                 throw new InvalidDataException("Invalid Data! The nested type does not finish.");
             }
 
-            if (!classData.Validate())
+            if (!typeData.Validate())
             {
                 throw new InvalidDataException("Invalid Data! Final validation failed. See above errors.");
             }
 
-            return classData;
+            return typeData;
         }
 
         private FieldData RecordNewField(TypeRawField nextField)
