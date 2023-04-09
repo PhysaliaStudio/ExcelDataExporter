@@ -25,8 +25,8 @@ namespace Physalia.ExcelDataExporter.Tests
                 Assert.AreEqual(2, typeData.fieldDatas.Count);
                 Assert.AreEqual("x", typeData.fieldDatas[0].name);
                 Assert.AreEqual("y", typeData.fieldDatas[1].name);
-                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[0].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].TypeName);
             }
             {
                 TypeData typeData = customTypeTable.GetTypeData("Vector3");
@@ -35,9 +35,9 @@ namespace Physalia.ExcelDataExporter.Tests
                 Assert.AreEqual("x", typeData.fieldDatas[0].name);
                 Assert.AreEqual("y", typeData.fieldDatas[1].name);
                 Assert.AreEqual("z", typeData.fieldDatas[2].name);
-                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[0].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].TypeName);
             }
         }
 
@@ -60,8 +60,8 @@ namespace Physalia.ExcelDataExporter.Tests
                 Assert.AreEqual(2, typeData.fieldDatas.Count);
                 Assert.AreEqual("x", typeData.fieldDatas[0].name);
                 Assert.AreEqual("y", typeData.fieldDatas[1].name);
-                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[0].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].TypeName);
             }
             {
                 TypeData typeData = customTypeTable.GetTypeData("Vector3");
@@ -70,9 +70,9 @@ namespace Physalia.ExcelDataExporter.Tests
                 Assert.AreEqual("x", typeData.fieldDatas[0].name);
                 Assert.AreEqual("y", typeData.fieldDatas[1].name);
                 Assert.AreEqual("z", typeData.fieldDatas[2].name);
-                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[0].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].TypeName);
             }
         }
 
@@ -96,9 +96,9 @@ namespace Physalia.ExcelDataExporter.Tests
                 Assert.AreEqual("x", typeData.fieldDatas[0].name);
                 Assert.AreEqual("y", typeData.fieldDatas[1].name);
                 Assert.AreEqual("z", typeData.fieldDatas[2].name);
-                Assert.AreEqual("int", typeData.fieldDatas[0].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[1].typeName);
-                Assert.AreEqual("int", typeData.fieldDatas[2].typeName);
+                Assert.AreEqual("int", typeData.fieldDatas[0].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[1].TypeName);
+                Assert.AreEqual("int", typeData.fieldDatas[2].TypeName);
             }
 
             LogAssert.Expect(LogType.Error, new Regex(".+"));

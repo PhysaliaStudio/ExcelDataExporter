@@ -55,7 +55,8 @@ namespace Physalia.ExcelDataExporter
                             failed = true;
                             break;
                         }
-                        currentTypeData.fieldDatas[j].typeName = typeName;
+
+                        currentTypeData.fieldDatas[j].typeData = TypeUtility.GetDefaultType(typeName);
                     }
 
                     if (!failed)
@@ -75,6 +76,12 @@ namespace Physalia.ExcelDataExporter
         {
             bool success = typeTable.TryGetValue(typeName, out TypeData typeData);
             if (success)
+            {
+                return typeData;
+            }
+
+            typeData = TypeUtility.GetDefaultType(typeName);
+            if (typeData != null)
             {
                 return typeData;
             }
