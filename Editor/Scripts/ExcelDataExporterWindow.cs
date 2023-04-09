@@ -30,6 +30,9 @@ namespace Physalia.ExcelDataExporter
             uiAsset.CloneTree(rootVisualElement);
             rootVisualElement.Bind(serializedObject);
 
+            var showDataFolderbutton = rootVisualElement.Q<Button>("show-data-folder-button");
+            showDataFolderbutton.clicked += ShowDataFolder;
+
             var browseDataFolderbutton = rootVisualElement.Q<Button>("browse-data-folder-button");
             browseDataFolderbutton.clicked += BrowseDataFolder;
 
@@ -43,6 +46,11 @@ namespace Physalia.ExcelDataExporter
             {
                 Reload();
             }
+        }
+
+        private void ShowDataFolder()
+        {
+            EditorUtility.RevealInFinder(gameDatabase.DataPath);
         }
 
         private void BrowseDataFolder()

@@ -5,7 +5,8 @@
         <ui:VisualElement style="flex-grow: 1;">
             <ui:TextField picking-mode="Ignore" readonly="true" binding-path="dataPath" />
         </ui:VisualElement>
-        <ui:Button text="..." display-tooltip-when-elided="true" name="browse-data-folder-button" style="width: 24px;" />
+        <ui:Button text="S" name="show-data-folder-button" style="width: 24px;" />
+        <ui:Button text="..." name="browse-data-folder-button" style="width: 24px;" />
     </ui:VisualElement>
     <ui:Button text="Reload" name="reload-button" style="width: 60px;" />
     <ui:VisualElement style="height: 20px;" />
