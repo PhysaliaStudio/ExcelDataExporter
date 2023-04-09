@@ -18,6 +18,7 @@ namespace Physalia.ExcelDataExporter
             private int memberIndex;
 
             internal FieldData FieldData => fieldData;
+            internal FieldData CurrentMember => typeData.fieldDatas[memberIndex];
             internal bool IsArray => arrayIndex >= 0;
             internal int ArrayIndex => arrayIndex;
 
@@ -291,35 +292,100 @@ namespace Physalia.ExcelDataExporter
 
             writer.WriteStartObject();
 
-            for (var i = 0; i < dataRow.Length; i++)
+            var columnIndex = 0;
+            for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
 
-                writer.WritePropertyName(fieldData.name);
-                if (fieldData.IsArray)
+                // If the field is system type, write it directly
+                if (fieldData.IsSystemType)
                 {
-                    writer.WriteStartArray();
-
-                    string[] splits = dataRow[i].Split(',');
-                    for (var j = 0; j < splits.Length; j++)
-                    {
-                        WriteForBuiltInTypes(writer, fieldData.BaseTypeName, splits[j]);
-                    }
-
-                    writer.WriteEndArray();
+                    WritePropertyForSystemType(writer, fieldData, dataRow[columnIndex]);
+                    columnIndex++;
+                    continue;
                 }
-                else
-                {
-                    string text = dataRow[i];
-                    WriteForBuiltInTypes(writer, fieldData.BaseTypeName, text);
-                }
+
+                // If the field is custom type, write it recursively
+                columnIndex = WritePropertyForCustomType(writer, fieldData, dataRow, columnIndex);
             }
 
             writer.WriteEndObject();
             return sb.ToString();
         }
 
-        private void WriteForBuiltInTypes(JsonTextWriter writer, string typeName, string text)
+        private int WritePropertyForCustomType(JsonTextWriter writer, FieldData fieldData, string[] dataRow, int columnIndex)
+        {
+            writer.WritePropertyName(fieldData.name);
+
+            var iterator = new TypeFieldIterator(fieldData);
+            if (fieldData.IsArray)
+            {
+                writer.WriteStartArray();
+            }
+            writer.WriteStartObject();
+
+            while (true)
+            {
+                FieldData currentMemberFieldData = iterator.CurrentMember;
+                if (currentMemberFieldData.IsSystemType)
+                {
+                    WritePropertyForSystemType(writer, currentMemberFieldData, dataRow[columnIndex]);
+                    columnIndex++;
+                }
+                else
+                {
+                    columnIndex = WritePropertyForCustomType(writer, currentMemberFieldData, dataRow, columnIndex);
+                }
+
+                // Increase array index if not finished
+                if (!iterator.IsAtLastMember())
+                {
+                    iterator.IncreaseMemberIndex();
+                }
+                else if (iterator.IsArray && iterator.ArrayIndex < iterator.FieldData.arraySize - 1)
+                {
+                    writer.WriteEndObject();
+                    iterator.IncreaseArrayIndex();
+                    writer.WriteStartObject();
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            writer.WriteEndObject();
+            if (fieldData.IsArray)
+            {
+                writer.WriteEndArray();
+            }
+
+            return columnIndex;
+        }
+
+        private void WritePropertyForSystemType(JsonTextWriter writer, FieldData fieldData, string dataText)
+        {
+            writer.WritePropertyName(fieldData.name);
+            if (fieldData.IsArray)
+            {
+                writer.WriteStartArray();
+
+                string[] splits = dataText.Split(',');
+                for (var j = 0; j < splits.Length; j++)
+                {
+                    WriteValueForSystemType(writer, fieldData.BaseTypeName, splits[j]);
+                }
+
+                writer.WriteEndArray();
+            }
+            else
+            {
+                string text = dataText;
+                WriteValueForSystemType(writer, fieldData.BaseTypeName, text);
+            }
+        }
+
+        private void WriteValueForSystemType(JsonTextWriter writer, string typeName, string text)
         {
             object value = TypeUtility.ParseValueToSystemType(typeName, text);
             writer.WriteValue(value);
