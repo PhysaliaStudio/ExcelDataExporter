@@ -99,6 +99,22 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
+        public void SelectAll()
+        {
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                dataTables[i].SetSelected(true);
+            }
+        }
+
+        public void DeselectAll()
+        {
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                dataTables[i].SetSelected(false);
+            }
+        }
+
         public void GenerateCodeForCustomTypes()
         {
             // Get CustomTypeTable file

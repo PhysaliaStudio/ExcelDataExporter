@@ -5,6 +5,7 @@
             <ui:VisualElement style="flex-grow: 1;">
                 <ui:TextField picking-mode="Ignore" readonly="true" binding-path="codePath" />
             </ui:VisualElement>
+            <ui:Button text="P" name="ping-code-folder-button" style="width: 24px;" />
             <ui:Button text="..." name="browse-code-folder-button" style="width: 24px;" />
         </ui:VisualElement>
         <ui:VisualElement style="flex-direction: row;">
@@ -12,6 +13,7 @@
             <ui:VisualElement style="flex-grow: 1;">
                 <ui:TextField picking-mode="Ignore" readonly="true" binding-path="exportPath" />
             </ui:VisualElement>
+            <ui:Button text="P" name="ping-export-folder-button" style="width: 24px;" />
             <ui:Button text="..." name="browse-export-folder-button" style="width: 24px;" />
         </ui:VisualElement>
         <ui:VisualElement style="height: 20px;" />
@@ -30,8 +32,8 @@
         <ui:VisualElement style="height: 10px;" />
         <ui:VisualElement style="flex-direction: row; height: 20px;">
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:Button text="Select All" />
-            <ui:Button text="Deselect All" />
+            <ui:Button text="Select All" name="select-all-button" />
+            <ui:Button text="Deselect All" name="deselect-all-button" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:ScrollView style="flex-grow: 1;">
