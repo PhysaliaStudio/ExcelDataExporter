@@ -26,7 +26,11 @@ namespace Physalia.ExcelDataExporter
         private void Switch()
         {
             worksheetData.Switch();
+            Refresh();
+        }
 
+        public void Refresh()
+        {
             bool isSelected = worksheetData.IsSelected;
             button.style.backgroundColor = isSelected ? SelectedColor : StyleKeyword.Null;
         }
@@ -55,6 +59,12 @@ namespace Physalia.ExcelDataExporter
 
             var browseExportFolderbutton = visualElement.Q<Button>("browse-export-folder-button");
             browseExportFolderbutton.clicked += BrowseExportFolder;
+
+            var selectAllButton = visualElement.Q<Button>("select-all-button");
+            selectAllButton.clicked += SelectAll;
+
+            var deselectAllButton = visualElement.Q<Button>("deselect-all-button");
+            deselectAllButton.clicked += DeselectAll;
 
             var namespaceField = visualElement.Q<TextField>("namespace-field");
             namespaceField.RegisterValueChangedCallback(evt => gameDatabase.SaveNamespace());
@@ -103,6 +113,28 @@ namespace Physalia.ExcelDataExporter
             }
 
             gameDatabase.SetExportPath(fullPath);
+        }
+
+        private void SelectAll()
+        {
+            gameDatabase.SelectAll();
+
+            var container = visualElement.Q<VisualElement>("data-table-view");
+            container.Query<DataTableButton>().ForEach(button =>
+            {
+                button.Refresh();
+            });
+        }
+
+        private void DeselectAll()
+        {
+            gameDatabase.DeselectAll();
+
+            var container = visualElement.Q<VisualElement>("data-table-view");
+            container.Query<DataTableButton>().ForEach(button =>
+            {
+                button.Refresh();
+            });
         }
 
         public void SetupList()

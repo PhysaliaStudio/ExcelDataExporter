@@ -32,5 +32,10 @@ namespace Physalia.ExcelDataExporter
         {
             isSelected = !isSelected;
         }
+
+        public void SetSelected(bool value)
+        {
+            isSelected = value;
+        }
     }
 }
