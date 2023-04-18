@@ -172,6 +172,8 @@ namespace Physalia.ExcelDataExporter
 
         public void ExportSelectedTables()
         {
+            var dataExporter = new DataExporterJson();
+
             for (var i = 0; i < dataTables.Count; i++)
             {
                 if (dataTables[i].IsSelected)
@@ -179,7 +181,7 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        string json = sheetParser.ExportDataTableAsJson(sheetRawDatas[j]);
+                        string json = dataExporter.Export(sheetRawDatas[j]);
                         string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
                         SaveFile(path, json);
                     }
