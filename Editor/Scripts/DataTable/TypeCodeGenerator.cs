@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Physalia.ExcelDataExporter
@@ -13,10 +14,11 @@ namespace Physalia.ExcelDataExporter
         {
             string usingBlock = CreateUsingBlock(typeData);
 
-            var fieldBuilder = new StringBuilder();
-
             bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
             string tab = "    ";
+
+            // Data class
+            var fieldBuilder = new StringBuilder();
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
@@ -53,6 +55,7 @@ $@"{WARNING_COMMENT}
 
 {usingBlock}namespace {namespaceName}
 {{
+{tab}[Serializable]
 {tab}public class {typeData.name}
 {tab}{{
 {fieldBuilder}
@@ -65,7 +68,8 @@ $@"{WARNING_COMMENT}
                 scriptText =
 $@"{WARNING_COMMENT}
 
-{usingBlock}public class {typeData.name}
+{usingBlock}[Serializable]
+public class {typeData.name}
 {{
 {fieldBuilder}
 }}
@@ -78,6 +82,8 @@ $@"{WARNING_COMMENT}
         private static string CreateUsingBlock(TypeData typeData)
         {
             var sb = new StringBuilder();
+            sb.AppendLine("using System;");
+
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
@@ -95,6 +101,79 @@ $@"{WARNING_COMMENT}
             }
 
             return sb.ToString();
+        }
+
+        public static string GenerateCodesOfTypeTable(string namespaceName, TypeData typeData)
+        {
+            bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
+            string tab = "    ";
+            string ending = "\r\n";
+
+            List<string> codesOfUsingBlock = GenerateCodeOfUsingBlockOfTableClass(ending);
+
+            // Table class
+            List<string> codesOfClass = GenerateCodesOfTableClass(typeData, tab, ending);
+            if (hasNamespace)
+            {
+                for (var i = 0; i < codesOfClass.Count; i++)
+                {
+                    codesOfClass[i] = tab + codesOfClass[i];
+                }
+            }
+
+            // Build string
+            var sb = new StringBuilder();
+
+            sb.Append(WARNING_COMMENT);
+            sb.Append(ending);
+            sb.Append(ending);
+
+            for (var i = 0; i < codesOfUsingBlock.Count; i++)
+            {
+                sb.Append(codesOfUsingBlock[i]);
+            }
+
+            if (hasNamespace)
+            {
+                sb.Append($"namespace {namespaceName}{ending}");
+                sb.Append($"{{{ending}");
+            }
+
+            for (var i = 0; i < codesOfClass.Count; i++)
+            {
+                sb.Append(codesOfClass[i]);
+            }
+
+            if (hasNamespace)
+            {
+                sb.Append($"}}{ending}");
+            }
+
+            return sb.ToString();
+        }
+
+        private static List<string> GenerateCodeOfUsingBlockOfTableClass(string ending)
+        {
+            var codes = new List<string>
+            {
+                $"using System;{ending}",
+                $"using System.Collections.Generic;{ending}",
+                $"using Physalia.ExcelDataExporter;{ending}",
+                $"{ending}",
+            };
+            return codes;
+        }
+
+        private static List<string> GenerateCodesOfTableClass(TypeData typeData, string tab, string ending)
+        {
+            var codes = new List<string>
+            {
+                $"public class {typeData.name}Table : DataTable<{typeData.name}>{ending}",
+                $"{{{ending}",
+                $"{tab}{ending}",
+                $"}}{ending}"
+            };
+            return codes;
         }
     }
 }
