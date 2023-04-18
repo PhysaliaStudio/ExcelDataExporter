@@ -204,7 +204,7 @@ namespace Physalia.ExcelDataExporter
                     Debug.LogError($"Unknown export format: {exportFormat}");
                     break;
                 case ExportFormat.Asset:
-                    Debug.LogError($"Not implemented yet: {exportFormat}");
+                    ExportSelectedTablesAsAsset();
                     break;
                 case ExportFormat.Json:
                     ExportSelectedTablesAsJson();
@@ -238,11 +238,61 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.Refresh();
         }
 
+        private void ExportSelectedTablesAsAsset()
+        {
+            var dataExporter = new DataExporterScriptableObject();
+
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                if (dataTables[i].IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        WorksheetData worksheetData = dataTables[i];
+                        SheetRawData sheetRawData = sheetRawDatas[j];
+                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+
+                        ScriptableObject scriptableObject = dataExporter.Export(typeData, sheetRawDatas[j]);
+                        string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                        string absolutePath = $"{exportPath}{relativePath}.asset";
+                        string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                        // Save asset
+                        Type tableType = GetTableType(typeData);
+                        UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
+                        if (@object != null)
+                        {
+                            scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                            EditorUtility.CopySerialized(scriptableObject, @object);
+                            EditorUtility.SetDirty(@object);
+                        }
+                        else
+                        {
+                            AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                        }
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
         private TypeData ParseToTypeData(WorksheetData worksheetData, SheetRawData sheetRawData)
         {
             string typeName = worksheetData.Name.EndsWith("Table") ? worksheetData.Name[..^"Table".Length] : worksheetData.Name;
             TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawData);
             return typeData;
+        }
+
+        private static Type GetTableType(TypeData typeData)
+        {
+            Type tableType = ReflectionUtility.FindType((Type type) =>
+            {
+                return type.Name == typeData.name + "Table" && type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
+            });
+            return tableType;
         }
 
         private void SaveFile(string path, string data)
@@ -251,6 +301,16 @@ namespace Physalia.ExcelDataExporter
             using var stream = new FileStream(path, FileMode.Create);
             using var writer = new StreamWriter(stream);
             writer.Write(data);
+        }
+
+        private static string AssetToAbsolutePath(string assetPath)
+        {
+            return Application.dataPath + assetPath["Assets".Length..];
+        }
+
+        private static string AbsoluteToAssetPath(string absolutePath)
+        {
+            return "Assets" + absolutePath[Application.dataPath.Length..];
         }
     }
 }
