@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -74,6 +75,11 @@ namespace Physalia.ExcelDataExporter
 
             var codeGenerateButton = visualElement.Q<Button>("code-generate-button");
             codeGenerateButton.clicked += GenerateCode;
+
+            var exportFormatDropdown = visualElement.Q<DropdownField>("export-format-dropdown");
+            exportFormatDropdown.choices = new List<string>(System.Enum.GetNames(typeof(ExportFormat)));
+            exportFormatDropdown.index = (int)gameDatabase.ExportFormat;
+            exportFormatDropdown.RegisterValueChangedCallback(evt => gameDatabase.SetExportFormat(exportFormatDropdown.index));
 
             var exportButton = visualElement.Q<Button>("export-button");
             exportButton.clicked += Export;

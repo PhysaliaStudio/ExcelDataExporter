@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
+    public enum ExportFormat
+    {
+        Asset = 0,
+        Json = 1,
+    }
+
     public class GameDatabase : ScriptableObject
     {
         public event Action Reloaded;
@@ -18,6 +24,8 @@ namespace Physalia.ExcelDataExporter
         private string exportPath;
         [SerializeField]
         private string namespaceName;
+        [SerializeField]
+        private ExportFormat exportFormat;
 
         public List<WorksheetData> dataTables = new();
 
@@ -27,6 +35,7 @@ namespace Physalia.ExcelDataExporter
         public string DataPath => dataPath;
         public string CodePath => codePath;
         public string ExportPath => exportPath;
+        public ExportFormat ExportFormat => exportFormat;
 
         private void Awake()
         {
@@ -34,6 +43,7 @@ namespace Physalia.ExcelDataExporter
             codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
             exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
             namespaceName = PlayerPrefs.GetString("ExcelDataExporter.NamespaceName", null);
+            exportFormat = (ExportFormat)PlayerPrefs.GetInt("ExcelDataExporter.ExportFormat", 0);
         }
 
         public void SetCodePath(string path)
@@ -53,9 +63,15 @@ namespace Physalia.ExcelDataExporter
             PlayerPrefs.SetString("ExcelDataExporter.NamespaceName", namespaceName);
         }
 
+        public void SetExportFormat(int index)
+        {
+            exportFormat = (ExportFormat)index;
+            PlayerPrefs.SetInt("ExcelDataExporter.ExportFormat", index);
+        }
+
         public void Load(string path)
         {
-            this.dataPath = path;
+            dataPath = path;
             PlayerPrefs.SetString("ExcelDataExporter.DataPath", path);
 
             CollectAllWorksheetDatas();

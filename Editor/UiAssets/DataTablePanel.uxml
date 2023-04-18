@@ -28,6 +28,8 @@
         <ui:VisualElement style="height: 20px;" />
         <ui:VisualElement style="align-items: center;">
             <ui:Button text="Export" name="export-button" style="height: 40px; max-width: 200px; font-size: 18px; -unity-font-style: bold; width: 100%;" />
+            <ui:VisualElement style="width: 100%; height: 10px;" />
+            <ui:DropdownField index="-1" name="export-format-dropdown" style="width: 75px; height: 18px;" />
         </ui:VisualElement>
         <ui:VisualElement style="height: 10px;" />
         <ui:VisualElement style="flex-direction: row; height: 20px;">
