@@ -156,8 +156,6 @@ public class {typeData.name}
         {
             var codes = new List<string>
             {
-                $"using System;{ending}",
-                $"using System.Collections.Generic;{ending}",
                 $"using Physalia.ExcelDataExporter;{ending}",
                 $"{ending}",
             };
