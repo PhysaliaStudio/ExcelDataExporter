@@ -198,6 +198,22 @@ namespace Physalia.ExcelDataExporter
 
         public void ExportSelectedTables()
         {
+            switch (exportFormat)
+            {
+                default:
+                    Debug.LogError($"Unknown export format: {exportFormat}");
+                    break;
+                case ExportFormat.Asset:
+                    Debug.LogError($"Not implemented yet: {exportFormat}");
+                    break;
+                case ExportFormat.Json:
+                    ExportSelectedTablesAsJson();
+                    break;
+            }
+        }
+
+        private void ExportSelectedTablesAsJson()
+        {
             var dataExporter = new DataExporterJson();
 
             for (var i = 0; i < dataTables.Count; i++)
