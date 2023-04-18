@@ -6,11 +6,11 @@ namespace Physalia.ExcelDataExporter
 {
     public class DataExporterJson
     {
-        public string Export(SheetRawData sheetRawData)
+        public string Export(string typeName, SheetRawData sheetRawData)
         {
             var sb = new StringBuilder();
 
-            TypeData typeData = new SheetParser().ExportTypeData("", sheetRawData);  // TODO: class name
+            TypeData typeData = new SheetParser().ExportTypeData(typeName, sheetRawData);
             for (var i = 2; i < sheetRawData.RowCount; i++)
             {
                 string json = ExportDataRowAsJson(typeData, sheetRawData.GetRow(i));

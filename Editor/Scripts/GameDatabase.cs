@@ -181,7 +181,7 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        string json = dataExporter.Export(sheetRawDatas[j]);
+                        string json = dataExporter.Export(dataTables[i].Name, sheetRawDatas[j]);
                         string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
                         SaveFile(path, json);
                     }
