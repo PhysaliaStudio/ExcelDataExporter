@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
+    public enum ExportFormat
+    {
+        Asset = 0,
+        Json = 1,
+    }
+
     public class GameDatabase : ScriptableObject
     {
         public event Action Reloaded;
@@ -18,6 +24,8 @@ namespace Physalia.ExcelDataExporter
         private string exportPath;
         [SerializeField]
         private string namespaceName;
+        [SerializeField]
+        private ExportFormat exportFormat;
 
         public List<WorksheetData> dataTables = new();
 
@@ -27,6 +35,7 @@ namespace Physalia.ExcelDataExporter
         public string DataPath => dataPath;
         public string CodePath => codePath;
         public string ExportPath => exportPath;
+        public ExportFormat ExportFormat => exportFormat;
 
         private void Awake()
         {
@@ -34,6 +43,7 @@ namespace Physalia.ExcelDataExporter
             codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
             exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
             namespaceName = PlayerPrefs.GetString("ExcelDataExporter.NamespaceName", null);
+            exportFormat = (ExportFormat)PlayerPrefs.GetInt("ExcelDataExporter.ExportFormat", 0);
         }
 
         public void SetCodePath(string path)
@@ -53,9 +63,15 @@ namespace Physalia.ExcelDataExporter
             PlayerPrefs.SetString("ExcelDataExporter.NamespaceName", namespaceName);
         }
 
+        public void SetExportFormat(int index)
+        {
+            exportFormat = (ExportFormat)index;
+            PlayerPrefs.SetInt("ExcelDataExporter.ExportFormat", index);
+        }
+
         public void Load(string path)
         {
-            this.dataPath = path;
+            dataPath = path;
             PlayerPrefs.SetString("ExcelDataExporter.DataPath", path);
 
             CollectAllWorksheetDatas();
@@ -155,13 +171,23 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        string typeName = dataTables[i].Name.EndsWith("Table") ? dataTables[i].Name[..^"Table".Length] + "Data" : dataTables[i].Name + "Data";
-                        TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawDatas[j]);
-                        string scriptText = TypeCodeGenerator.Generate(namespaceName, typeData);
+                        WorksheetData worksheetData = dataTables[i];
+                        SheetRawData sheetRawData = sheetRawDatas[j];
+                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
 
-                        string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder[..^"Table".Length] + "Data" : dataTables[i].NameWithFolder + "Data";
-                        string path = $"{codePath}{relativePath}.cs";
-                        SaveFile(path, scriptText);
+                        {
+                            string scriptText = TypeCodeGenerator.Generate(namespaceName, typeData);
+                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
+                            string path = $"{codePath}{relativePath}.cs";
+                            SaveFile(path, scriptText);
+                        }
+
+                        {
+                            string scriptText = TypeCodeGenerator.GenerateCodesOfTypeTable(namespaceName, typeData);
+                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                            string path = $"{codePath}{relativePath}.cs";
+                            SaveFile(path, scriptText);
+                        }
                     }
                 }
             }
@@ -172,6 +198,24 @@ namespace Physalia.ExcelDataExporter
 
         public void ExportSelectedTables()
         {
+            switch (exportFormat)
+            {
+                default:
+                    Debug.LogError($"Unknown export format: {exportFormat}");
+                    break;
+                case ExportFormat.Asset:
+                    ExportSelectedTablesAsAsset();
+                    break;
+                case ExportFormat.Json:
+                    ExportSelectedTablesAsJson();
+                    break;
+            }
+        }
+
+        private void ExportSelectedTablesAsJson()
+        {
+            var dataExporter = new DataExporterJson();
+
             for (var i = 0; i < dataTables.Count; i++)
             {
                 if (dataTables[i].IsSelected)
@@ -179,7 +223,11 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        string json = sheetParser.ExportDataTableAsJson(sheetRawDatas[j]);
+                        WorksheetData worksheetData = dataTables[i];
+                        SheetRawData sheetRawData = sheetRawDatas[j];
+                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+
+                        string json = dataExporter.Export(typeData, sheetRawDatas[j]);
                         string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
                         SaveFile(path, json);
                     }
@@ -190,12 +238,79 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.Refresh();
         }
 
+        private void ExportSelectedTablesAsAsset()
+        {
+            var dataExporter = new DataExporterScriptableObject();
+
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                if (dataTables[i].IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        WorksheetData worksheetData = dataTables[i];
+                        SheetRawData sheetRawData = sheetRawDatas[j];
+                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+
+                        ScriptableObject scriptableObject = dataExporter.Export(typeData, sheetRawDatas[j]);
+                        string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                        string absolutePath = $"{exportPath}{relativePath}.asset";
+                        string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                        // Save asset
+                        Type tableType = GetTableType(typeData);
+                        UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
+                        if (@object != null)
+                        {
+                            scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                            EditorUtility.CopySerialized(scriptableObject, @object);
+                            EditorUtility.SetDirty(@object);
+                        }
+                        else
+                        {
+                            AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                        }
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+
+        private TypeData ParseToTypeData(WorksheetData worksheetData, SheetRawData sheetRawData)
+        {
+            string typeName = worksheetData.Name.EndsWith("Table") ? worksheetData.Name[..^"Table".Length] : worksheetData.Name;
+            TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawData);
+            return typeData;
+        }
+
+        private static Type GetTableType(TypeData typeData)
+        {
+            Type tableType = ReflectionUtility.FindType((Type type) =>
+            {
+                return type.Name == typeData.name + "Table" && type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
+            });
+            return tableType;
+        }
+
         private void SaveFile(string path, string data)
         {
             _ = Directory.CreateDirectory(Path.GetDirectoryName(path));
             using var stream = new FileStream(path, FileMode.Create);
             using var writer = new StreamWriter(stream);
             writer.Write(data);
+        }
+
+        private static string AssetToAbsolutePath(string assetPath)
+        {
+            return Application.dataPath + assetPath["Assets".Length..];
+        }
+
+        private static string AbsoluteToAssetPath(string absolutePath)
+        {
+            return "Assets" + absolutePath[Application.dataPath.Length..];
         }
     }
 }

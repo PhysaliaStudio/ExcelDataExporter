@@ -1,7 +1,9 @@
 {
     "name": "Physalia.ExcelDataExporter.Editor",
     "rootNamespace": "Physalia.ExcelDataExporter",
-    "references": [],
+    "references": [
+        "Physalia.ExcelDataExporter"
+    ],
     "includePlatforms": [
         "Editor"
     ],

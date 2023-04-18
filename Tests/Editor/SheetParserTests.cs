@@ -76,9 +76,10 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "42", "abc", "true");
 
             var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             string expected = "{\"field1\":42,\"field2\":\"abc\",\"field3\":true}\n";
-            string actual = parser.ExportDataTableAsJson(sheetRawData);
+            string actual = new DataExporterJson().Export(typeData, sheetRawData);
             Assert.AreEqual(expected, actual);
         }
 
@@ -91,9 +92,10 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "1,2,3", "true,false,true");
 
             var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             string expected = "{\"field1\":[1,2,3],\"field2\":[true,false,true]}\n";
-            string actual = parser.ExportDataTableAsJson(sheetRawData);
+            string actual = new DataExporterJson().Export(typeData, sheetRawData);
             Assert.AreEqual(expected, actual);
         }
 
@@ -106,9 +108,10 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "1", "2", "3", "4", "5");
 
             var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             string expected = "{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
-            string actual = parser.ExportDataTableAsJson(sheetRawData);
+            string actual = new DataExporterJson().Export(typeData, sheetRawData);
             Assert.AreEqual(expected, actual);
         }
 
@@ -121,9 +124,10 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "1", "2", "3", "4", "5", "6", "7");
 
             var parser = new SheetParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             string expected = "{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
-            string actual = parser.ExportDataTableAsJson(sheetRawData);
+            string actual = new DataExporterJson().Export(typeData, sheetRawData);
             Assert.AreEqual(expected, actual);
         }
     }
