@@ -7,7 +7,7 @@ namespace Physalia.ExcelDataExporter
     {
         private const string WARNING_COMMENT =
 @"// ###############################################
-// #### AUTO GENERATED CODE, DO NOT MODIFIE!! ####
+// #### AUTO GENERATED CODE, DO NOT MODIFY!! ####
 // ###############################################";
 
         public static string Generate(string namespaceName, TypeData typeData)
