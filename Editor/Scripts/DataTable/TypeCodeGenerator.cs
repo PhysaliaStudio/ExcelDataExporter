@@ -5,84 +5,42 @@ namespace Physalia.ExcelDataExporter
 {
     public static class TypeCodeGenerator
     {
-        private const string WARNING_COMMENT =
-@"// ###############################################
-// #### AUTO GENERATED CODE, DO NOT MODIFY!! #####
-// ###############################################";
-
-        public static string Generate(string namespaceName, TypeData typeData)
+        public static string GenerateTypeClass(string namespaceName, TypeData typeData)
         {
-            string usingBlock = CreateUsingBlock(typeData);
-
             bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
             string tab = "    ";
+            string ending = "\r\n";
+
+            List<string> headerBlock = GenerateHeaderBlock(ending);
+            List<string> usingBlock = GenerateUsingBlockOfClass(typeData, ending);
 
             // Data class
-            var fieldBuilder = new StringBuilder();
-            for (var i = 0; i < typeData.fieldDatas.Count; i++)
-            {
-                FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.name;
-                string fieldTypeName = fieldData.typeData.name;
-                if (fieldData.IsArray)
-                {
-                    fieldTypeName += "[]";
-                }
-
-                if (hasNamespace)
-                {
-                    fieldBuilder.Append(tab);
-                    fieldBuilder.Append(tab);
-                }
-                else
-                {
-                    fieldBuilder.Append(tab);
-                }
-
-                fieldBuilder.Append($"public {fieldTypeName} {fieldName};");
-
-                if (i != typeData.fieldDatas.Count - 1)
-                {
-                    fieldBuilder.AppendLine();
-                }
-            }
-
-            string scriptText;
+            List<string> typeBlock = GenerateTypeBlockOfClass(typeData, tab, ending);
             if (hasNamespace)
             {
-                scriptText =
-$@"{WARNING_COMMENT}
-
-{usingBlock}namespace {namespaceName}
-{{
-{tab}[Serializable]
-{tab}public class {typeData.name}
-{tab}{{
-{fieldBuilder}
-{tab}}}
-}}
-";
-            }
-            else
-            {
-                scriptText =
-$@"{WARNING_COMMENT}
-
-{usingBlock}[Serializable]
-public class {typeData.name}
-{{
-{fieldBuilder}
-}}
-";
+                for (var i = 0; i < typeBlock.Count; i++)
+                {
+                    typeBlock[i] = tab + typeBlock[i];
+                }
             }
 
-            return scriptText;
+            // Build string
+            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, namespaceName);
         }
 
-        private static string CreateUsingBlock(TypeData typeData)
+        private static List<string> GenerateHeaderBlock(string ending)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("using System;");
+            return new List<string>()
+            {
+                $"// ###############################################{ending}",
+                $"// #### AUTO GENERATED CODE, DO NOT MODIFY!! #####{ending}",
+                $"// ###############################################{ending}"
+            };
+        }
+
+        private static List<string> GenerateUsingBlockOfClass(TypeData typeData, string ending)
+        {
+            var codes = new List<string> { $"using System;{ending}" };
 
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
@@ -90,69 +48,62 @@ public class {typeData.name}
                 string typeName = fieldData.typeData.name;
                 if (TypeUtility.IsUnityType(typeName))
                 {
-                    sb.AppendLine("using UnityEngine;");
+                    codes.Add($"using UnityEngine;{ending}");
                     break;
                 }
             }
 
-            if (sb.Length > 0)
-            {
-                sb.AppendLine();
-            }
+            codes.Add(ending);
 
-            return sb.ToString();
+            return codes;
         }
 
-        public static string GenerateCodesOfTypeTable(string namespaceName, TypeData typeData)
+        private static List<string> GenerateTypeBlockOfClass(TypeData typeData, string tab, string ending)
+        {
+            var codes = new List<string>
+            {
+                $"[Serializable]{ending}",
+                $"public class {typeData.name}{ending}",
+                $"{{{ending}",
+            };
+
+            for (var i = 0; i < typeData.fieldDatas.Count; i++)
+            {
+                FieldData fieldData = typeData.fieldDatas[i];
+                string fieldName = fieldData.name;
+                string fieldTypeName = fieldData.TypeName;
+                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+            }
+
+            codes.Add($"}}{ending}");
+
+            return codes;
+        }
+
+        public static string GenerateTypeTableClass(string namespaceName, TypeData typeData)
         {
             bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
             string tab = "    ";
             string ending = "\r\n";
 
-            List<string> codesOfUsingBlock = GenerateCodeOfUsingBlockOfTableClass(ending);
+            List<string> headerBlock = GenerateHeaderBlock(ending);
+            List<string> usingBlock = GenerateUsingBlockOfTableClass(ending);
 
             // Table class
-            List<string> codesOfClass = GenerateCodesOfTableClass(typeData, tab, ending);
+            List<string> typeBlock = GenerateTypeBlockOfTableClass(typeData, tab, ending);
             if (hasNamespace)
             {
-                for (var i = 0; i < codesOfClass.Count; i++)
+                for (var i = 0; i < typeBlock.Count; i++)
                 {
-                    codesOfClass[i] = tab + codesOfClass[i];
+                    typeBlock[i] = tab + typeBlock[i];
                 }
             }
 
             // Build string
-            var sb = new StringBuilder();
-
-            sb.Append(WARNING_COMMENT);
-            sb.Append(ending);
-            sb.Append(ending);
-
-            for (var i = 0; i < codesOfUsingBlock.Count; i++)
-            {
-                sb.Append(codesOfUsingBlock[i]);
-            }
-
-            if (hasNamespace)
-            {
-                sb.Append($"namespace {namespaceName}{ending}");
-                sb.Append($"{{{ending}");
-            }
-
-            for (var i = 0; i < codesOfClass.Count; i++)
-            {
-                sb.Append(codesOfClass[i]);
-            }
-
-            if (hasNamespace)
-            {
-                sb.Append($"}}{ending}");
-            }
-
-            return sb.ToString();
+            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, namespaceName);
         }
 
-        private static List<string> GenerateCodeOfUsingBlockOfTableClass(string ending)
+        private static List<string> GenerateUsingBlockOfTableClass(string ending)
         {
             var codes = new List<string>
             {
@@ -162,7 +113,7 @@ public class {typeData.name}
             return codes;
         }
 
-        private static List<string> GenerateCodesOfTableClass(TypeData typeData, string tab, string ending)
+        private static List<string> GenerateTypeBlockOfTableClass(TypeData typeData, string tab, string ending)
         {
             var codes = new List<string>
             {
@@ -172,6 +123,43 @@ public class {typeData.name}
                 $"}}{ending}"
             };
             return codes;
+        }
+
+        private static string BuildScriptText(List<string> header, List<string> usingBlock, List<string> typeBlock,
+            string ending, string namespaceName = null)
+        {
+            bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
+
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < header.Count; i++)
+            {
+                sb.Append(header[i]);
+            }
+            sb.Append(ending);
+
+            for (var i = 0; i < usingBlock.Count; i++)
+            {
+                sb.Append(usingBlock[i]);
+            }
+
+            if (hasNamespace)
+            {
+                sb.Append($"namespace {namespaceName}{ending}");
+                sb.Append($"{{{ending}");
+            }
+
+            for (var i = 0; i < typeBlock.Count; i++)
+            {
+                sb.Append(typeBlock[i]);
+            }
+
+            if (hasNamespace)
+            {
+                sb.Append($"}}{ending}");
+            }
+
+            return sb.ToString();
         }
     }
 }

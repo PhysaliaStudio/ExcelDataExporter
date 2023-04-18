@@ -154,7 +154,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
-                string scriptText = TypeCodeGenerator.Generate(namespaceName, customType);
+                string scriptText = TypeCodeGenerator.GenerateTypeClass(namespaceName, customType);
                 string path = $"{codePath}/CustomTypes/{customType.name}.cs";
                 SaveFile(path, scriptText);
             }
@@ -176,14 +176,14 @@ namespace Physalia.ExcelDataExporter
                         TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
 
                         {
-                            string scriptText = TypeCodeGenerator.Generate(namespaceName, typeData);
+                            string scriptText = TypeCodeGenerator.GenerateTypeClass(namespaceName, typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
                         }
 
                         {
-                            string scriptText = TypeCodeGenerator.GenerateCodesOfTypeTable(namespaceName, typeData);
+                            string scriptText = TypeCodeGenerator.GenerateTypeTableClass(namespaceName, typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
