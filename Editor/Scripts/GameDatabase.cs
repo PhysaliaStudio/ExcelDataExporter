@@ -155,13 +155,22 @@ namespace Physalia.ExcelDataExporter
                     List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        string typeName = dataTables[i].Name.EndsWith("Table") ? dataTables[i].Name[..^"Table".Length] + "Data" : dataTables[i].Name + "Data";
+                        string typeName = dataTables[i].Name.EndsWith("Table") ? dataTables[i].Name[..^"Table".Length] : dataTables[i].Name;
                         TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawDatas[j]);
-                        string scriptText = TypeCodeGenerator.Generate(namespaceName, typeData);
 
-                        string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder[..^"Table".Length] + "Data" : dataTables[i].NameWithFolder + "Data";
-                        string path = $"{codePath}{relativePath}.cs";
-                        SaveFile(path, scriptText);
+                        {
+                            string scriptText = TypeCodeGenerator.Generate(namespaceName, typeData);
+                            string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder[..^"Table".Length] : dataTables[i].NameWithFolder;
+                            string path = $"{codePath}{relativePath}.cs";
+                            SaveFile(path, scriptText);
+                        }
+
+                        {
+                            string scriptText = TypeCodeGenerator.GenerateCodesOfTypeTable(namespaceName, typeData);
+                            string relativePath = dataTables[i].NameWithFolder.EndsWith("Table") ? dataTables[i].NameWithFolder : dataTables[i].NameWithFolder + "Table";
+                            string path = $"{codePath}{relativePath}.cs";
+                            SaveFile(path, scriptText);
+                        }
                     }
                 }
             }
