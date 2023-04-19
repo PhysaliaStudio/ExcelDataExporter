@@ -40,7 +40,10 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlockOfClass(TypeData typeData, string ending)
         {
-            var codes = new List<string> { $"using System;{ending}" };
+            var codes = new List<string> {
+                $"using System;{ending}",
+                $"using Physalia.ExcelDataExporter;{ending}"
+            };
 
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
@@ -63,16 +66,28 @@ namespace Physalia.ExcelDataExporter
             var codes = new List<string>
             {
                 $"[Serializable]{ending}",
-                $"public class {typeData.name}{ending}",
+                $"public class {typeData.name} : IHasId{ending}",
                 $"{{{ending}",
             };
 
+            // Write fields
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.name;
+                string fieldName = fieldData.NameForField;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+            }
+
+            codes.Add(ending);
+
+            // Write properties
+            for (var i = 0; i < typeData.fieldDatas.Count; i++)
+            {
+                FieldData fieldData = typeData.fieldDatas[i];
+                string propertyName = fieldData.NameForProperty;
+                string fieldTypeName = fieldData.TypeName;
+                codes.Add($"{tab}public {fieldTypeName} {propertyName} {{ get; }}{ending}");
             }
 
             codes.Add($"}}{ending}");
