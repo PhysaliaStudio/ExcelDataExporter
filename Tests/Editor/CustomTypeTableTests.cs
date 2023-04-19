@@ -111,5 +111,30 @@ namespace Physalia.ExcelDataExporter.Tests
 
             LogAssert.Expect(LogType.Error, new Regex(".+"));
         }
+
+        [Test]
+        public void ParseToTypeTable_ContainsEnum()
+        {
+            var sheetRawData = new SheetRawData(3, 4);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "enum EnemyType", "Normal", "Elite", "Boss");
+            sheetRawData.SetRow(2, "", "0", "1", "2");
+
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
+
+            Assert.AreEqual(1, customTypeTable.Count);
+            {
+                TypeData typeData = customTypeTable.GetTypeData("EnemyType");
+                Assert.AreEqual(TypeData.Define.Enum, typeData.define);
+                Assert.AreEqual("EnemyType", typeData.name);
+                Assert.AreEqual(3, typeData.fieldDatas.Count);
+                Assert.AreEqual("Normal", typeData.fieldDatas[0].name);
+                Assert.AreEqual("Elite", typeData.fieldDatas[1].name);
+                Assert.AreEqual("Boss", typeData.fieldDatas[2].name);
+                Assert.AreEqual(0, typeData.fieldDatas[0].enumValue);
+                Assert.AreEqual(1, typeData.fieldDatas[1].enumValue);
+                Assert.AreEqual(2, typeData.fieldDatas[2].enumValue);
+            }
+        }
     }
 }

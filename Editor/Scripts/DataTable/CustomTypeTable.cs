@@ -33,7 +33,16 @@ namespace Physalia.ExcelDataExporter
                 }
                 else
                 {
-                    bool success = ParseTypeRow(currentTypeData, row);
+                    bool success;
+                    if (currentTypeData.define != TypeData.Define.Enum)
+                    {
+                        success = ParseTypeRow(currentTypeData, row);
+                    }
+                    else
+                    {
+                        success = ParseEnumValueRow(currentTypeData, row);
+                    }
+
                     if (success)
                     {
                         currentTypeData.ParseMetadata(metadata);
@@ -111,6 +120,30 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 typeDataToContinued.fieldDatas[i].typeData = TypeUtility.GetDefaultType(typeName);
+            }
+
+            return true;
+        }
+
+        private static bool ParseEnumValueRow(TypeData typeDataToContinued, string[] row)
+        {
+            for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
+            {
+                string value = row[i + 1];
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Debug.LogError($"Parse enum failed! Empty value. Type: {typeDataToContinued.name}");
+                    return false;
+                }
+
+                bool success = int.TryParse(value, out int enumValue);
+                if (!success)
+                {
+                    Debug.LogError($"Parse enum failed! Not int value. Type: {typeDataToContinued.name}");
+                    return false;
+                }
+
+                typeDataToContinued.fieldDatas[i].enumValue = enumValue;
             }
 
             return true;

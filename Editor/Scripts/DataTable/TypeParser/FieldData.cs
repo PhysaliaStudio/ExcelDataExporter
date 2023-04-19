@@ -6,6 +6,7 @@ namespace Physalia.ExcelDataExporter
         public TypeData typeData;
         public bool isArray;
         public int arraySize = -1;
+        public int enumValue;
 
         public bool IsArray => isArray;
         public bool IsSystemType => typeData.IsSystemType;
