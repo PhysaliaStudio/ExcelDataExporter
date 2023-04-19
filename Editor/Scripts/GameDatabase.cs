@@ -43,7 +43,6 @@ namespace Physalia.ExcelDataExporter
             dataPath = PlayerPrefs.GetString("ExcelDataExporter.DataPath", null);
             codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
             exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
-            namespaceName = PlayerPrefs.GetString("ExcelDataExporter.NamespaceName", null);
             exportFormat = (ExportFormat)PlayerPrefs.GetInt("ExcelDataExporter.ExportFormat", 0);
         }
 
@@ -57,11 +56,6 @@ namespace Physalia.ExcelDataExporter
         {
             exportPath = path;
             PlayerPrefs.SetString("ExcelDataExporter.ExportPath", path);
-        }
-
-        public void SaveNamespace()
-        {
-            PlayerPrefs.SetString("ExcelDataExporter.NamespaceName", namespaceName);
         }
 
         public void SetExportFormat(int index)
@@ -155,7 +149,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
-                string scriptText = TypeCodeGenerator.GenerateTypeClass(namespaceName, customType);
+                string scriptText = TypeCodeGenerator.GenerateTypeClass(customType);
                 string path = $"{codePath}/CustomTypes/{customType.name}.cs";
                 SaveFile(path, scriptText);
             }
@@ -185,14 +179,14 @@ namespace Physalia.ExcelDataExporter
                         }
 
                         {
-                            string scriptText = TypeCodeGenerator.GenerateTypeClass(namespaceName, typeData);
+                            string scriptText = TypeCodeGenerator.GenerateTypeClass(typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
                         }
 
                         {
-                            string scriptText = TypeCodeGenerator.GenerateTypeTableClass(namespaceName, typeData);
+                            string scriptText = TypeCodeGenerator.GenerateTypeTableClass(typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
@@ -320,7 +314,9 @@ namespace Physalia.ExcelDataExporter
         {
             Type tableType = ReflectionUtility.FindType((Type type) =>
             {
-                return type.Name == typeData.name + "Table" && type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
+                return type.Namespace == typeData.namespaceName &&
+                    type.Name == typeData.name + "Table" &&
+                    type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
             });
             return tableType;
         }

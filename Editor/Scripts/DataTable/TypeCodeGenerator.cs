@@ -5,9 +5,9 @@ namespace Physalia.ExcelDataExporter
 {
     public static class TypeCodeGenerator
     {
-        public static string GenerateTypeClass(string namespaceName, TypeData typeData)
+        public static string GenerateTypeClass(TypeData typeData)
         {
-            bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
+            bool hasNamespace = !string.IsNullOrEmpty(typeData.namespaceName);
             string tab = "    ";
             string ending = "\r\n";
 
@@ -25,7 +25,7 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Build string
-            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, namespaceName);
+            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, typeData.namespaceName);
         }
 
         private static List<string> GenerateHeaderBlock(string ending)
@@ -95,9 +95,9 @@ namespace Physalia.ExcelDataExporter
             return codes;
         }
 
-        public static string GenerateTypeTableClass(string namespaceName, TypeData typeData)
+        public static string GenerateTypeTableClass(TypeData typeData)
         {
-            bool hasNamespace = !string.IsNullOrEmpty(namespaceName);
+            bool hasNamespace = !string.IsNullOrEmpty(typeData.namespaceName);
             string tab = "    ";
             string ending = "\r\n";
 
@@ -115,7 +115,7 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Build string
-            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, namespaceName);
+            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, typeData.namespaceName);
         }
 
         private static List<string> GenerateUsingBlockOfTableClass(string ending)

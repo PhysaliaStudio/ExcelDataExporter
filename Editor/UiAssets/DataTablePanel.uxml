@@ -18,10 +18,6 @@
         </ui:VisualElement>
         <ui:VisualElement style="height: 20px;" />
         <ui:VisualElement style="flex-direction: row;">
-            <ui:Label text="Namespace:" style="width: 80px; -unity-text-align: middle-left;" />
-            <ui:TextField picking-mode="Ignore" binding-path="namespaceName" name="namespace-field" style="flex-grow: 1;" />
-        </ui:VisualElement>
-        <ui:VisualElement style="flex-direction: row;">
             <ui:Button text="Generate Code&#10;(Custom Types)" name="code-generate-custom-type-button" style="width: 120px; height: 40px;" />
             <ui:Button text="Generate Code&#10;(Data)" name="code-generate-button" style="width: 120px; height: 40px;" />
         </ui:VisualElement>
