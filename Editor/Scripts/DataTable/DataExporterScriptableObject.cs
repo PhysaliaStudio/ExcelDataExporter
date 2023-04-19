@@ -59,10 +59,10 @@ namespace Physalia.ExcelDataExporter
 
         private void WritePropertyForSystemType(SerializedProperty element, FieldData fieldData, string dataText)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPublicField);
+            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPrivateField);
             if (fieldProperty == null)
             {
-                Debug.LogError($"Field '{fieldData.NameForPublicField}' not found!");
+                Debug.LogError($"Field '{fieldData.NameForPrivateField}' not found!");
                 return;
             }
 
@@ -118,10 +118,10 @@ namespace Physalia.ExcelDataExporter
 
         private int WritePropertyForCustomType(SerializedProperty element, FieldData fieldData, string[] dataRow, int columnIndex)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPublicField);
+            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPrivateField);
             if (fieldProperty == null)
             {
-                Debug.LogError($"Field '{fieldData.NameForPublicField}' not found!");
+                Debug.LogError($"Field '{fieldData.NameForPrivateField}' not found!");
                 return columnIndex;
             }
 

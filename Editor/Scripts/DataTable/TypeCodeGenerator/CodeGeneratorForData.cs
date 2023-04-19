@@ -29,21 +29,10 @@ namespace Physalia.ExcelDataExporter
         {
             var codes = new List<string> {
                 $"using System;{ending}",
-                $"using Physalia.ExcelDataExporter;{ending}"
+                $"using Physalia.ExcelDataExporter;{ending}",
+                $"using UnityEngine;{ending}",
+                ending,
             };
-
-            for (var i = 0; i < typeData.fieldDatas.Count; i++)
-            {
-                FieldData fieldData = typeData.fieldDatas[i];
-                string typeName = fieldData.typeData.name;
-                if (TypeUtility.IsUnityType(typeName))
-                {
-                    codes.Add($"using UnityEngine;{ending}");
-                    break;
-                }
-            }
-
-            codes.Add(ending);
 
             return codes;
         }
@@ -61,9 +50,10 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.NameForPublicField;
+                string fieldName = fieldData.NameForPrivateField;
                 string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                codes.Add($"{tab}[SerializeField]{ending}");
+                codes.Add($"{tab}private {fieldTypeName} {fieldName};{ending}");
             }
 
             codes.Add(ending);
