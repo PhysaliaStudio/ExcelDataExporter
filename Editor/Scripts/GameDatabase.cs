@@ -149,7 +149,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
-                string scriptText = TypeCodeGenerator.GenerateTypeClass(customType);
+                string scriptText = TypeCodeGenerator.GeneratePoco(customType);
                 string path = $"{codePath}/CustomTypes/{customType.name}.cs";
                 SaveFile(path, scriptText);
             }

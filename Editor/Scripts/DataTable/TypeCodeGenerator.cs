@@ -5,6 +5,27 @@ namespace Physalia.ExcelDataExporter
 {
     public static class TypeCodeGenerator
     {
+        public static string GeneratePoco(TypeData typeData)
+        {
+            bool hasNamespace = !string.IsNullOrEmpty(typeData.namespaceName);
+            string tab = "    ";
+            string ending = "\r\n";
+
+            List<string> headerBlock = GenerateHeaderBlock(ending);
+            List<string> usingBlock = GenerateUsingBlockOfPoco(typeData, ending);
+            List<string> typeBlock = GenerateTypeBlockOfPoco(typeData, tab, ending);
+            if (hasNamespace)
+            {
+                for (var i = 0; i < typeBlock.Count; i++)
+                {
+                    typeBlock[i] = tab + typeBlock[i];
+                }
+            }
+
+            // Build string
+            return BuildScriptText(headerBlock, usingBlock, typeBlock, ending, typeData.namespaceName);
+        }
+
         public static string GenerateTypeClass(TypeData typeData)
         {
             bool hasNamespace = !string.IsNullOrEmpty(typeData.namespaceName);
@@ -38,6 +59,28 @@ namespace Physalia.ExcelDataExporter
             };
         }
 
+        private static List<string> GenerateUsingBlockOfPoco(TypeData typeData, string ending)
+        {
+            var codes = new List<string> {
+                $"using System;{ending}",
+            };
+
+            for (var i = 0; i < typeData.fieldDatas.Count; i++)
+            {
+                FieldData fieldData = typeData.fieldDatas[i];
+                string typeName = fieldData.typeData.name;
+                if (TypeUtility.IsUnityType(typeName))
+                {
+                    codes.Add($"using UnityEngine;{ending}");
+                    break;
+                }
+            }
+
+            codes.Add(ending);
+
+            return codes;
+        }
+
         private static List<string> GenerateUsingBlockOfClass(TypeData typeData, string ending)
         {
             var codes = new List<string> {
@@ -57,6 +100,29 @@ namespace Physalia.ExcelDataExporter
             }
 
             codes.Add(ending);
+
+            return codes;
+        }
+
+        private static List<string> GenerateTypeBlockOfPoco(TypeData typeData, string tab, string ending)
+        {
+            var codes = new List<string>
+            {
+                $"[Serializable]{ending}",
+                $"public class {typeData.name}{ending}",
+                $"{{{ending}",
+            };
+
+            // Write fields
+            for (var i = 0; i < typeData.fieldDatas.Count; i++)
+            {
+                FieldData fieldData = typeData.fieldDatas[i];
+                string fieldName = fieldData.NameForField;
+                string fieldTypeName = fieldData.TypeName;
+                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+            }
+
+            codes.Add($"}}{ending}");
 
             return codes;
         }
