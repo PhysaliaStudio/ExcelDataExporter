@@ -146,10 +146,11 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Generate codes
+            CodeGeneratorBase codeGenerator = new CodeGeneratorForCustomType();
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
-                string scriptText = TypeCodeGenerator.GeneratePoco(customType);
+                string scriptText = codeGenerator.Generate(customType);
                 string path = $"{codePath}/CustomTypes/{customType.name}.cs";
                 SaveFile(path, scriptText);
             }
@@ -160,6 +161,8 @@ namespace Physalia.ExcelDataExporter
         public void GenerateCodeForSelectedTables()
         {
             var invalidResults = new List<TypeDataValidator.Result>();
+            CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForData();
+            CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForDataTable();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -179,14 +182,14 @@ namespace Physalia.ExcelDataExporter
                         }
 
                         {
-                            string scriptText = TypeCodeGenerator.GenerateTypeClass(typeData);
+                            string scriptText = codeGeneratorForData.Generate(typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
                         }
 
                         {
-                            string scriptText = TypeCodeGenerator.GenerateTypeTableClass(typeData);
+                            string scriptText = codeGeneratorForDataTable.Generate(typeData);
                             string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
