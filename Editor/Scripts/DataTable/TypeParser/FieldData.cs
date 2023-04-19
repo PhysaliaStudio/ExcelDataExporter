@@ -12,7 +12,7 @@ namespace Physalia.ExcelDataExporter
         public string TypeName => isArray ? $"{typeData.name}[]" : typeData.name;
         public string BaseTypeName => typeData.name;
 
-        public string NameForField => name.Length > 1 ? $"_{char.ToLower(name[0])}{name[1..]}" : $"_{char.ToLower(name[0])}";
-        public string NameForProperty => name.Length > 1 ? $"{char.ToUpper(name[0])}{name[1..]}" : char.ToUpper(name[0]).ToString();
+        public string NameForField => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
+        public string NameForProperty => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
     }
 }
