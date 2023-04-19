@@ -12,7 +12,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(1, "Id", "Field2", "Field3");
             sheetRawData.SetRow(2, "int", "string", "bool");
 
-            var parser = new SheetParser();
+            var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             var validator = new TypeDataValidator();
@@ -28,7 +28,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(1, "Field1", "Field2", "Field3");
             sheetRawData.SetRow(2, "int", "string", "bool");
 
-            var parser = new SheetParser();
+            var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             var validator = new TypeDataValidator();
@@ -45,7 +45,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(1, "Id", "Field2", "Field3");
             sheetRawData.SetRow(2, "bool", "string", "bool");
 
-            var parser = new SheetParser();
+            var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             var validator = new TypeDataValidator();
@@ -62,7 +62,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(1, "Id", "Field2", "Field2");
             sheetRawData.SetRow(2, "int", "string", "bool");
 
-            var parser = new SheetParser();
+            var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
 
             var validator = new TypeDataValidator();
