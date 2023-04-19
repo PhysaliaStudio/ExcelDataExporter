@@ -7,9 +7,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(2, 3);
-            sheetRawData.SetRow(0, "Field1", "Field2", "Field3");
-            sheetRawData.SetRow(1, "int", "string", "bool");
+            var sheetRawData = new SheetRawData(3, 3);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1", "field2", "field3");
+            sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -22,9 +23,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(2, 2);
-            sheetRawData.SetRow(0, "Field1", "Field2");
-            sheetRawData.SetRow(1, "int[]", "bool[]");
+            var sheetRawData = new SheetRawData(3, 2);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1", "field2");
+            sheetRawData.SetRow(2, "int[]", "bool[]");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -38,9 +40,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(2, 5);
-            sheetRawData.SetRow(0, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
-            sheetRawData.SetRow(1, "Vector2Int", "", "Vector3Int", "", "");
+            var sheetRawData = new SheetRawData(3, 5);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
+            sheetRawData.SetRow(2, "Vector2Int", "", "Vector3Int", "", "");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -52,9 +55,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(2, 7);
-            sheetRawData.SetRow(0, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
-            sheetRawData.SetRow(1, "Vector2Int", "", "", "", "Vector3Int", "", "");
+            var sheetRawData = new SheetRawData(3, 7);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
+            sheetRawData.SetRow(2, "Vector2Int", "", "", "", "Vector3Int", "", "");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -70,10 +74,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(3, 3);
-            sheetRawData.SetRow(0, "field1", "field2", "field3");
-            sheetRawData.SetRow(1, "int", "string", "bool");
-            sheetRawData.SetRow(2, "42", "abc", "true");
+            var sheetRawData = new SheetRawData(4, 3);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1", "field2", "field3");
+            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.SetRow(3, "42", "abc", "true");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -86,10 +91,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(3, 2);
-            sheetRawData.SetRow(0, "field1", "field2");
-            sheetRawData.SetRow(1, "int[]", "bool[]");
-            sheetRawData.SetRow(2, "1,2,3", "true,false,true");
+            var sheetRawData = new SheetRawData(4, 2);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1", "field2");
+            sheetRawData.SetRow(2, "int[]", "bool[]");
+            sheetRawData.SetRow(3, "1,2,3", "true,false,true");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -102,10 +108,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(3, 5);
-            sheetRawData.SetRow(0, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
-            sheetRawData.SetRow(1, "Vector2Int", "", "Vector3Int", "", "");
-            sheetRawData.SetRow(2, "1", "2", "3", "4", "5");
+            var sheetRawData = new SheetRawData(4, 5);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
+            sheetRawData.SetRow(2, "Vector2Int", "", "Vector3Int", "", "");
+            sheetRawData.SetRow(3, "1", "2", "3", "4", "5");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
@@ -118,10 +125,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(3, 7);
-            sheetRawData.SetRow(0, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
-            sheetRawData.SetRow(1, "Vector2Int", "", "", "", "Vector3Int", "", "");
-            sheetRawData.SetRow(2, "1", "2", "3", "4", "5", "6", "7");
+            var sheetRawData = new SheetRawData(4, 7);
+            sheetRawData.SetRow(0, "namespace=Test");
+            sheetRawData.SetRow(1, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
+            sheetRawData.SetRow(2, "Vector2Int", "", "", "", "Vector3Int", "", "");
+            sheetRawData.SetRow(3, "1", "2", "3", "4", "5", "6", "7");
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
