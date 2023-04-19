@@ -28,8 +28,12 @@ namespace Physalia.ExcelDataExporter
                         continue;
                     }
 
-                    string typeName = row[0];
-                    currentTypeData = new TypeData { name = typeName };
+                    currentTypeData = StartTypeData(row[0]);
+                    if (currentTypeData == null)  // Encounter invalid data
+                    {
+                        continue;
+                    }
+
                     for (var j = 1; j < row.Length; j++)
                     {
                         string fieldName = row[j];
@@ -72,6 +76,29 @@ namespace Physalia.ExcelDataExporter
             }
 
             return table;
+        }
+
+        private static TypeData StartTypeData(string cell)
+        {
+            string[] splits = cell.Split(' ');
+            if (splits.Length != 2)
+            {
+                return null;
+            }
+
+            string typeDefine = splits[0];
+            string typeName = splits[1];
+            switch (typeDefine)
+            {
+                default:
+                    return null;
+                case "class":
+                    return new TypeData { name = typeName, define = TypeData.Define.Class };
+                case "struct":
+                    return new TypeData { name = typeName, define = TypeData.Define.Struct };
+                case "enum":
+                    return new TypeData { name = typeName, define = TypeData.Define.Enum };
+            }
         }
 
         public TypeData GetTypeData(string typeName)
