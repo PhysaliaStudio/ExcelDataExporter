@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -164,6 +165,8 @@ namespace Physalia.ExcelDataExporter
 
         public void GenerateCodeForSelectedTables()
         {
+            var invalidResults = new List<TypeDataValidator.Result>();
+
             for (var i = 0; i < dataTables.Count; i++)
             {
                 if (dataTables[i].IsSelected)
@@ -174,6 +177,12 @@ namespace Physalia.ExcelDataExporter
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        if (!result.IsValid)
+                        {
+                            invalidResults.Add(result);
+                            continue;
+                        }
 
                         {
                             string scriptText = TypeCodeGenerator.GenerateTypeClass(namespaceName, typeData);
@@ -194,6 +203,8 @@ namespace Physalia.ExcelDataExporter
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
+            ShowInvalidResults(invalidResults);
         }
 
         public void ExportSelectedTables()
@@ -214,6 +225,7 @@ namespace Physalia.ExcelDataExporter
 
         private void ExportSelectedTablesAsJson()
         {
+            var invalidResults = new List<TypeDataValidator.Result>();
             var dataExporter = new DataExporterJson();
 
             for (var i = 0; i < dataTables.Count; i++)
@@ -226,6 +238,12 @@ namespace Physalia.ExcelDataExporter
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        if (!result.IsValid)
+                        {
+                            invalidResults.Add(result);
+                            continue;
+                        }
 
                         string json = dataExporter.Export(typeData, sheetRawDatas[j]);
                         string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
@@ -236,10 +254,13 @@ namespace Physalia.ExcelDataExporter
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
+            ShowInvalidResults(invalidResults);
         }
 
         private void ExportSelectedTablesAsAsset()
         {
+            var invalidResults = new List<TypeDataValidator.Result>();
             var dataExporter = new DataExporterScriptableObject();
 
             for (var i = 0; i < dataTables.Count; i++)
@@ -252,6 +273,12 @@ namespace Physalia.ExcelDataExporter
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        if (!result.IsValid)
+                        {
+                            invalidResults.Add(result);
+                            continue;
+                        }
 
                         ScriptableObject scriptableObject = dataExporter.Export(typeData, sheetRawDatas[j]);
                         string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
@@ -277,6 +304,8 @@ namespace Physalia.ExcelDataExporter
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
+            ShowInvalidResults(invalidResults);
         }
 
         private TypeData ParseToTypeData(WorksheetData worksheetData, SheetRawData sheetRawData)
@@ -311,6 +340,40 @@ namespace Physalia.ExcelDataExporter
         private static string AbsoluteToAssetPath(string absolutePath)
         {
             return "Assets" + absolutePath[Application.dataPath.Length..];
+        }
+
+        private static void ShowInvalidResults(IReadOnlyList<TypeDataValidator.Result> invalidResults)
+        {
+            if (invalidResults.Count == 0)
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < invalidResults.Count; i++)
+            {
+                TypeDataValidator.Result result = invalidResults[i];
+                if (result.IsValid)
+                {
+                    continue;
+                }
+
+                sb.Append($"{result.TypeData.name}: ");
+                if (!result.HasIntIdField)
+                {
+                    sb.Append("NoIntIdField ");
+                }
+
+                if (!result.HasNoDuplicatedName)
+                {
+                    sb.Append("NameDuplicated ");
+                }
+
+                sb.AppendLine();
+            }
+
+            EditorUtility.DisplayDialog("Some table failed!", sb.ToString(), "OK");
         }
     }
 }

@@ -77,11 +77,6 @@ namespace Physalia.ExcelDataExporter
                 throw new InvalidDataException("Invalid Data! The nested type does not finish.");
             }
 
-            if (!typeData.Validate())
-            {
-                throw new InvalidDataException("Invalid Data! Final validation failed. See above errors.");
-            }
-
             return typeData;
         }
 
