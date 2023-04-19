@@ -34,8 +34,8 @@ namespace Physalia.ExcelDataExporter
 
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
-            string[] fieldNameRow = sheetRawData.GetRow(0);
-            string[] fieldTypeNameRow = sheetRawData.GetRow(1);
+            string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
+            string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {

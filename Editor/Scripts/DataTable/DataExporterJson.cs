@@ -9,7 +9,7 @@ namespace Physalia.ExcelDataExporter
         public string Export(TypeData typeData, SheetRawData sheetRawData)
         {
             var sb = new StringBuilder();
-            for (var i = 2; i < sheetRawData.RowCount; i++)
+            for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
             {
                 string json = ExportDataRowAsJson(typeData, sheetRawData.GetRow(i));
                 sb.Append(json);

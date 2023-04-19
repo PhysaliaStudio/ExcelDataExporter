@@ -23,10 +23,10 @@ namespace Physalia.ExcelDataExporter
             var serializedObject = new SerializedObject(dataTable);
             SerializedProperty property = serializedObject.FindProperty("items");
 
-            property.arraySize = sheetRawData.RowCount - 2;
-            for (var i = 2; i < sheetRawData.RowCount; i++)
+            property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
+            for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
             {
-                SerializedProperty element = property.GetArrayElementAtIndex(i - 2);
+                SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartRow);
                 ExportDataAsItem(element, typeData, sheetRawData.GetRow(i));
             }
 
