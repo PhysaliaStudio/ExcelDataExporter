@@ -16,8 +16,9 @@ namespace Physalia.ExcelDataExporter
 
             var readyForTypeRow = false;
             TypeData currentTypeData = null;
+            string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
 
-            for (var i = 0; i < sheetRawData.RowCount; i++)
+            for (var i = Const.SheetMetaRow + 1; i < sheetRawData.RowCount; i++)
             {
                 string[] row = sheetRawData.GetRow(i);
                 if (!readyForTypeRow)
@@ -61,6 +62,7 @@ namespace Physalia.ExcelDataExporter
 
                     if (!failed)
                     {
+                        currentTypeData.ParseMetadata(metadata);
                         table.typeTable.Add(currentTypeData.name, currentTypeData);
                     }
 
