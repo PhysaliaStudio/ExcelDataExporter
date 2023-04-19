@@ -67,9 +67,6 @@ namespace Physalia.ExcelDataExporter
             var deselectAllButton = visualElement.Q<Button>("deselect-all-button");
             deselectAllButton.clicked += DeselectAll;
 
-            var namespaceField = visualElement.Q<TextField>("namespace-field");
-            namespaceField.RegisterValueChangedCallback(evt => gameDatabase.SaveNamespace());
-
             var codeGenerateCustomTypeButton = visualElement.Q<Button>("code-generate-custom-type-button");
             codeGenerateCustomTypeButton.clicked += GenerateCodeForCustomTypes;
 

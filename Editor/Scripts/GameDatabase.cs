@@ -43,7 +43,6 @@ namespace Physalia.ExcelDataExporter
             dataPath = PlayerPrefs.GetString("ExcelDataExporter.DataPath", null);
             codePath = PlayerPrefs.GetString("ExcelDataExporter.CodePath", null);
             exportPath = PlayerPrefs.GetString("ExcelDataExporter.ExportPath", null);
-            namespaceName = PlayerPrefs.GetString("ExcelDataExporter.NamespaceName", null);
             exportFormat = (ExportFormat)PlayerPrefs.GetInt("ExcelDataExporter.ExportFormat", 0);
         }
 
@@ -57,11 +56,6 @@ namespace Physalia.ExcelDataExporter
         {
             exportPath = path;
             PlayerPrefs.SetString("ExcelDataExporter.ExportPath", path);
-        }
-
-        public void SaveNamespace()
-        {
-            PlayerPrefs.SetString("ExcelDataExporter.NamespaceName", namespaceName);
         }
 
         public void SetExportFormat(int index)
