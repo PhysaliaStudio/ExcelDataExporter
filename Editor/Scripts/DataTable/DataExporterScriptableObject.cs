@@ -10,7 +10,9 @@ namespace Physalia.ExcelDataExporter
         {
             Type tableType = ReflectionUtility.FindType((Type type) =>
             {
-                return type.Name == typeData.name + "Table" && type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
+                return type.Namespace == typeData.namespaceName &&
+                    type.Name == typeData.name + "Table" &&
+                    type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
             });
             return tableType;
         }
