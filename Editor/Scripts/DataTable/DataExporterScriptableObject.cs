@@ -57,7 +57,13 @@ namespace Physalia.ExcelDataExporter
 
         private void WritePropertyForSystemType(SerializedProperty element, FieldData fieldData, string dataText)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.name);
+            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForField);
+            if (fieldProperty == null)
+            {
+                Debug.LogError($"Field '{fieldData.NameForField}' not found!");
+                return;
+            }
+
             if (fieldData.IsArray)
             {
                 string[] splits = dataText.Split(',');
@@ -110,7 +116,13 @@ namespace Physalia.ExcelDataExporter
 
         private int WritePropertyForCustomType(SerializedProperty element, FieldData fieldData, string[] dataRow, int columnIndex)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.name);
+            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForField);
+            if (fieldProperty == null)
+            {
+                Debug.LogError($"Field '{fieldData.NameForField}' not found!");
+                return columnIndex;
+            }
+
             SerializedProperty writtenProperty;
 
             var iterator = new TypeFieldIterator(fieldData);

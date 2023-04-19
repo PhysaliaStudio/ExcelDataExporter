@@ -74,7 +74,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.name;
+                string fieldName = fieldData.NameForField;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
             }
@@ -85,7 +85,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string propertyName = fieldData.PropertyName;
+                string propertyName = fieldData.NameForProperty;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {propertyName} {{ get; }}{ending}");
             }
