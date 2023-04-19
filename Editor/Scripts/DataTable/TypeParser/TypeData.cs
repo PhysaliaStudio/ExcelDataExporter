@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
     public class TypeData
     {
+        public string namespaceName;
         public string name;
         public List<FieldData> fieldDatas = new();
 

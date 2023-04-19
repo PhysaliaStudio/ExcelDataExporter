@@ -43,6 +43,9 @@ namespace Physalia.ExcelDataExporter
             }
 
             var typeData = new TypeData { name = typeName };
+            string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+            ParseMetadata(typeData, metadata);
+
             var iterators = new Stack<TypeFieldIterator>();
 
             for (var i = 0; i < rawFields.Count; i++)
@@ -78,6 +81,19 @@ namespace Physalia.ExcelDataExporter
             }
 
             return typeData;
+        }
+
+        private void ParseMetadata(TypeData typeData, string metadata)
+        {
+            string[] lines = metadata.Replace("\r\n", "\n").Split('\n');
+            for (var i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (line.StartsWith("namespace="))
+                {
+                    typeData.namespaceName = line["namespace=".Length..];
+                }
+            }
         }
 
         private FieldData RecordNewField(TypeRawField nextField)

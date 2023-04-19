@@ -14,6 +14,8 @@ namespace Physalia.ExcelDataExporter.Tests
 
             var parser = new SheetParser();
             TypeData typeData = parser.ExportTypeData("", sheetRawData);
+
+            Assert.AreEqual("Test", typeData.namespaceName);
             Assert.AreEqual(3, typeData.fieldDatas.Count);
             Assert.AreEqual(TypeUtility.GetDefaultType("int"), typeData.fieldDatas[0].typeData);
             Assert.AreEqual(TypeUtility.GetDefaultType("string"), typeData.fieldDatas[1].typeData);
