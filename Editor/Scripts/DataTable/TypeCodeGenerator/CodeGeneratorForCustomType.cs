@@ -60,7 +60,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.NameForField;
+                string fieldName = fieldData.NameForPublicField;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
             }

@@ -50,7 +50,7 @@ namespace Physalia.ExcelDataExporter
 
         private int WritePropertyForCustomType(JsonTextWriter writer, FieldData fieldData, string[] dataRow, int columnIndex)
         {
-            writer.WritePropertyName(fieldData.NameForField);
+            writer.WritePropertyName(fieldData.NameForPublicField);
 
             var iterator = new TypeFieldIterator(fieldData);
             if (fieldData.IsArray)
@@ -100,7 +100,7 @@ namespace Physalia.ExcelDataExporter
 
         private void WritePropertyForSystemType(JsonTextWriter writer, FieldData fieldData, string dataText)
         {
-            writer.WritePropertyName(fieldData.NameForField);
+            writer.WritePropertyName(fieldData.NameForPublicField);
             if (fieldData.IsArray)
             {
                 writer.WriteStartArray();
