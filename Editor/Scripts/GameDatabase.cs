@@ -296,6 +296,7 @@ namespace Physalia.ExcelDataExporter
                         }
                         else
                         {
+                            _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
                             AssetDatabase.CreateAsset(scriptableObject, assetPath);
                         }
                     }
