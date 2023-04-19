@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
-    public abstract class DataTable<T> : ScriptableObject
+    public abstract class DataTable<T> : ScriptableObject where T : IHasId
     {
         [SerializeField]
         private List<T> items = new();
@@ -11,6 +11,26 @@ namespace Physalia.ExcelDataExporter
         private readonly Dictionary<int, T> table = new();
 
         public int Count => items.Count;
+
+        public void BuildTable()
+        {
+            table.Clear();
+            for (var i = 0; i < items.Count; i++)
+            {
+                T item = items[i];
+                table.Add(item.Id, item);
+            }
+        }
+
+        public bool Contains(int id)
+        {
+            return table.ContainsKey(id);
+        }
+
+        public bool TryGetData(int id, out T data)
+        {
+            return table.TryGetValue(id, out data);
+        }
 
         public T GetData(int id)
         {
