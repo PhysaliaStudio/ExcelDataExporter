@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class SheetParser
+    public class TypeDataParser
     {
         private class TypeRawField
         {
@@ -22,12 +22,12 @@ namespace Physalia.ExcelDataExporter
 
         private readonly CustomTypeTable customTypeTable;
 
-        public SheetParser()
+        public TypeDataParser()
         {
             customTypeTable = new CustomTypeTable();
         }
 
-        public SheetParser(CustomTypeTable customTypeTable)
+        public TypeDataParser(CustomTypeTable customTypeTable)
         {
             this.customTypeTable = customTypeTable;
         }

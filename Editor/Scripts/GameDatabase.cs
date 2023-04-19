@@ -31,7 +31,7 @@ namespace Physalia.ExcelDataExporter
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataLoader excelDataLoader = new();
-        private readonly SheetParser sheetParser = new();
+        private readonly TypeDataParser sheetParser = new();
 
         public string DataPath => dataPath;
         public string CodePath => codePath;
