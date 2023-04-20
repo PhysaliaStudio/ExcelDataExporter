@@ -360,12 +360,12 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 sb.Append($"{result.TypeData.name}: ");
-                if (!result.HasIntIdField)
+                if (result.IsIdFieldMissing)
                 {
                     sb.Append("NoIntIdField ");
                 }
 
-                if (!result.HasNoDuplicatedName)
+                if (result.HasDuplicatedName)
                 {
                     sb.Append("NameDuplicated ");
                 }

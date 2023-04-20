@@ -34,7 +34,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
             Assert.AreEqual(false, result.IsValid);
-            Assert.AreEqual(false, result.HasIntIdField);
+            Assert.AreEqual(true, result.IsIdFieldMissing);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
             Assert.AreEqual(false, result.IsValid);
-            Assert.AreEqual(false, result.HasIntIdField);
+            Assert.AreEqual(true, result.IsIdFieldMissing);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
             Assert.AreEqual(false, result.IsValid);
-            Assert.AreEqual(false, result.HasNoDuplicatedName);
+            Assert.AreEqual(true, result.HasDuplicatedName);
         }
     }
 }
