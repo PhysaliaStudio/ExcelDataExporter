@@ -49,10 +49,11 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)
         {
+            string typeDefine = typeData.define == TypeData.Define.Class ? "class" : "struct";
             var codes = new List<string>
             {
                 $"[Serializable]{ending}",
-                $"public class {typeData.name}{ending}",
+                $"public {typeDefine} {typeData.name}{ending}",
                 $"{{{ending}",
             };
 
