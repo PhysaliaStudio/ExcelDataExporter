@@ -8,18 +8,35 @@ namespace Physalia.ExcelDataExporter
     {
         public string Export(TypeData typeData, SheetRawData sheetRawData)
         {
+            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+            Metadata metadata = Metadata.Parse(metadataText);
+
             var sb = new StringBuilder();
-            for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+
+            if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
-                string json = ExportDataRowAsJson(typeData, sheetRawData.GetRow(i));
-                sb.Append(json);
-                sb.Append('\n');
+                for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+                {
+                    string json = ExportDataCellsAsJson(typeData, sheetRawData.GetRow(i));
+                    sb.Append(json);
+                    sb.Append('\n');
+                }
+            }
+            else
+            {
+                for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
+                {
+                    // Note: The first row is metadata, so skip it
+                    string json = ExportDataCellsAsJson(typeData, sheetRawData.GetColumn(i)[1..]);
+                    sb.Append(json);
+                    sb.Append('\n');
+                }
             }
 
             return sb.ToString();
         }
 
-        private string ExportDataRowAsJson(TypeData typeData, string[] dataRow)
+        private string ExportDataCellsAsJson(TypeData typeData, string[] dataCells)
         {
             var sb = new StringBuilder();
             using var sw = new StringWriter(sb);
@@ -27,7 +44,7 @@ namespace Physalia.ExcelDataExporter
 
             writer.WriteStartObject();
 
-            var columnIndex = 0;
+            var cellIndex = 0;
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
@@ -35,13 +52,13 @@ namespace Physalia.ExcelDataExporter
                 // If the field is system type, write it directly
                 if (fieldData.IsSystemType)
                 {
-                    WritePropertyForSystemType(writer, fieldData, dataRow[columnIndex]);
-                    columnIndex++;
+                    WritePropertyForSystemType(writer, fieldData, dataCells[cellIndex]);
+                    cellIndex++;
                     continue;
                 }
 
                 // If the field is custom type, write it recursively
-                columnIndex = WritePropertyForCustomType(writer, fieldData, dataRow, columnIndex);
+                cellIndex = WritePropertyForCustomType(writer, fieldData, dataCells, cellIndex);
             }
 
             writer.WriteEndObject();

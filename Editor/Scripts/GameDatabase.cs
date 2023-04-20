@@ -294,7 +294,7 @@ namespace Physalia.ExcelDataExporter
                         string assetPath = AbsoluteToAssetPath(absolutePath);
 
                         // Save asset
-                        Type tableType = GetTableType(typeData);
+                        Type tableType = typeData.GetTableType();
                         UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
                         if (@object != null)
                         {
@@ -322,17 +322,6 @@ namespace Physalia.ExcelDataExporter
             string typeName = worksheetData.Name.EndsWith("Table") ? worksheetData.Name[..^"Table".Length] : worksheetData.Name;
             TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawData);
             return typeData;
-        }
-
-        private static Type GetTableType(TypeData typeData)
-        {
-            Type tableType = ReflectionUtility.FindType((Type type) =>
-            {
-                return type.Namespace == typeData.namespaceName &&
-                    type.Name == typeData.name + "Table" &&
-                    type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
-            });
-            return tableType;
         }
 
         private void SaveFile(string path, string data)

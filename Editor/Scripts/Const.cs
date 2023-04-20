@@ -14,6 +14,10 @@ namespace Physalia.ExcelDataExporter
         public const int DataTableTypeRow = 2;
         public const int DataTableStartRow = 3;
 
+        public const int DataTableNameColumn = 0;
+        public const int DataTableTypeColumn = 1;
+        public const int DataTableStartColumn = 2;
+
         public const string NotApplicable = "N/A";
     }
 }

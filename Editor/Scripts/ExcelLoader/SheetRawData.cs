@@ -35,7 +35,22 @@ namespace Physalia.ExcelDataExporter
 
         public string[] GetRow(int rowIndex)
         {
-            return table[rowIndex];
+            var row = new string[columnCount];
+            for (var i = 0; i < columnCount; i++)
+            {
+                row[i] = table[rowIndex][i];
+            }
+            return row;
+        }
+
+        public string[] GetColumn(int columnIndex)
+        {
+            var column = new string[rowCount];
+            for (var i = 0; i < rowCount; i++)
+            {
+                column[i] = table[i][columnIndex];
+            }
+            return column;
         }
 
         public void SetRow(int rowIndex, params string[] texts)

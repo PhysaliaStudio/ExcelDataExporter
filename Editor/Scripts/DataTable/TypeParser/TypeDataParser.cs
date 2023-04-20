@@ -34,18 +34,60 @@ namespace Physalia.ExcelDataExporter
 
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
+            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+            Metadata metadata = Metadata.Parse(metadataText);
+
+            var typeData = new TypeData
+            {
+                namespaceName = metadata.NamespaceName,
+                name = typeName
+            };
+
+            List<TypeRawField> rawFields;
+            if (metadata.SheetLayout == SheetLayout.Horizontal)
+            {
+                rawFields = FindRawFieldsHorizontally(sheetRawData);
+            }
+            else
+            {
+                rawFields = FindRawFieldsVertically(sheetRawData);
+            }
+
+            ParseTypeData(typeData, rawFields);
+            return typeData;
+        }
+
+        private List<TypeRawField> FindRawFieldsHorizontally(SheetRawData sheetRawData)
+        {
             string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
             string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
+
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
                 rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
             }
 
-            var typeData = new TypeData { name = typeName };
-            string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            typeData.ParseMetadata(metadata);
+            return rawFields;
+        }
 
+        private List<TypeRawField> FindRawFieldsVertically(SheetRawData sheetRawData)
+        {
+            string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameColumn);
+            string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeColumn);
+
+            // Note: The first row is metadata, so skip it
+            var rawFields = new List<TypeRawField>(fieldNameColumn.Length - 1);
+            for (var i = 1; i < sheetRawData.RowCount; i++)
+            {
+                rawFields.Add(new TypeRawField(fieldNameColumn[i], fieldTypeNameColumn[i]));
+            }
+
+            return rawFields;
+        }
+
+        private void ParseTypeData(TypeData typeData, List<TypeRawField> rawFields)
+        {
             var iterators = new Stack<TypeFieldIterator>();
 
             for (var i = 0; i < rawFields.Count; i++)
@@ -79,8 +121,6 @@ namespace Physalia.ExcelDataExporter
             {
                 throw new InvalidDataException("Invalid Data! The nested type does not finish.");
             }
-
-            return typeData;
         }
 
         private FieldData RecordNewField(TypeRawField nextField)
