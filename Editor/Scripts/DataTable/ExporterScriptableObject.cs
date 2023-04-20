@@ -1,46 +1,11 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class DataExporterScriptableObject
+    public abstract class ExporterScriptableObject
     {
-        public ScriptableObject Export(TypeData typeData, SheetRawData sheetRawData)
-        {
-            Type tableType = typeData.GetTableType();
-            ScriptableObject dataTable = ScriptableObject.CreateInstance(tableType);
-            var serializedObject = new SerializedObject(dataTable);
-
-            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            Metadata metadata = Metadata.Parse(metadataText);
-
-            SerializedProperty property = serializedObject.FindProperty("items");
-            if (metadata.SheetLayout == SheetLayout.Horizontal)
-            {
-                property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
-                for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
-                {
-                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartRow);
-                    ExportDataAsItem(element, typeData, sheetRawData.GetRow(i));
-                }
-            }
-            else
-            {
-                property.arraySize = sheetRawData.ColumnCount - Const.DataTableStartColumn;
-                for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
-                {
-                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartColumn);
-                    ExportDataAsItem(element, typeData, sheetRawData.GetColumn(i)[1..]);
-                }
-            }
-
-            serializedObject.ApplyModifiedPropertiesWithoutUndo();
-            serializedObject.UpdateIfRequiredOrScript();
-            return dataTable;
-        }
-
-        private void ExportDataAsItem(SerializedObject @object, TypeData typeData, string[] dataRow)
+        protected static void ExportDataAsItem(SerializedObject @object, TypeData typeData, string[] dataRow)
         {
             var columnIndex = 0;
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
@@ -58,7 +23,7 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private void ExportDataAsItem(SerializedProperty property, TypeData typeData, string[] dataRow)
+        protected static void ExportDataAsItem(SerializedProperty property, TypeData typeData, string[] dataRow)
         {
             var columnIndex = 0;
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
@@ -76,7 +41,7 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private void WriteForSystemType(SerializedObject @object, FieldData fieldData, string dataText, bool isRoot)
+        private static void WriteForSystemType(SerializedObject @object, FieldData fieldData, string dataText, bool isRoot)
         {
             SerializedProperty fieldProperty = FindFieldProperty(@object, fieldData, isRoot);
             if (fieldProperty == null)
@@ -87,7 +52,7 @@ namespace Physalia.ExcelDataExporter
             WritePropertyForSystemType(fieldProperty, fieldData, dataText);
         }
 
-        private void WriteForSystemType(SerializedProperty property, FieldData fieldData, string dataText, bool isRoot)
+        private static void WriteForSystemType(SerializedProperty property, FieldData fieldData, string dataText, bool isRoot)
         {
             SerializedProperty fieldProperty = FindFieldProperty(property, fieldData, isRoot);
             if (fieldProperty == null)
@@ -98,7 +63,7 @@ namespace Physalia.ExcelDataExporter
             WritePropertyForSystemType(fieldProperty, fieldData, dataText);
         }
 
-        private int WriteForCustomType(SerializedObject @object, FieldData fieldData, string[] dataRow, int columnIndex, bool isRoot)
+        private static int WriteForCustomType(SerializedObject @object, FieldData fieldData, string[] dataRow, int columnIndex, bool isRoot)
         {
             SerializedProperty fieldProperty = FindFieldProperty(@object, fieldData, isRoot);
             if (fieldProperty == null)
@@ -109,7 +74,7 @@ namespace Physalia.ExcelDataExporter
             return WritePropertyForCustomType(fieldProperty, fieldData, dataRow, columnIndex);
         }
 
-        private int WriteForCustomType(SerializedProperty property, FieldData fieldData, string[] dataRow, int columnIndex, bool isRoot)
+        private static int WriteForCustomType(SerializedProperty property, FieldData fieldData, string[] dataRow, int columnIndex, bool isRoot)
         {
             SerializedProperty fieldProperty = FindFieldProperty(property, fieldData, isRoot);
             if (fieldProperty == null)
@@ -144,7 +109,7 @@ namespace Physalia.ExcelDataExporter
             return fieldProperty;
         }
 
-        private void WritePropertyForSystemType(SerializedProperty fieldProperty, FieldData fieldData, string dataText)
+        private static void WritePropertyForSystemType(SerializedProperty fieldProperty, FieldData fieldData, string dataText)
         {
             if (fieldData.IsArray)
             {
@@ -164,7 +129,7 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private int WritePropertyForCustomType(SerializedProperty fieldProperty, FieldData fieldData, string[] dataRow, int columnIndex)
+        private static int WritePropertyForCustomType(SerializedProperty fieldProperty, FieldData fieldData, string[] dataRow, int columnIndex)
         {
             var iterator = new TypeFieldIterator(fieldData);
             SerializedProperty writtenProperty = fieldProperty;
@@ -224,7 +189,7 @@ namespace Physalia.ExcelDataExporter
             return columnIndex;
         }
 
-        private void WriteValueForSystemType(SerializedProperty fieldProperty, string typeName, string text)
+        private static void WriteValueForSystemType(SerializedProperty fieldProperty, string typeName, string text)
         {
             switch (typeName)
             {

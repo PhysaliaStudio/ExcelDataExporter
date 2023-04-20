@@ -193,7 +193,6 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-
                         if (typeData.IsTypeWithId)
                         {
                             {
@@ -281,7 +280,6 @@ namespace Physalia.ExcelDataExporter
         private void ExportSelectedTablesAsAsset()
         {
             var invalidResults = new List<TypeDataValidator.Result>();
-            var dataExporter = new DataExporterScriptableObject();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -300,7 +298,7 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-                        ScriptableObject scriptableObject = dataExporter.Export(typeData, sheetRawDatas[j]);
+                        ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawDatas[j]);
                         string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
                         string absolutePath = $"{exportPath}{relativePath}.asset";
                         string assetPath = AbsoluteToAssetPath(absolutePath);
