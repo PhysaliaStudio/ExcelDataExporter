@@ -6,20 +6,9 @@ namespace Physalia.ExcelDataExporter
 {
     public class DataExporterScriptableObject
     {
-        private static Type GetTableType(TypeData typeData)
-        {
-            Type tableType = ReflectionUtility.FindType((Type type) =>
-            {
-                return type.Namespace == typeData.namespaceName &&
-                    type.Name == typeData.name + "Table" &&
-                    type.BaseType.GetGenericTypeDefinition() == typeof(DataTable<>);
-            });
-            return tableType;
-        }
-
         public ScriptableObject Export(TypeData typeData, SheetRawData sheetRawData)
         {
-            Type tableType = GetTableType(typeData);
+            Type tableType = typeData.GetTableType();
             var dataTable = ScriptableObject.CreateInstance(tableType);
 
             var serializedObject = new SerializedObject(dataTable);
