@@ -14,5 +14,15 @@ namespace Physalia.ExcelDataExporter
             });
             return tableType;
         }
+
+        public static Type GetDataType(this TypeData typeData)
+        {
+            Type dataType = ReflectionUtility.FindType((Type type) =>
+            {
+                return type.Namespace == typeData.namespaceName &&
+                    type.Name == typeData.name;
+            });
+            return dataType;
+        }
     }
 }

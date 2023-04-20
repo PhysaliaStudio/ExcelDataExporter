@@ -174,6 +174,7 @@ namespace Physalia.ExcelDataExporter
             var invalidResults = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForData();
             CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForDataTable();
+            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForSetting();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -192,16 +193,26 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
+                        if (typeData.IsTypeWithId)
                         {
-                            string scriptText = codeGeneratorForData.Generate(typeData);
-                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
-                            string path = $"{codePath}{relativePath}.cs";
-                            SaveFile(path, scriptText);
-                        }
+                            {
+                                string scriptText = codeGeneratorForData.Generate(typeData);
+                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
+                                string path = $"{codePath}{relativePath}.cs";
+                                SaveFile(path, scriptText);
+                            }
 
+                            {
+                                string scriptText = codeGeneratorForDataTable.Generate(typeData);
+                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                                string path = $"{codePath}{relativePath}.cs";
+                                SaveFile(path, scriptText);
+                            }
+                        }
+                        else
                         {
-                            string scriptText = codeGeneratorForDataTable.Generate(typeData);
-                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                            string scriptText = codeGeneratorForSetting.Generate(typeData);
+                            string relativePath = worksheetData.NameWithFolder;
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
                         }
@@ -269,7 +280,6 @@ namespace Physalia.ExcelDataExporter
         private void ExportSelectedTablesAsAsset()
         {
             var invalidResults = new List<TypeDataValidator.Result>();
-            var dataExporter = new DataExporterScriptableObject();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -288,24 +298,49 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-                        ScriptableObject scriptableObject = dataExporter.Export(typeData, sheetRawDatas[j]);
-                        string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
-                        string absolutePath = $"{exportPath}{relativePath}.asset";
-                        string assetPath = AbsoluteToAssetPath(absolutePath);
-
-                        // Save asset
-                        Type tableType = typeData.GetTableType();
-                        UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
-                        if (@object != null)
+                        if (typeData.isTypeWithId)
                         {
-                            scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
-                            EditorUtility.CopySerialized(scriptableObject, @object);
-                            EditorUtility.SetDirty(@object);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawDatas[j]);
+                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                            string absolutePath = $"{exportPath}{relativePath}.asset";
+                            string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                            // Save asset
+                            Type tableType = typeData.GetTableType();
+                            UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
+                            if (@object != null)
+                            {
+                                scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                                EditorUtility.CopySerialized(scriptableObject, @object);
+                                EditorUtility.SetDirty(@object);
+                            }
+                            else
+                            {
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            }
                         }
                         else
                         {
-                            _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
-                            AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectSetting.Export(typeData, sheetRawDatas[j]);
+                            string relativePath = worksheetData.NameWithFolder;
+                            string absolutePath = $"{exportPath}{relativePath}.asset";
+                            string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                            // Save asset
+                            Type dataType = typeData.GetDataType();
+                            UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, dataType);
+                            if (@object != null)
+                            {
+                                scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                                EditorUtility.CopySerialized(scriptableObject, @object);
+                                EditorUtility.SetDirty(@object);
+                            }
+                            else
+                            {
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            }
                         }
                     }
                 }
@@ -360,12 +395,12 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 sb.Append($"{result.TypeData.name}: ");
-                if (!result.HasIntIdField)
+                if (result.IsIdFieldMissing)
                 {
                     sb.Append("NoIntIdField ");
                 }
 
-                if (!result.HasNoDuplicatedName)
+                if (result.HasDuplicatedName)
                 {
                     sb.Append("NameDuplicated ");
                 }

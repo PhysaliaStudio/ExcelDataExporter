@@ -6,11 +6,13 @@ namespace Physalia.ExcelDataExporter
     {
         public enum Define { Class, Struct, Enum }
 
+        public bool isTypeWithId;
         public string namespaceName;
         public Define define;
         public string name;
         public List<FieldData> fieldDatas = new();
 
+        public bool IsTypeWithId => isTypeWithId;
         public bool IsSystemType => TypeUtility.IsSystemType(name);
 
         public int EvaluateColumnCount()

@@ -3,6 +3,7 @@ using System.IO;
 namespace Physalia.ExcelDataExporter
 {
     public enum SheetLayout { Horizontal, Vertical }
+    public enum SheetType { DataTable, Setting }
 
     public class Metadata
     {
@@ -35,16 +36,35 @@ namespace Physalia.ExcelDataExporter
                         throw new InvalidDataException($"Unknown layout value: {value}");
                     }
                 }
+
+                if (line.StartsWith("type="))
+                {
+                    string value = line["type=".Length..];
+                    if (value == "data-table")
+                    {
+                        metadata.sheetType = SheetType.DataTable;
+                    }
+                    else if (value == "setting")
+                    {
+                        metadata.sheetType = SheetType.Setting;
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"Unknown type value: {value}");
+                    }
+                }
             }
 
             return metadata;
         }
 
         private string namespaceName;
-        private SheetLayout sheetLayout;
+        private SheetLayout sheetLayout = SheetLayout.Horizontal;
+        private SheetType sheetType = SheetType.DataTable;
 
         public string NamespaceName => namespaceName;
         public SheetLayout SheetLayout => sheetLayout;
+        public SheetType SheetType => sheetType;
 
         private Metadata() { }
     }
