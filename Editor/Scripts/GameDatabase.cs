@@ -174,6 +174,7 @@ namespace Physalia.ExcelDataExporter
             var invalidResults = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForData();
             CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForDataTable();
+            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForSetting();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -192,16 +193,27 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-                        {
-                            string scriptText = codeGeneratorForData.Generate(typeData);
-                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
-                            string path = $"{codePath}{relativePath}.cs";
-                            SaveFile(path, scriptText);
-                        }
 
+                        if (typeData.IsTypeWithId)
                         {
-                            string scriptText = codeGeneratorForDataTable.Generate(typeData);
-                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                            {
+                                string scriptText = codeGeneratorForData.Generate(typeData);
+                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
+                                string path = $"{codePath}{relativePath}.cs";
+                                SaveFile(path, scriptText);
+                            }
+
+                            {
+                                string scriptText = codeGeneratorForDataTable.Generate(typeData);
+                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                                string path = $"{codePath}{relativePath}.cs";
+                                SaveFile(path, scriptText);
+                            }
+                        }
+                        else
+                        {
+                            string scriptText = codeGeneratorForSetting.Generate(typeData);
+                            string relativePath = worksheetData.NameWithFolder;
                             string path = $"{codePath}{relativePath}.cs";
                             SaveFile(path, scriptText);
                         }
