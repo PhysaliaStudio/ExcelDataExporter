@@ -125,30 +125,44 @@ namespace Physalia.ExcelDataExporter
                 return columnIndex;
             }
 
-            SerializedProperty writtenProperty;
-
             var iterator = new TypeFieldIterator(fieldData);
-            if (fieldData.IsArray)
-            {
-                fieldProperty.arraySize = 1;
-                writtenProperty = fieldProperty.GetArrayElementAtIndex(0);
-            }
-            else
-            {
-                writtenProperty = fieldProperty;
-            }
+            SerializedProperty writtenProperty = fieldProperty;
 
             while (true)
             {
+                bool isCurrentCellApplicable = !fieldData.IsArray || dataRow[columnIndex] != Const.NotApplicable;
+
+                if (iterator.IsAtFirstMember())
+                {
+                    if (isCurrentCellApplicable)
+                    {
+                        if (fieldData.IsArray)
+                        {
+                            fieldProperty.arraySize++;
+                            writtenProperty = fieldProperty.GetArrayElementAtIndex(fieldProperty.arraySize - 1);
+                        }
+                    }
+                }
+
                 FieldData currentMemberFieldData = iterator.CurrentMember;
                 if (currentMemberFieldData.IsSystemType)
                 {
-                    WritePropertyForSystemType(writtenProperty, currentMemberFieldData, dataRow[columnIndex], false);
+                    if (isCurrentCellApplicable)
+                    {
+                        WritePropertyForSystemType(writtenProperty, currentMemberFieldData, dataRow[columnIndex], false);
+                    }
                     columnIndex++;
                 }
                 else
                 {
-                    columnIndex = WritePropertyForCustomType(writtenProperty, currentMemberFieldData, dataRow, columnIndex, false);
+                    if (isCurrentCellApplicable)
+                    {
+                        columnIndex = WritePropertyForCustomType(writtenProperty, currentMemberFieldData, dataRow, columnIndex, false);
+                    }
+                    else
+                    {
+                        columnIndex += currentMemberFieldData.EvaluateColumnCount();
+                    }
                 }
 
                 // Increase array index if not finished
@@ -159,8 +173,6 @@ namespace Physalia.ExcelDataExporter
                 else if (iterator.IsArray && iterator.ArrayIndex < iterator.FieldData.arraySize - 1)
                 {
                     iterator.IncreaseArrayIndex();
-                    fieldProperty.arraySize++;
-                    writtenProperty = fieldProperty.GetArrayElementAtIndex(fieldProperty.arraySize - 1);
                 }
                 else
                 {

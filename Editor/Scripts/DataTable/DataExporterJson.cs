@@ -60,7 +60,7 @@ namespace Physalia.ExcelDataExporter
 
             while (true)
             {
-                bool isCurrentCellApplicable = dataRow[columnIndex] != Const.NotApplicable;
+                bool isCurrentCellApplicable = !fieldData.IsArray || dataRow[columnIndex] != Const.NotApplicable;
 
                 if (iterator.IsAtFirstMember())
                 {
