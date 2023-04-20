@@ -16,5 +16,6 @@ namespace Physalia.ExcelDataExporter
         public string NameForPrivateField => name.Length > 1 ? "_" + char.ToLower(name[0]) + name[1..] : "_" + char.ToLower(name[0]).ToString();
         public string NameForPublicField => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
         public string NameForProperty => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
+        public string NameForEnumMember => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
     }
 }
