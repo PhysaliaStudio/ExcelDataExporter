@@ -25,7 +25,6 @@ namespace Physalia.ExcelDataExporter
         {
             var readyForTypeRow = false;
             TypeData currentTypeData = null;
-            string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
 
             for (var i = Const.SheetMetaRow + 1; i < sheetRawData.RowCount; i++)
             {
@@ -54,7 +53,10 @@ namespace Physalia.ExcelDataExporter
 
                     if (success)
                     {
-                        currentTypeData.ParseMetadata(metadata);
+                        string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+                        Metadata metadata = Metadata.Parse(metadataText);
+                        currentTypeData.namespaceName = metadata.NamespaceName;
+
                         table.typeTable.Add(currentTypeData.name, currentTypeData);
                     }
 

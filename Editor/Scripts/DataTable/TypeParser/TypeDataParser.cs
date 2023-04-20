@@ -34,6 +34,15 @@ namespace Physalia.ExcelDataExporter
 
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
+            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+            Metadata metadata = Metadata.Parse(metadataText);
+
+            var typeData = new TypeData
+            {
+                namespaceName = metadata.NamespaceName,
+                name = typeName
+            };
+
             string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
             string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
@@ -41,10 +50,6 @@ namespace Physalia.ExcelDataExporter
             {
                 rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
             }
-
-            var typeData = new TypeData { name = typeName };
-            string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            typeData.ParseMetadata(metadata);
 
             var iterators = new Stack<TypeFieldIterator>();
 
