@@ -14,11 +14,26 @@ namespace Physalia.ExcelDataExporter
             var serializedObject = new SerializedObject(dataTable);
             SerializedProperty property = serializedObject.FindProperty("items");
 
-            property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
-            for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
+            Metadata metadata = Metadata.Parse(metadataText);
+
+            if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
-                SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartRow);
-                ExportDataAsItem(element, typeData, sheetRawData.GetRow(i));
+                property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
+                for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+                {
+                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartRow);
+                    ExportDataAsItem(element, typeData, sheetRawData.GetRow(i));
+                }
+            }
+            else
+            {
+                property.arraySize = sheetRawData.ColumnCount - Const.DataTableStartColumn;
+                for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
+                {
+                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartColumn);
+                    ExportDataAsItem(element, typeData, sheetRawData.GetColumn(i)[1..]);
+                }
             }
 
             serializedObject.ApplyModifiedPropertiesWithoutUndo();
