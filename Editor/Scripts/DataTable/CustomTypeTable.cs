@@ -10,10 +10,19 @@ namespace Physalia.ExcelDataExporter
         public int Count => typeTable.Count;
         public IEnumerable<TypeData> CustomTypes => typeTable.Values;
 
-        public static CustomTypeTable Parse(SheetRawData sheetRawData)
+        public static CustomTypeTable Parse(params SheetRawData[] sheetRawDatas)
         {
             var table = new CustomTypeTable();
+            for (var i = 0; i < sheetRawDatas.Length; i++)
+            {
+                ParseSheet(table, sheetRawDatas[i]);
+            }
 
+            return table;
+        }
+
+        private static void ParseSheet(CustomTypeTable table, SheetRawData sheetRawData)
+        {
             var readyForTypeRow = false;
             TypeData currentTypeData = null;
             string metadata = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
@@ -53,8 +62,6 @@ namespace Physalia.ExcelDataExporter
                     readyForTypeRow = false;
                 }
             }
-
-            return table;
         }
 
         private static TypeData ParseNameRow(string[] row)

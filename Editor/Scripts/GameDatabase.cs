@@ -148,7 +148,7 @@ namespace Physalia.ExcelDataExporter
             // Generate codes
             CodeGeneratorBase codeGeneratorForCustomType = new CodeGeneratorForCustomType();
             CodeGeneratorBase codeGeneratorForCustomEnum = new CodeGeneratorForCustomEnum();
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas.ToArray());
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
                 string scriptText;
