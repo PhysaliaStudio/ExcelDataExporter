@@ -38,6 +38,22 @@ namespace Physalia.ExcelDataExporter.Tests
         }
 
         [Test]
+        public void Validate_NoIdField_ButIsSettingType()
+        {
+            var sheetRawData = new SheetRawData(3, 3);
+            sheetRawData.SetRow(0, "namespace=Test\ntype=setting");
+            sheetRawData.SetRow(1, "Field1", "Field2", "Field3");
+            sheetRawData.SetRow(2, "int", "string", "bool");
+
+            var parser = new TypeDataParser();
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+
+            var validator = new TypeDataValidator();
+            TypeDataValidator.Result result = validator.Validate(typeData);
+            Assert.AreEqual(true, result.IsValid);
+        }
+
+        [Test]
         public void Validate_IdFieldIsNotInt()
         {
             var sheetRawData = new SheetRawData(3, 3);

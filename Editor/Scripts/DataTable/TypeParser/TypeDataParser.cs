@@ -39,6 +39,7 @@ namespace Physalia.ExcelDataExporter
 
             var typeData = new TypeData
             {
+                isTypeWithId = metadata.SheetType == SheetType.DataTable,
                 namespaceName = metadata.NamespaceName,
                 name = typeName
             };

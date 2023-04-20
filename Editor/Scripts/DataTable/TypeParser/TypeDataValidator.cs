@@ -32,6 +32,11 @@ namespace Physalia.ExcelDataExporter
 
         private bool CheckIfIdFieldMissing(TypeData typeData)
         {
+            if (!typeData.IsTypeWithId)
+            {
+                return false;
+            }
+
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
