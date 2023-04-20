@@ -57,19 +57,38 @@ namespace Physalia.ExcelDataExporter
             {
                 writer.WriteStartArray();
             }
-            writer.WriteStartObject();
 
             while (true)
             {
+                bool isCurrentCellApplicable = dataRow[columnIndex] != Const.NotApplicable;
+
+                if (iterator.IsAtFirstMember())
+                {
+                    if (isCurrentCellApplicable)
+                    {
+                        writer.WriteStartObject();
+                    }
+                }
+
                 FieldData currentMemberFieldData = iterator.CurrentMember;
                 if (currentMemberFieldData.IsSystemType)
                 {
-                    WritePropertyForSystemType(writer, currentMemberFieldData, dataRow[columnIndex]);
+                    if (isCurrentCellApplicable)
+                    {
+                        WritePropertyForSystemType(writer, currentMemberFieldData, dataRow[columnIndex]);
+                    }
                     columnIndex++;
                 }
                 else
                 {
-                    columnIndex = WritePropertyForCustomType(writer, currentMemberFieldData, dataRow, columnIndex);
+                    if (isCurrentCellApplicable)
+                    {
+                        columnIndex = WritePropertyForCustomType(writer, currentMemberFieldData, dataRow, columnIndex);
+                    }
+                    else
+                    {
+                        columnIndex += currentMemberFieldData.EvaluateColumnCount();
+                    }
                 }
 
                 // Increase array index if not finished
@@ -79,17 +98,22 @@ namespace Physalia.ExcelDataExporter
                 }
                 else if (iterator.IsArray && iterator.ArrayIndex < iterator.FieldData.arraySize - 1)
                 {
-                    writer.WriteEndObject();
+                    if (isCurrentCellApplicable)
+                    {
+                        writer.WriteEndObject();
+                    }
                     iterator.IncreaseArrayIndex();
-                    writer.WriteStartObject();
                 }
                 else
                 {
+                    if (isCurrentCellApplicable)
+                    {
+                        writer.WriteEndObject();
+                    }
                     break;
                 }
             }
 
-            writer.WriteEndObject();
             if (fieldData.IsArray)
             {
                 writer.WriteEndArray();
