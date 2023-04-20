@@ -43,7 +43,16 @@ namespace Physalia.ExcelDataExporter
                 name = typeName
             };
 
-            List<TypeRawField> rawFields = FindRawFieldsHorizontally(sheetRawData);
+            List<TypeRawField> rawFields;
+            if (metadata.SheetLayout == SheetLayout.Horizontal)
+            {
+                rawFields = FindRawFieldsHorizontally(sheetRawData);
+            }
+            else
+            {
+                rawFields = FindRawFieldsVertically(sheetRawData);
+            }
+
             ParseTypeData(typeData, rawFields);
             return typeData;
         }
@@ -57,6 +66,21 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
                 rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
+            }
+
+            return rawFields;
+        }
+
+        private List<TypeRawField> FindRawFieldsVertically(SheetRawData sheetRawData)
+        {
+            string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameColumn);
+            string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeColumn);
+
+            // Note: The first row is metadata, so skip it
+            var rawFields = new List<TypeRawField>(fieldNameColumn.Length - 1);
+            for (var i = 1; i < sheetRawData.RowCount; i++)
+            {
+                rawFields.Add(new TypeRawField(fieldNameColumn[i], fieldTypeNameColumn[i]));
             }
 
             return rawFields;
