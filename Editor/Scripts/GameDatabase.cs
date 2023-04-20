@@ -100,7 +100,8 @@ namespace Physalia.ExcelDataExporter
                     continue;
                 }
 
-                if (fileInfo.Name == Const.CustomTypeTableName)
+                // Skip if the file is a special file
+                if (fileInfo.Name.StartsWith("$"))
                 {
                     continue;
                 }
