@@ -43,26 +43,25 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-
-                // If the field is system type, write it directly
-                if (fieldData.IsSystemType)
+                if (fieldData.IsSystemType)  // If the field is system type, write it directly
                 {
-                    WritePropertyForSystemType(element, fieldData, dataRow[columnIndex]);
+                    WritePropertyForSystemType(element, fieldData, dataRow[columnIndex], true);
                     columnIndex++;
-                    continue;
                 }
-
-                // If the field is custom type, write it recursively
-                columnIndex = WritePropertyForCustomType(element, fieldData, dataRow, columnIndex);
+                else  // If the field is custom type, write it recursively
+                {
+                    columnIndex = WritePropertyForCustomType(element, fieldData, dataRow, columnIndex, true);
+                }
             }
         }
 
-        private void WritePropertyForSystemType(SerializedProperty element, FieldData fieldData, string dataText)
+        private void WritePropertyForSystemType(SerializedProperty element, FieldData fieldData, string dataText, bool isRoot)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPrivateField);
+            string propertyName = isRoot ? fieldData.NameForPrivateField : fieldData.NameForPublicField;
+            SerializedProperty fieldProperty = element.FindPropertyRelative(propertyName);
             if (fieldProperty == null)
             {
-                Debug.LogError($"Field '{fieldData.NameForPrivateField}' not found!");
+                Debug.LogError($"Field '{propertyName}' not found!");
                 return;
             }
 
@@ -116,12 +115,13 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private int WritePropertyForCustomType(SerializedProperty element, FieldData fieldData, string[] dataRow, int columnIndex)
+        private int WritePropertyForCustomType(SerializedProperty element, FieldData fieldData, string[] dataRow, int columnIndex, bool isRoot)
         {
-            SerializedProperty fieldProperty = element.FindPropertyRelative(fieldData.NameForPrivateField);
+            string propertyName = isRoot ? fieldData.NameForPrivateField : fieldData.NameForPublicField;
+            SerializedProperty fieldProperty = element.FindPropertyRelative(propertyName);
             if (fieldProperty == null)
             {
-                Debug.LogError($"Field '{fieldData.NameForPrivateField}' not found!");
+                Debug.LogError($"Field '{propertyName}' not found!");
                 return columnIndex;
             }
 
@@ -143,12 +143,12 @@ namespace Physalia.ExcelDataExporter
                 FieldData currentMemberFieldData = iterator.CurrentMember;
                 if (currentMemberFieldData.IsSystemType)
                 {
-                    WritePropertyForSystemType(writtenProperty, currentMemberFieldData, dataRow[columnIndex]);
+                    WritePropertyForSystemType(writtenProperty, currentMemberFieldData, dataRow[columnIndex], false);
                     columnIndex++;
                 }
                 else
                 {
-                    columnIndex = WritePropertyForCustomType(writtenProperty, currentMemberFieldData, dataRow, columnIndex);
+                    columnIndex = WritePropertyForCustomType(writtenProperty, currentMemberFieldData, dataRow, columnIndex, false);
                 }
 
                 // Increase array index if not finished
