@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CodeGeneratorForCustomType : CodeGeneratorBase
+    public class CodeGeneratorForCustomEnum : CodeGeneratorBase
     {
         public override string Generate(TypeData typeData)
         {
@@ -27,33 +27,15 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            var codes = new List<string> {
-                $"using System;{ending}",
-            };
-
-            for (var i = 0; i < typeData.fieldDatas.Count; i++)
-            {
-                FieldData fieldData = typeData.fieldDatas[i];
-                string typeName = fieldData.typeData.name;
-                if (TypeUtility.IsUnityType(typeName))
-                {
-                    codes.Add($"using UnityEngine;{ending}");
-                    break;
-                }
-            }
-
-            codes.Add(ending);
-
+            var codes = new List<string>();
             return codes;
         }
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)
         {
-            string typeDefine = typeData.define == TypeData.Define.Class ? "class" : "struct";
             var codes = new List<string>
             {
-                $"[Serializable]{ending}",
-                $"public {typeDefine} {typeData.name}{ending}",
+                $"public enum {typeData.name}{ending}",
                 $"{{{ending}",
             };
 
@@ -61,9 +43,9 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.NameForPublicField;
-                string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                string fieldName = fieldData.NameForEnumMember;
+                int enumValue = fieldData.enumValue;
+                codes.Add($"{tab}{fieldName} = {enumValue},{ending}");
             }
 
             codes.Add($"}}{ending}");

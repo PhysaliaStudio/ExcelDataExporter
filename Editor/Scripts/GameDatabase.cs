@@ -146,11 +146,21 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Generate codes
-            CodeGeneratorBase codeGenerator = new CodeGeneratorForCustomType();
+            CodeGeneratorBase codeGeneratorForCustomType = new CodeGeneratorForCustomType();
+            CodeGeneratorBase codeGeneratorForCustomEnum = new CodeGeneratorForCustomEnum();
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas[0]);
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
-                string scriptText = codeGenerator.Generate(customType);
+                string scriptText;
+                if (customType.define != TypeData.Define.Enum)
+                {
+                    scriptText = codeGeneratorForCustomType.Generate(customType);
+                }
+                else
+                {
+                    scriptText = codeGeneratorForCustomEnum.Generate(customType);
+                }
+
                 string path = $"{codePath}/CustomTypes/{customType.name}.cs";
                 SaveFile(path, scriptText);
             }

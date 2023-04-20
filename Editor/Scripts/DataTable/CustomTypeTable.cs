@@ -23,44 +23,27 @@ namespace Physalia.ExcelDataExporter
                 string[] row = sheetRawData.GetRow(i);
                 if (!readyForTypeRow)
                 {
-                    if (string.IsNullOrWhiteSpace(row[0]))
+                    currentTypeData = ParseNameRow(row);
+                    if (currentTypeData == null)
                     {
                         continue;
-                    }
-
-                    string typeName = row[0];
-                    currentTypeData = new TypeData { name = typeName };
-                    for (var j = 1; j < row.Length; j++)
-                    {
-                        string fieldName = row[j];
-                        if (string.IsNullOrWhiteSpace(fieldName))
-                        {
-                            break;
-                        }
-
-                        var fieldData = new FieldData { name = fieldName };
-                        currentTypeData.fieldDatas.Add(fieldData);
                     }
 
                     readyForTypeRow = true;
                 }
                 else
                 {
-                    var failed = false;
-                    for (var j = 0; j < currentTypeData.fieldDatas.Count; j++)
+                    bool success;
+                    if (currentTypeData.define != TypeData.Define.Enum)
                     {
-                        string typeName = row[j + 1];
-                        if (string.IsNullOrWhiteSpace(typeName))
-                        {
-                            Debug.LogError($"Parse type failed! Invalid format. Type: {currentTypeData.name}");
-                            failed = true;
-                            break;
-                        }
-
-                        currentTypeData.fieldDatas[j].typeData = TypeUtility.GetDefaultType(typeName);
+                        success = ParseTypeRow(currentTypeData, row);
+                    }
+                    else
+                    {
+                        success = ParseEnumValueRow(currentTypeData, row);
                     }
 
-                    if (!failed)
+                    if (success)
                     {
                         currentTypeData.ParseMetadata(metadata);
                         table.typeTable.Add(currentTypeData.name, currentTypeData);
@@ -72,6 +55,98 @@ namespace Physalia.ExcelDataExporter
             }
 
             return table;
+        }
+
+        private static TypeData ParseNameRow(string[] row)
+        {
+            if (string.IsNullOrWhiteSpace(row[0]))
+            {
+                return null;
+            }
+
+            TypeData typeData = StartTypeData(row[0]);
+            if (typeData == null)  // Encounter invalid data
+            {
+                return null;
+            }
+
+            for (var i = 1; i < row.Length; i++)
+            {
+                string fieldName = row[i];
+                if (string.IsNullOrWhiteSpace(fieldName))
+                {
+                    break;
+                }
+
+                var fieldData = new FieldData { name = fieldName };
+                typeData.fieldDatas.Add(fieldData);
+            }
+
+            return typeData;
+        }
+
+        private static TypeData StartTypeData(string cell)
+        {
+            string[] splits = cell.Split(' ');
+            if (splits.Length != 2)
+            {
+                return null;
+            }
+
+            string typeDefine = splits[0];
+            string typeName = splits[1];
+            switch (typeDefine)
+            {
+                default:
+                    return null;
+                case "class":
+                    return new TypeData { name = typeName, define = TypeData.Define.Class };
+                case "struct":
+                    return new TypeData { name = typeName, define = TypeData.Define.Struct };
+                case "enum":
+                    return new TypeData { name = typeName, define = TypeData.Define.Enum };
+            }
+        }
+
+        private static bool ParseTypeRow(TypeData typeDataToContinued, string[] row)
+        {
+            for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
+            {
+                string typeName = row[i + 1];
+                if (string.IsNullOrWhiteSpace(typeName))
+                {
+                    Debug.LogError($"Parse type failed! Invalid format. Type: {typeDataToContinued.name}");
+                    return false;
+                }
+
+                typeDataToContinued.fieldDatas[i].typeData = TypeUtility.GetDefaultType(typeName);
+            }
+
+            return true;
+        }
+
+        private static bool ParseEnumValueRow(TypeData typeDataToContinued, string[] row)
+        {
+            for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
+            {
+                string value = row[i + 1];
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Debug.LogError($"Parse enum failed! Empty value. Type: {typeDataToContinued.name}");
+                    return false;
+                }
+
+                bool success = int.TryParse(value, out int enumValue);
+                if (!success)
+                {
+                    Debug.LogError($"Parse enum failed! Not int value. Type: {typeDataToContinued.name}");
+                    return false;
+                }
+
+                typeDataToContinued.fieldDatas[i].enumValue = enumValue;
+            }
+
+            return true;
         }
 
         public TypeData GetTypeData(string typeName)
