@@ -298,24 +298,49 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-                        ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawDatas[j]);
-                        string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
-                        string absolutePath = $"{exportPath}{relativePath}.asset";
-                        string assetPath = AbsoluteToAssetPath(absolutePath);
-
-                        // Save asset
-                        Type tableType = typeData.GetTableType();
-                        UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
-                        if (@object != null)
+                        if (typeData.isTypeWithId)
                         {
-                            scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
-                            EditorUtility.CopySerialized(scriptableObject, @object);
-                            EditorUtility.SetDirty(@object);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawDatas[j]);
+                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
+                            string absolutePath = $"{exportPath}{relativePath}.asset";
+                            string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                            // Save asset
+                            Type tableType = typeData.GetTableType();
+                            UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, tableType);
+                            if (@object != null)
+                            {
+                                scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                                EditorUtility.CopySerialized(scriptableObject, @object);
+                                EditorUtility.SetDirty(@object);
+                            }
+                            else
+                            {
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            }
                         }
                         else
                         {
-                            _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
-                            AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectSetting.Export(typeData, sheetRawDatas[j]);
+                            string relativePath = worksheetData.NameWithFolder;
+                            string absolutePath = $"{exportPath}{relativePath}.asset";
+                            string assetPath = AbsoluteToAssetPath(absolutePath);
+
+                            // Save asset
+                            Type dataType = typeData.GetDataType();
+                            UnityEngine.Object @object = AssetDatabase.LoadAssetAtPath(assetPath, dataType);
+                            if (@object != null)
+                            {
+                                scriptableObject.name = @object.name;  // Unity Rule: The name is need to be same as the original one
+                                EditorUtility.CopySerialized(scriptableObject, @object);
+                                EditorUtility.SetDirty(@object);
+                            }
+                            else
+                            {
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                AssetDatabase.CreateAsset(scriptableObject, assetPath);
+                            }
                         }
                     }
                 }
