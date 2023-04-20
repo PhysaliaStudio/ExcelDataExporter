@@ -17,5 +17,36 @@ namespace Physalia.ExcelDataExporter
         public string NameForPublicField => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
         public string NameForProperty => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
         public string NameForEnumMember => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
+
+        public int EvaluateColumnCount()
+        {
+            if (IsArray && arraySize == -1)
+            {
+                return -1;
+            }
+
+            int fieldCountForNonArray;
+            if (IsSystemType)
+            {
+                fieldCountForNonArray = 1;
+            }
+            else
+            {
+                fieldCountForNonArray = typeData.EvaluateColumnCount();
+            }
+
+            if (fieldCountForNonArray == -1)
+            {
+                return -1;
+            }
+            else if (IsArray)
+            {
+                return fieldCountForNonArray * arraySize;
+            }
+            else
+            {
+                return fieldCountForNonArray;
+            }
+        }
     }
 }
