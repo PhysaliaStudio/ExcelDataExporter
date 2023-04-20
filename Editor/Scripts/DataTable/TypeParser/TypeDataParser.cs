@@ -43,14 +43,27 @@ namespace Physalia.ExcelDataExporter
                 name = typeName
             };
 
+            List<TypeRawField> rawFields = FindRawFieldsHorizontally(sheetRawData);
+            ParseTypeData(typeData, rawFields);
+            return typeData;
+        }
+
+        private List<TypeRawField> FindRawFieldsHorizontally(SheetRawData sheetRawData)
+        {
             string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
             string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
+
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
                 rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
             }
 
+            return rawFields;
+        }
+
+        private void ParseTypeData(TypeData typeData, List<TypeRawField> rawFields)
+        {
             var iterators = new Stack<TypeFieldIterator>();
 
             for (var i = 0; i < rawFields.Count; i++)
@@ -84,8 +97,6 @@ namespace Physalia.ExcelDataExporter
             {
                 throw new InvalidDataException("Invalid Data! The nested type does not finish.");
             }
-
-            return typeData;
         }
 
         private FieldData RecordNewField(TypeRawField nextField)
