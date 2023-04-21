@@ -11,7 +11,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                if (fieldData.IsSystemType)  // If the field is system type, write it directly
+                if (fieldData.IsSystemTypeOrEnum)  // If the field is system type, write it directly
                 {
                     WriteForSystemType(@object, fieldData, dataRow[columnIndex], true);
                     columnIndex++;
@@ -29,7 +29,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                if (fieldData.IsSystemType)  // If the field is system type, write it directly
+                if (fieldData.IsSystemTypeOrEnum)  // If the field is system type, write it directly
                 {
                     WriteForSystemType(property, fieldData, dataRow[columnIndex], true);
                     columnIndex++;
@@ -119,13 +119,13 @@ namespace Physalia.ExcelDataExporter
                 for (var j = 0; j < splits.Length; j++)
                 {
                     SerializedProperty item = fieldProperty.GetArrayElementAtIndex(j);
-                    WriteValueForSystemType(item, fieldData.BaseTypeName, splits[j]);
+                    WriteValueForSystemType(item, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
                 }
             }
             else
             {
                 string text = dataText;
-                WriteValueForSystemType(fieldProperty, fieldData.BaseTypeName, text);
+                WriteValueForSystemType(fieldProperty, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, text);
             }
         }
 
@@ -151,7 +151,7 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 FieldData currentMemberFieldData = iterator.CurrentMember;
-                if (currentMemberFieldData.IsSystemType)
+                if (currentMemberFieldData.IsSystemTypeOrEnum)
                 {
                     if (isCurrentCellApplicable)
                     {

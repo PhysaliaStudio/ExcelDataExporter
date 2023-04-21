@@ -14,10 +14,12 @@ namespace Physalia.ExcelDataExporter
 
         public bool IsTypeWithId => isTypeWithId;
         public bool IsSystemType => TypeUtility.IsSystemType(name);
+        public bool IsEnum => define == Define.Enum;
+        public bool IsSystemTypeOrEnum => IsSystemType || IsEnum;
 
         public int EvaluateColumnCount()
         {
-            if (IsSystemType)
+            if (IsSystemTypeOrEnum)
             {
                 return 1;
             }

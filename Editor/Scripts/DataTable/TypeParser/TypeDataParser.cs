@@ -104,7 +104,7 @@ namespace Physalia.ExcelDataExporter
                     typeData.fieldDatas.Add(newFieldData);
 
                     // Start new nested type if necessary
-                    if (!newFieldData.typeData.IsSystemType)
+                    if (!newFieldData.typeData.IsSystemTypeOrEnum)
                     {
                         var iterator = new TypeFieldIterator(newFieldData);
                         iterators.Push(iterator);
@@ -139,7 +139,7 @@ namespace Physalia.ExcelDataExporter
 
                 fieldTypeName = fieldTypeName[0..^2];
                 fieldTypeData = customTypeTable.GetTypeData(fieldTypeName);
-                if (fieldTypeData == null || !fieldTypeData.IsSystemType)
+                if (fieldTypeData == null || !fieldTypeData.IsSystemTypeOrEnum)
                 {
                     throw new InvalidDataException($"Invalid field type cell: {fieldTypeName}");
                 }
@@ -152,10 +152,10 @@ namespace Physalia.ExcelDataExporter
                     throw new InvalidDataException($"Invalid field type cell: {fieldTypeName}");
                 }
 
-                bool isSystemType = fieldTypeData.IsSystemType;
+                bool isSystemTypeOrEnum = fieldTypeData.IsSystemTypeOrEnum;
 
                 // If not system type, then it must be a custom type, and the fieldName must have dot in it
-                if (!isSystemType)
+                if (!isSystemTypeOrEnum)
                 {
                     int indexOfDot = fieldName.IndexOf('.');
                     if (indexOfDot == -1)
@@ -171,7 +171,7 @@ namespace Physalia.ExcelDataExporter
                 isArray = indexOfArrayChar != -1;
                 if (isArray)
                 {
-                    if (isSystemType)
+                    if (isSystemTypeOrEnum)
                     {
                         throw new InvalidDataException($"Invalid array declaration: {fieldName} for {fieldTypeName}");
                     }

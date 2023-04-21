@@ -87,6 +87,55 @@ namespace Physalia.ExcelDataExporter.Tests
         }
 
         [Test]
+        public void ExportTypeData_Horizontally_CustomEnums()
+        {
+            var sheetRawData = new SheetRawData(3, 1);
+            sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
+            sheetRawData.SetRow(0, "類型");
+            sheetRawData.SetRow(1, "type");
+            sheetRawData.SetRow(2, "EnemyType");
+
+            var sheetForCustomEnum = new SheetRawData(3, 4);
+            sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
+            sheetForCustomEnum.SetRow(0, "enum EnemyType", "普通", "菁英", "魔王");
+            sheetForCustomEnum.SetRow(1, "", "Normal", "Elite", "Boss");
+            sheetForCustomEnum.SetRow(2, "", "0", "1", "2");
+
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
+            var parser = new TypeDataParser(customTypeTable);
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+
+            Assert.AreEqual(1, typeData.fieldDatas.Count);
+            Assert.AreEqual("類型", typeData.fieldDatas[0].comment);
+            Assert.AreEqual("EnemyType", typeData.fieldDatas[0].typeData.name);
+        }
+
+        [Test]
+        public void ExportTypeData_Horizontally_CustomEnumArrays()
+        {
+            var sheetRawData = new SheetRawData(3, 1);
+            sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
+            sheetRawData.SetRow(0, "類型");
+            sheetRawData.SetRow(1, "types");
+            sheetRawData.SetRow(2, "EnemyType[]");
+
+            var sheetForCustomEnum = new SheetRawData(3, 4);
+            sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
+            sheetForCustomEnum.SetRow(0, "enum EnemyType", "普通", "菁英", "魔王");
+            sheetForCustomEnum.SetRow(1, "", "Normal", "Elite", "Boss");
+            sheetForCustomEnum.SetRow(2, "", "0", "1", "2");
+
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
+            var parser = new TypeDataParser(customTypeTable);
+            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+
+            Assert.AreEqual(1, typeData.fieldDatas.Count);
+            Assert.AreEqual("類型", typeData.fieldDatas[0].comment);
+            Assert.AreEqual("EnemyType", typeData.fieldDatas[0].typeData.name);
+            Assert.AreEqual(true, typeData.fieldDatas[0].IsArray);
+        }
+
+        [Test]
         public void ExportTypeData_Vertically_SystemTypes()
         {
             var sheetRawData = new SheetRawData(3, 3);

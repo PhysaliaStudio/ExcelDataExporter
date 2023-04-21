@@ -11,6 +11,8 @@ namespace Physalia.ExcelDataExporter
 
         public bool IsArray => isArray;
         public bool IsSystemType => typeData.IsSystemType;
+        public bool IsEnum => typeData.IsEnum;
+        public bool IsSystemTypeOrEnum => typeData.IsSystemTypeOrEnum;
         public string TypeName => isArray ? $"{typeData.name}[]" : typeData.name;
         public string BaseTypeName => typeData.name;
         public string Comment => comment;
@@ -28,7 +30,7 @@ namespace Physalia.ExcelDataExporter
             }
 
             int fieldCountForNonArray;
-            if (IsSystemType)
+            if (typeData.IsSystemTypeOrEnum)
             {
                 fieldCountForNonArray = 1;
             }

@@ -48,7 +48,7 @@ namespace Physalia.ExcelDataExporter
                 FieldData fieldData = typeData.fieldDatas[i];
 
                 // If the field is system type, write it directly
-                if (fieldData.IsSystemType)
+                if (fieldData.IsSystemTypeOrEnum)
                 {
                     WritePropertyForSystemType(writer, fieldData, dataCells[cellIndex]);
                     cellIndex++;
@@ -86,7 +86,7 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 FieldData currentMemberFieldData = iterator.CurrentMember;
-                if (currentMemberFieldData.IsSystemType)
+                if (currentMemberFieldData.IsSystemTypeOrEnum)
                 {
                     if (isCurrentCellApplicable)
                     {
@@ -147,7 +147,7 @@ namespace Physalia.ExcelDataExporter
                 string[] splits = dataText.Split(',');
                 for (var j = 0; j < splits.Length; j++)
                 {
-                    WriteValueForSystemType(writer, fieldData.BaseTypeName, splits[j]);
+                    WriteValueForSystemType(writer, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
                 }
 
                 writer.WriteEndArray();
@@ -155,7 +155,7 @@ namespace Physalia.ExcelDataExporter
             else
             {
                 string text = dataText;
-                WriteValueForSystemType(writer, fieldData.BaseTypeName, text);
+                WriteValueForSystemType(writer, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, text);
             }
         }
 
