@@ -5,11 +5,13 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetRawData
     {
+        private string name;
         private Metadata metadata;
         private int rowCount;
         private int columnCount;
         private string[][] table;
 
+        public string Name => name;
         public Metadata Metadata => metadata;
         public int RowCount => rowCount;
         public int ColumnCount => columnCount;
@@ -23,6 +25,11 @@ namespace Physalia.ExcelDataExporter
             {
                 table[i] = new string[columnCount];
             }
+        }
+
+        public void SetName(string name)
+        {
+            this.name = name;
         }
 
         public void SetMetadata(string metadataText)

@@ -19,6 +19,7 @@ namespace Physalia.ExcelDataExporter
                 int rowCount = reader.RowCount;
                 int columnCount = reader.FieldCount;
                 var sheetRawData = new SheetRawData(rowCount - 1, columnCount);
+                sheetRawData.SetName(reader.Name);
 
                 // Read the first row as metadata
                 bool success = reader.Read();
