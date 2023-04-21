@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CodeGeneratorForData : CodeGeneratorBase
+    public class CodeGeneratorForAssetSetting : CodeGeneratorBase
     {
         public override string Generate(TypeData typeData)
         {
@@ -30,63 +30,15 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            // Collect namespaces
-            var namespaces = new List<string>
-            {
-                "System",
-                "Physalia.ExcelDataExporter",
-                "UnityEngine",
-            };
-
-            for (var i = 0; i < typeData.fieldDatas.Count; i++)
-            {
-                FieldData fieldData = typeData.fieldDatas[i];
-                string namespaceName = fieldData.typeData.namespaceName;
-                if (string.IsNullOrEmpty(namespaceName) ||
-                    typeData.namespaceName.StartsWith(namespaceName) ||
-                    namespaces.Contains(namespaceName))
-                {
-                    continue;
-                }
-
-                namespaces.Add(namespaceName);
-            }
-
-            namespaces.Sort((a, b) =>
-            {
-                bool aIsSystem = a.StartsWith("System");
-                bool bIsSystem = b.StartsWith("System");
-                if (aIsSystem && !bIsSystem)
-                {
-                    return -1;
-                }
-                else if (bIsSystem && !aIsSystem)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return a.CompareTo(b);
-                }
-            });
-
-            // Build string
-            var codes = new List<string>(namespaces.Count + 1);
-            for (var i = 0; i < namespaces.Count; i++)
-            {
-                codes.Add($"using {namespaces[i]};{ending}");
-            }
-            codes.Add(ending);
-
-            return codes;
+            List<string> namespaces = CollectNamespaces(typeData, "UnityEngine");
+            return GenerateUsingBlock(namespaces, ending);
         }
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)
         {
             var codes = new List<string>
             {
-                $"[Serializable]{ending}",
-                $"public class {typeData.name} : IHasId{ending}",
+                $"public class {typeData.name} : ScriptableObject{ending}",
                 $"{{{ending}",
             };
 
@@ -122,9 +74,10 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 // Write property
+                string fieldName = fieldData.NameForPrivateField;
                 string propertyName = fieldData.NameForProperty;
                 string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {propertyName} {{ get; }}{ending}");
+                codes.Add($"{tab}public {fieldTypeName} {propertyName} => {fieldName};{ending}");
             }
 
             codes.Add($"}}{ending}");

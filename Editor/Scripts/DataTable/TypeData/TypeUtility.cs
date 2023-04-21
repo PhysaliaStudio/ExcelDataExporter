@@ -36,6 +36,7 @@ namespace Physalia.ExcelDataExporter
 
             { "Vector2Int", new TypeData
                 {
+                    namespaceName = "UnityEngine",
                     name = "Vector2Int",
                     fieldDatas = new List<FieldData>
                     {
@@ -46,6 +47,7 @@ namespace Physalia.ExcelDataExporter
             },
             { "Vector3Int", new TypeData
                 {
+                    namespaceName = "UnityEngine",
                     name = "Vector3Int",
                     fieldDatas = new List<FieldData>
                     {

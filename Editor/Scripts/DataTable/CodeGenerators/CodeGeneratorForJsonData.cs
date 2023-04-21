@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CodeGeneratorForCustomType : CodeGeneratorBase
+    public class CodeGeneratorForJsonData : CodeGeneratorBase
     {
         public override string Generate(TypeData typeData)
         {
@@ -30,17 +30,15 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            List<string> namespaces = CollectNamespaces(typeData, "System");
+            List<string> namespaces = CollectNamespaces(typeData, "Physalia.ExcelDataExporter");
             return GenerateUsingBlock(namespaces, ending);
         }
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)
         {
-            string typeDefine = typeData.define == TypeData.Define.Class ? "class" : "struct";
             var codes = new List<string>
             {
-                $"[Serializable]{ending}",
-                $"public {typeDefine} {typeData.name}{ending}",
+                $"public class {typeData.name} : IHasId{ending}",
                 $"{{{ending}",
             };
 
@@ -68,6 +66,11 @@ namespace Physalia.ExcelDataExporter
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
             }
+
+            codes.Add(ending);
+
+            // Write Id property
+            codes.Add($"{tab}public int Id => id;{ending}");
 
             codes.Add($"}}{ending}");
 
