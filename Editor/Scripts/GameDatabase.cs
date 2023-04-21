@@ -31,7 +31,6 @@ namespace Physalia.ExcelDataExporter
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataLoader excelDataLoader = new();
-        private readonly TypeDataParser sheetParser = new();
 
         public string DataPath => dataPath;
         public string CodePath => codePath;
@@ -129,27 +128,11 @@ namespace Physalia.ExcelDataExporter
 
         public void GenerateCodeForCustomTypes()
         {
-            // Get CustomTypeTable file
-            var fileInfo = new FileInfo($"{dataPath}/{Const.CustomTypeTableName}");
-            if (!fileInfo.Exists)
-            {
-                Debug.LogWarning($"{Const.CustomTypeTableName} not found.");
-                return;
-            }
-
-            // Load sheet
-            var worksheetData = new WorksheetData(dataPath, fileInfo);
-            List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
-            if (sheetRawDatas.Count == 0)
-            {
-                Debug.LogWarning($"The count of sheet in {Const.CustomTypeTableName}");
-                return;
-            }
+            CustomTypeTable customTypeTable = GenerateCustomTypeTable();
 
             // Generate codes
             CodeGeneratorBase codeGeneratorForCustomType = new CodeGeneratorForCustomType();
             CodeGeneratorBase codeGeneratorForCustomEnum = new CodeGeneratorForCustomEnum();
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas.ToArray());
             foreach (TypeData customType in customTypeTable.CustomTypes)
             {
                 string scriptText;
@@ -171,6 +154,9 @@ namespace Physalia.ExcelDataExporter
 
         public void GenerateCodeForSelectedTables()
         {
+            CustomTypeTable customTypeTable = GenerateCustomTypeTable();
+            var parser = new TypeDataParser(customTypeTable);
+
             var invalidResults = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForData();
             CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForDataTable();
@@ -185,7 +171,7 @@ namespace Physalia.ExcelDataExporter
                     {
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -244,6 +230,9 @@ namespace Physalia.ExcelDataExporter
 
         private void ExportSelectedTablesAsJson()
         {
+            CustomTypeTable customTypeTable = GenerateCustomTypeTable();
+            var parser = new TypeDataParser(customTypeTable);
+
             var invalidResults = new List<TypeDataValidator.Result>();
             var dataExporter = new DataExporterJson();
 
@@ -256,7 +245,7 @@ namespace Physalia.ExcelDataExporter
                     {
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -279,6 +268,9 @@ namespace Physalia.ExcelDataExporter
 
         private void ExportSelectedTablesAsAsset()
         {
+            CustomTypeTable customTypeTable = GenerateCustomTypeTable();
+            var parser = new TypeDataParser(customTypeTable);
+
             var invalidResults = new List<TypeDataValidator.Result>();
 
             for (var i = 0; i < dataTables.Count; i++)
@@ -290,7 +282,7 @@ namespace Physalia.ExcelDataExporter
                     {
                         WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(worksheetData, sheetRawData);
+                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -352,10 +344,34 @@ namespace Physalia.ExcelDataExporter
             ShowInvalidResults(invalidResults);
         }
 
-        private TypeData ParseToTypeData(WorksheetData worksheetData, SheetRawData sheetRawData)
+        private CustomTypeTable GenerateCustomTypeTable()
+        {
+            // Get CustomTypeTable file
+            var fileInfo = new FileInfo($"{dataPath}/{Const.CustomTypeTableName}");
+            if (!fileInfo.Exists)
+            {
+                Debug.LogWarning($"{Const.CustomTypeTableName} not found.");
+                return null;
+            }
+
+            // Load sheet
+            var worksheetData = new WorksheetData(dataPath, fileInfo);
+            List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
+            if (sheetRawDatas.Count == 0)
+            {
+                Debug.LogWarning($"The count of sheet in {Const.CustomTypeTableName}");
+                return null;
+            }
+
+            // Parse
+            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas.ToArray());
+            return customTypeTable;
+        }
+
+        private TypeData ParseToTypeData(TypeDataParser parser, WorksheetData worksheetData, SheetRawData sheetRawData)
         {
             string typeName = worksheetData.Name.EndsWith("Table") ? worksheetData.Name[..^"Table".Length] : worksheetData.Name;
-            TypeData typeData = sheetParser.ExportTypeData(typeName, sheetRawData);
+            TypeData typeData = parser.ExportTypeData(typeName, sheetRawData);
             return typeData;
         }
 
