@@ -17,19 +17,19 @@ namespace Physalia.ExcelDataExporter
             Metadata metadata = sheetRawData.Metadata;
             if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
-                property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
-                for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+                property.arraySize = sheetRawData.RowCount - Const.DataTableStartLine;
+                for (var i = Const.DataTableStartLine; i < sheetRawData.RowCount; i++)
                 {
-                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartRow);
+                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartLine);
                     ExportDataAsItem(element, typeData, sheetRawData.GetRow(i));
                 }
             }
             else
             {
-                property.arraySize = sheetRawData.ColumnCount - Const.DataTableStartColumn;
-                for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
+                property.arraySize = sheetRawData.ColumnCount - Const.DataTableStartLine;
+                for (var i = Const.DataTableStartLine; i < sheetRawData.ColumnCount; i++)
                 {
-                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartColumn);
+                    SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartLine);
                     ExportDataAsItem(element, typeData, sheetRawData.GetColumn(i));
                 }
             }

@@ -61,9 +61,9 @@ namespace Physalia.ExcelDataExporter
 
         private List<TypeRawField> FindRawFieldsHorizontally(SheetRawData sheetRawData)
         {
-            string[] fieldCommentRow = sheetRawData.GetRow(Const.DataTableCommentRow);
-            string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
-            string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
+            string[] fieldCommentRow = sheetRawData.GetRow(Const.DataTableCommentLine);
+            string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameLine);
+            string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeLine);
 
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
@@ -76,9 +76,9 @@ namespace Physalia.ExcelDataExporter
 
         private List<TypeRawField> FindRawFieldsVertically(SheetRawData sheetRawData)
         {
-            string[] fieldCommentColumn = sheetRawData.GetColumn(Const.DataTableCommentColumn);
-            string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameColumn);
-            string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeColumn);
+            string[] fieldCommentColumn = sheetRawData.GetColumn(Const.DataTableCommentLine);
+            string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameLine);
+            string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeLine);
 
             var rawFields = new List<TypeRawField>(fieldNameColumn.Length);
             for (var i = 0; i < sheetRawData.RowCount; i++)

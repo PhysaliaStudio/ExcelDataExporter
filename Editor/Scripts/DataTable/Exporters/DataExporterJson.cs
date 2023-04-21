@@ -14,7 +14,7 @@ namespace Physalia.ExcelDataExporter
 
             if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
-                for (var i = Const.DataTableStartRow; i < sheetRawData.RowCount; i++)
+                for (var i = Const.DataTableStartLine; i < sheetRawData.RowCount; i++)
                 {
                     string json = ExportDataCellsAsJson(typeData, sheetRawData.GetRow(i));
                     sb.Append(json);
@@ -23,7 +23,7 @@ namespace Physalia.ExcelDataExporter
             }
             else
             {
-                for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
+                for (var i = Const.DataTableStartLine; i < sheetRawData.ColumnCount; i++)
                 {
                     string json = ExportDataCellsAsJson(typeData, sheetRawData.GetColumn(i));
                     sb.Append(json);

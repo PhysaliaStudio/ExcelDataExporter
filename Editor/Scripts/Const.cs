@@ -7,18 +7,10 @@ namespace Physalia.ExcelDataExporter
 
         public const string CustomTypeTableName = "$CustomTypes.xlsx";
 
-        public const int SheetMetaRow = 0;
-        public const int SheetMetaColumn = 0;
-
-        public const int DataTableCommentRow = 0;
-        public const int DataTableNameRow = 1;
-        public const int DataTableTypeRow = 2;
-        public const int DataTableStartRow = 3;
-
-        public const int DataTableCommentColumn = 0;
-        public const int DataTableNameColumn = 1;
-        public const int DataTableTypeColumn = 2;
-        public const int DataTableStartColumn = 3;
+        public const int DataTableCommentLine = 0;
+        public const int DataTableNameLine = 1;
+        public const int DataTableTypeLine = 2;
+        public const int DataTableStartLine = 3;
 
         public const string NotApplicable = "N/A";
     }
