@@ -12,16 +12,14 @@ namespace Physalia.ExcelDataExporter
             ScriptableObject setting = ScriptableObject.CreateInstance(dataType);
             var serializedObject = new SerializedObject(setting);
 
-            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            Metadata metadata = Metadata.Parse(metadataText);
-
+            Metadata metadata = sheetRawData.Metadata;
             if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
                 ExportDataAsItem(serializedObject, typeData, sheetRawData.GetRow(Const.DataTableStartRow));
             }
             else
             {
-                ExportDataAsItem(serializedObject, typeData, sheetRawData.GetColumn(Const.DataTableStartColumn)[1..]);
+                ExportDataAsItem(serializedObject, typeData, sheetRawData.GetColumn(Const.DataTableStartColumn));
             }
 
             serializedObject.ApplyModifiedPropertiesWithoutUndo();

@@ -12,10 +12,9 @@ namespace Physalia.ExcelDataExporter
             ScriptableObject dataTable = ScriptableObject.CreateInstance(tableType);
             var serializedObject = new SerializedObject(dataTable);
 
-            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            Metadata metadata = Metadata.Parse(metadataText);
-
             SerializedProperty property = serializedObject.FindProperty("items");
+
+            Metadata metadata = sheetRawData.Metadata;
             if (metadata.SheetLayout == SheetLayout.Horizontal)
             {
                 property.arraySize = sheetRawData.RowCount - Const.DataTableStartRow;
@@ -31,7 +30,7 @@ namespace Physalia.ExcelDataExporter
                 for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
                 {
                     SerializedProperty element = property.GetArrayElementAtIndex(i - Const.DataTableStartColumn);
-                    ExportDataAsItem(element, typeData, sheetRawData.GetColumn(i)[1..]);
+                    ExportDataAsItem(element, typeData, sheetRawData.GetColumn(i));
                 }
             }
 
