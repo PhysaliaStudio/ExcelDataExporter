@@ -7,10 +7,12 @@ namespace Physalia.ExcelDataExporter
 
     public class Metadata
     {
+        private bool export = true;
         private string namespaceName;
         private SheetLayout sheetLayout = SheetLayout.Horizontal;
         private SheetType sheetType = SheetType.DataTable;
 
+        public bool Export => export;
         public string NamespaceName => namespaceName;
         public SheetLayout SheetLayout => sheetLayout;
         public SheetType SheetType => sheetType;
@@ -25,6 +27,12 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
+
+                if (line.StartsWith("export="))
+                {
+                    metadata.export = line["export=".Length..] != "false";
+                }
+
                 if (line.StartsWith("namespace="))
                 {
                     metadata.namespaceName = line["namespace=".Length..];
