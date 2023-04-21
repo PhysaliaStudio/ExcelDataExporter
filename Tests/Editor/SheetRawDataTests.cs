@@ -21,5 +21,16 @@ namespace Physalia.ExcelDataExporter.Tests
             Assert.AreEqual("b", sheetRawData.Get(1, 1));
             Assert.AreEqual("c", sheetRawData.Get(1, 2));
         }
+
+        [Test]
+        public void ResizeBounds()
+        {
+            var sheetRawData = new SheetRawData(5, 3);
+            sheetRawData.SetRow(1, "a", "b");
+            sheetRawData.ResizeBounds();
+
+            Assert.AreEqual(2, sheetRawData.RowCount);
+            Assert.AreEqual(2, sheetRawData.ColumnCount);
+        }
     }
 }

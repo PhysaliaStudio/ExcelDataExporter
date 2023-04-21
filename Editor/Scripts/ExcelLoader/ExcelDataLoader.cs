@@ -49,6 +49,7 @@ namespace Physalia.ExcelDataExporter
                     rowIndex++;
                 }
 
+                sheetRawData.ResizeBounds();
                 sheetRawDatas.Add(sheetRawData);
             }
             while (reader.NextResult());

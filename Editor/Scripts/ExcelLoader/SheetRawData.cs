@@ -5,11 +5,10 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetRawData
     {
-        private readonly int rowCount;
-        private readonly int columnCount;
-        private readonly string[][] table;
-
         private Metadata metadata;
+        private int rowCount;
+        private int columnCount;
+        private string[][] table;
 
         public Metadata Metadata => metadata;
         public int RowCount => rowCount;
@@ -74,6 +73,75 @@ namespace Physalia.ExcelDataExporter
             {
                 table[rowIndex][i] = texts[i];
             }
+        }
+
+        public void ResizeBounds()
+        {
+            // Calculate new table size
+            var newRowCount = 0;
+            for (var i = rowCount - 1; i >= 0; i--)
+            {
+                if (!IsRowEmpty(i))
+                {
+                    newRowCount = i + 1;
+                    break;
+                }
+            }
+
+            var newColumnCount = 0;
+            for (var i = columnCount - 1; i >= 0; i--)
+            {
+                if (!IsColumnEmpty(i))
+                {
+                    newColumnCount = i + 1;
+                    break;
+                }
+            }
+
+            // Create new table
+            if (newRowCount == rowCount && newColumnCount == columnCount)
+            {
+                return;
+            }
+
+            string[][] newTable = new string[newRowCount][];
+            for (var i = 0; i < newRowCount; i++)
+            {
+                newTable[i] = new string[newColumnCount];
+                for (var j = 0; j < newColumnCount; j++)
+                {
+                    newTable[i][j] = table[i][j];
+                }
+            }
+
+            // Replace table
+            rowCount = newRowCount;
+            columnCount = newColumnCount;
+            table = newTable;
+        }
+
+        private bool IsRowEmpty(int rowIndex)
+        {
+            for (var i = 0; i < columnCount; i++)
+            {
+                if (!string.IsNullOrEmpty(table[rowIndex][i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool IsColumnEmpty(int columnIndex)
+        {
+            for (var i = 0; i < rowCount; i++)
+            {
+                if (!string.IsNullOrEmpty(table[i][columnIndex]))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public override string ToString()
