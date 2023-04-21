@@ -7,6 +7,7 @@ namespace Physalia.ExcelDataExporter
 {
     public class DataTableButton : BindableElement
     {
+        private static readonly Vector2 ButtonSize = new(150, 30);
         private static readonly Color SelectedColor = new Color32(0, 150, 0, 255);
 
         private readonly WorksheetData worksheetData;
@@ -16,12 +17,10 @@ namespace Physalia.ExcelDataExporter
         {
             this.worksheetData = worksheetData;
 
-            var uiAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{Const.UiAssetFolderPath}{nameof(DataTableButton)}.uxml");
-            uiAsset.CloneTree(this);
-
-            button = this.Q<Button>();
-            button.text = worksheetData.Name;
-            button.clicked += Switch;
+            button = new Button(Switch) { text = worksheetData.Name };
+            button.style.width = ButtonSize.x;
+            button.style.height = ButtonSize.y;
+            Add(button);
         }
 
         private void Switch()
