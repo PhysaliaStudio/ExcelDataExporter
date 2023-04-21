@@ -154,6 +154,70 @@ namespace Physalia.ExcelDataExporter
 
         public void GenerateCodeForSelectedTables()
         {
+            switch (exportFormat)
+            {
+                default:
+                    Debug.LogError($"Unknown export format: {exportFormat}");
+                    break;
+                case ExportFormat.Asset:
+                    GenerateCodeForSelectedTablesForAsset();
+                    break;
+                case ExportFormat.Json:
+                    GenerateCodeForSelectedTablesForJson();
+                    break;
+            }
+        }
+
+        private void GenerateCodeForSelectedTablesForJson()
+        {
+            CustomTypeTable customTypeTable = GenerateCustomTypeTable();
+            var parser = new TypeDataParser(customTypeTable);
+
+            var invalidResults = new List<TypeDataValidator.Result>();
+            CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForJsonData();
+            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForJsonSetting();
+
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                WorksheetData worksheetData = dataTables[i];
+                if (worksheetData.IsSelected)
+                {
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
+                    for (var j = 0; j < sheetRawDatas.Count; j++)
+                    {
+                        SheetRawData sheetRawData = sheetRawDatas[j];
+                        TypeData typeData = parser.ExportTypeData(sheetRawData);
+                        TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        if (!result.IsValid)
+                        {
+                            invalidResults.Add(result);
+                            continue;
+                        }
+
+                        if (typeData.IsTypeWithId)
+                        {
+                            string scriptText = codeGeneratorForData.Generate(typeData);
+                            string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.cs";
+                            SaveFile(path, scriptText);
+                        }
+                        else
+                        {
+                            string scriptText = codeGeneratorForSetting.Generate(typeData);
+                            string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.cs";
+                            SaveFile(path, scriptText);
+                        }
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            ShowInvalidResults(invalidResults);
+        }
+
+        private void GenerateCodeForSelectedTablesForAsset()
+        {
             CustomTypeTable customTypeTable = GenerateCustomTypeTable();
             var parser = new TypeDataParser(customTypeTable);
 
