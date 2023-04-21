@@ -34,9 +34,7 @@ namespace Physalia.ExcelDataExporter
 
         public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
         {
-            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            Metadata metadata = Metadata.Parse(metadataText);
-
+            Metadata metadata = sheetRawData.Metadata;
             var typeData = new TypeData
             {
                 isTypeWithId = metadata.SheetType == SheetType.DataTable,
@@ -77,9 +75,8 @@ namespace Physalia.ExcelDataExporter
             string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameColumn);
             string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeColumn);
 
-            // Note: The first row is metadata, so skip it
-            var rawFields = new List<TypeRawField>(fieldNameColumn.Length - 1);
-            for (var i = 1; i < sheetRawData.RowCount; i++)
+            var rawFields = new List<TypeRawField>(fieldNameColumn.Length);
+            for (var i = 0; i < sheetRawData.RowCount; i++)
             {
                 rawFields.Add(new TypeRawField(fieldNameColumn[i], fieldTypeNameColumn[i]));
             }

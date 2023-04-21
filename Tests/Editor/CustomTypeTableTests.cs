@@ -10,12 +10,12 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable()
         {
-            var sheetRawData = new SheetRawData(5, 4);
-            sheetRawData.SetRow(0, "namespace=Test");
-            sheetRawData.SetRow(1, "class Vector2", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "int");
-            sheetRawData.SetRow(3, "class Vector3", "x", "y", "z");
-            sheetRawData.SetRow(4, "", "int", "int", "int");
+            var sheetRawData = new SheetRawData(4, 4);
+            sheetRawData.SetMetadata("namespace=Test");
+            sheetRawData.SetRow(0, "class Vector2", "x", "y");
+            sheetRawData.SetRow(1, "", "int", "int");
+            sheetRawData.SetRow(2, "class Vector3", "x", "y", "z");
+            sheetRawData.SetRow(3, "", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -47,13 +47,13 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEmptyRow()
         {
-            var sheetRawData = new SheetRawData(6, 4);
-            sheetRawData.SetRow(0, "namespace=Test");
-            sheetRawData.SetRow(1, "struct Vector2", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "int");
-            sheetRawData.SetRow(3);
-            sheetRawData.SetRow(4, "struct Vector3", "x", "y", "z");
-            sheetRawData.SetRow(5, "", "int", "int", "int");
+            var sheetRawData = new SheetRawData(5, 4);
+            sheetRawData.SetMetadata("namespace=Test");
+            sheetRawData.SetRow(0, "struct Vector2", "x", "y");
+            sheetRawData.SetRow(1, "", "int", "int");
+            sheetRawData.SetRow(2);
+            sheetRawData.SetRow(3, "struct Vector3", "x", "y", "z");
+            sheetRawData.SetRow(4, "", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -85,13 +85,13 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsInvalidData()
         {
-            var sheetRawData = new SheetRawData(6, 4);
-            sheetRawData.SetRow(0, "namespace=Test");
-            sheetRawData.SetRow(1, "struct Vector2", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "");  // Missing type name, which is invalid.
-            sheetRawData.SetRow(3);
-            sheetRawData.SetRow(4, "struct Vector3", "x", "y", "z");
-            sheetRawData.SetRow(5, "", "int", "int", "int");
+            var sheetRawData = new SheetRawData(5, 4);
+            sheetRawData.SetMetadata("namespace=Test");
+            sheetRawData.SetRow(0, "struct Vector2", "x", "y");
+            sheetRawData.SetRow(1, "", "int", "");  // Missing type name, which is invalid.
+            sheetRawData.SetRow(2);
+            sheetRawData.SetRow(3, "struct Vector3", "x", "y", "z");
+            sheetRawData.SetRow(4, "", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -115,10 +115,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEnum()
         {
-            var sheetRawData = new SheetRawData(3, 4);
-            sheetRawData.SetRow(0, "namespace=Test");
-            sheetRawData.SetRow(1, "enum EnemyType", "Normal", "Elite", "Boss");
-            sheetRawData.SetRow(2, "", "0", "1", "2");
+            var sheetRawData = new SheetRawData(2, 4);
+            sheetRawData.SetMetadata("namespace=Test");
+            sheetRawData.SetRow(0, "enum EnemyType", "Normal", "Elite", "Boss");
+            sheetRawData.SetRow(1, "", "0", "1", "2");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 

@@ -10,9 +10,9 @@ namespace Physalia.ExcelDataExporter
         public const int SheetMetaRow = 0;
         public const int SheetMetaColumn = 0;
 
-        public const int DataTableNameRow = 1;
-        public const int DataTableTypeRow = 2;
-        public const int DataTableStartRow = 3;
+        public const int DataTableNameRow = 0;
+        public const int DataTableTypeRow = 1;
+        public const int DataTableStartRow = 2;
 
         public const int DataTableNameColumn = 0;
         public const int DataTableTypeColumn = 1;

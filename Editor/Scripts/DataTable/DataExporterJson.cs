@@ -8,8 +8,7 @@ namespace Physalia.ExcelDataExporter
     {
         public string Export(TypeData typeData, SheetRawData sheetRawData)
         {
-            string metadataText = sheetRawData.Get(Const.SheetMetaRow, Const.SheetMetaColumn);
-            Metadata metadata = Metadata.Parse(metadataText);
+            Metadata metadata = sheetRawData.Metadata;
 
             var sb = new StringBuilder();
 
@@ -26,8 +25,7 @@ namespace Physalia.ExcelDataExporter
             {
                 for (var i = Const.DataTableStartColumn; i < sheetRawData.ColumnCount; i++)
                 {
-                    // Note: The first row is metadata, so skip it
-                    string json = ExportDataCellsAsJson(typeData, sheetRawData.GetColumn(i)[1..]);
+                    string json = ExportDataCellsAsJson(typeData, sheetRawData.GetColumn(i));
                     sb.Append(json);
                     sb.Append('\n');
                 }
