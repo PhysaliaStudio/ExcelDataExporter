@@ -9,15 +9,18 @@ namespace Physalia.ExcelDataExporter
         {
             private readonly string fieldName;
             private readonly string typeName;
+            private readonly string comment;
 
-            internal TypeRawField(string fieldName, string typeName)
+            internal TypeRawField(string fieldName, string typeName, string comment)
             {
                 this.typeName = typeName;
                 this.fieldName = fieldName;
+                this.comment = comment;
             }
 
             internal string FieldName => fieldName;
             internal string TypeName => typeName;
+            internal string Comment => comment;
         }
 
         private readonly CustomTypeTable customTypeTable;
@@ -58,13 +61,14 @@ namespace Physalia.ExcelDataExporter
 
         private List<TypeRawField> FindRawFieldsHorizontally(SheetRawData sheetRawData)
         {
+            string[] fieldCommentRow = sheetRawData.GetRow(Const.DataTableCommentRow);
             string[] fieldNameRow = sheetRawData.GetRow(Const.DataTableNameRow);
             string[] fieldTypeNameRow = sheetRawData.GetRow(Const.DataTableTypeRow);
 
             var rawFields = new List<TypeRawField>(fieldNameRow.Length);
             for (var i = 0; i < sheetRawData.ColumnCount; i++)
             {
-                rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i]));
+                rawFields.Add(new TypeRawField(fieldNameRow[i], fieldTypeNameRow[i], fieldCommentRow[i]));
             }
 
             return rawFields;
@@ -72,13 +76,14 @@ namespace Physalia.ExcelDataExporter
 
         private List<TypeRawField> FindRawFieldsVertically(SheetRawData sheetRawData)
         {
+            string[] fieldCommentColumn = sheetRawData.GetColumn(Const.DataTableCommentColumn);
             string[] fieldNameColumn = sheetRawData.GetColumn(Const.DataTableNameColumn);
             string[] fieldTypeNameColumn = sheetRawData.GetColumn(Const.DataTableTypeColumn);
 
             var rawFields = new List<TypeRawField>(fieldNameColumn.Length);
             for (var i = 0; i < sheetRawData.RowCount; i++)
             {
-                rawFields.Add(new TypeRawField(fieldNameColumn[i], fieldTypeNameColumn[i]));
+                rawFields.Add(new TypeRawField(fieldNameColumn[i], fieldTypeNameColumn[i], fieldCommentColumn[i]));
             }
 
             return rawFields;
@@ -179,6 +184,7 @@ namespace Physalia.ExcelDataExporter
             {
                 name = fieldName.Length > 1 ? char.ToLower(fieldName[0]) + fieldName[1..] : char.ToLower(fieldName[0]).ToString(),
                 typeData = fieldTypeData,
+                comment = nextField.Comment,
                 isArray = isArray,
             };
 

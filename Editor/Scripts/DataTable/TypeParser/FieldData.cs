@@ -4,6 +4,7 @@ namespace Physalia.ExcelDataExporter
     {
         public string name;
         public TypeData typeData;
+        public string comment;
         public bool isArray;
         public int arraySize = -1;
         public int enumValue;
@@ -12,6 +13,7 @@ namespace Physalia.ExcelDataExporter
         public bool IsSystemType => typeData.IsSystemType;
         public string TypeName => isArray ? $"{typeData.name}[]" : typeData.name;
         public string BaseTypeName => typeData.name;
+        public string Comment => comment;
 
         public string NameForPrivateField => name.Length > 1 ? "_" + char.ToLower(name[0]) + name[1..] : "_" + char.ToLower(name[0]).ToString();
         public string NameForPublicField => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
