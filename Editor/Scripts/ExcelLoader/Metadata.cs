@@ -8,11 +8,13 @@ namespace Physalia.ExcelDataExporter
     public class Metadata
     {
         private bool export = true;
+        private string overrideName;
         private string namespaceName;
         private SheetLayout sheetLayout = SheetLayout.Horizontal;
         private SheetType sheetType = SheetType.DataTable;
 
         public bool Export => export;
+        public string OverrideName => overrideName;
         public string NamespaceName => namespaceName;
         public SheetLayout SheetLayout => sheetLayout;
         public SheetType SheetType => sheetType;
@@ -31,6 +33,11 @@ namespace Physalia.ExcelDataExporter
                 if (line.StartsWith("export="))
                 {
                     metadata.export = line["export=".Length..] != "false";
+                }
+
+                if (line.StartsWith("name="))
+                {
+                    metadata.overrideName = line["name=".Length..];
                 }
 
                 if (line.StartsWith("namespace="))

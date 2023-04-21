@@ -35,14 +35,14 @@ namespace Physalia.ExcelDataExporter
             this.customTypeTable = customTypeTable;
         }
 
-        public TypeData ExportTypeData(string typeName, SheetRawData sheetRawData)
+        public TypeData ExportTypeData(SheetRawData sheetRawData)
         {
             Metadata metadata = sheetRawData.Metadata;
             var typeData = new TypeData
             {
                 isTypeWithId = metadata.SheetType == SheetType.DataTable,
                 namespaceName = metadata.NamespaceName,
-                name = typeName
+                name = sheetRawData.Name,
             };
 
             List<TypeRawField> rawFields;

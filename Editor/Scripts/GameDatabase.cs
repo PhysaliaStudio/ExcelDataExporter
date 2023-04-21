@@ -164,14 +164,14 @@ namespace Physalia.ExcelDataExporter
 
             for (var i = 0; i < dataTables.Count; i++)
             {
-                if (dataTables[i].IsSelected)
+                WorksheetData worksheetData = dataTables[i];
+                if (worksheetData.IsSelected)
                 {
-                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
+                        TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -183,23 +183,20 @@ namespace Physalia.ExcelDataExporter
                         {
                             {
                                 string scriptText = codeGeneratorForData.Generate(typeData);
-                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder[..^"Table".Length] : worksheetData.NameWithFolder;
-                                string path = $"{codePath}{relativePath}.cs";
+                                string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.cs";
                                 SaveFile(path, scriptText);
                             }
 
                             {
                                 string scriptText = codeGeneratorForDataTable.Generate(typeData);
-                                string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
-                                string path = $"{codePath}{relativePath}.cs";
+                                string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name + "Table"}.cs";
                                 SaveFile(path, scriptText);
                             }
                         }
                         else
                         {
                             string scriptText = codeGeneratorForSetting.Generate(typeData);
-                            string relativePath = worksheetData.NameWithFolder;
-                            string path = $"{codePath}{relativePath}.cs";
+                            string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.cs";
                             SaveFile(path, scriptText);
                         }
                     }
@@ -238,14 +235,14 @@ namespace Physalia.ExcelDataExporter
 
             for (var i = 0; i < dataTables.Count; i++)
             {
-                if (dataTables[i].IsSelected)
+                WorksheetData worksheetData = dataTables[i];
+                if (worksheetData.IsSelected)
                 {
-                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
+                        TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -253,8 +250,8 @@ namespace Physalia.ExcelDataExporter
                             continue;
                         }
 
-                        string json = dataExporter.Export(typeData, sheetRawDatas[j]);
-                        string path = $"{exportPath}{dataTables[i].NameWithFolder}.json";
+                        string json = dataExporter.Export(typeData, sheetRawData);
+                        string path = $"{exportPath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.json";
                         SaveFile(path, json);
                     }
                 }
@@ -275,14 +272,14 @@ namespace Physalia.ExcelDataExporter
 
             for (var i = 0; i < dataTables.Count; i++)
             {
-                if (dataTables[i].IsSelected)
+                WorksheetData worksheetData = dataTables[i];
+                if (worksheetData.IsSelected)
                 {
-                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(dataTables[i].FullPath);
+                    List<SheetRawData> sheetRawDatas = excelDataLoader.LoadExcelData(worksheetData.FullPath);
                     for (var j = 0; j < sheetRawDatas.Count; j++)
                     {
-                        WorksheetData worksheetData = dataTables[i];
                         SheetRawData sheetRawData = sheetRawDatas[j];
-                        TypeData typeData = ParseToTypeData(parser, worksheetData, sheetRawData);
+                        TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
                         if (!result.IsValid)
                         {
@@ -292,10 +289,9 @@ namespace Physalia.ExcelDataExporter
 
                         if (typeData.isTypeWithId)
                         {
-                            ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawDatas[j]);
-                            string relativePath = worksheetData.NameWithFolder.EndsWith("Table") ? worksheetData.NameWithFolder : worksheetData.NameWithFolder + "Table";
-                            string absolutePath = $"{exportPath}{relativePath}.asset";
-                            string assetPath = AbsoluteToAssetPath(absolutePath);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectDataTable.Export(typeData, sheetRawData);
+                            string fullPath = $"{exportPath}{worksheetData.RelativeFolder}/{sheetRawData.Name + "Table"}.asset";
+                            string assetPath = FullPathToAssetPath(fullPath);
 
                             // Save asset
                             Type tableType = typeData.GetTableType();
@@ -308,16 +304,15 @@ namespace Physalia.ExcelDataExporter
                             }
                             else
                             {
-                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                                 AssetDatabase.CreateAsset(scriptableObject, assetPath);
                             }
                         }
                         else
                         {
-                            ScriptableObject scriptableObject = ExporterScriptableObjectSetting.Export(typeData, sheetRawDatas[j]);
-                            string relativePath = worksheetData.NameWithFolder;
-                            string absolutePath = $"{exportPath}{relativePath}.asset";
-                            string assetPath = AbsoluteToAssetPath(absolutePath);
+                            ScriptableObject scriptableObject = ExporterScriptableObjectSetting.Export(typeData, sheetRawData);
+                            string fullPath = $"{exportPath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.asset";
+                            string assetPath = FullPathToAssetPath(fullPath);
 
                             // Save asset
                             Type dataType = typeData.GetDataType();
@@ -330,7 +325,7 @@ namespace Physalia.ExcelDataExporter
                             }
                             else
                             {
-                                _ = Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
+                                _ = Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                                 AssetDatabase.CreateAsset(scriptableObject, assetPath);
                             }
                         }
@@ -368,13 +363,6 @@ namespace Physalia.ExcelDataExporter
             return customTypeTable;
         }
 
-        private TypeData ParseToTypeData(TypeDataParser parser, WorksheetData worksheetData, SheetRawData sheetRawData)
-        {
-            string typeName = worksheetData.Name.EndsWith("Table") ? worksheetData.Name[..^"Table".Length] : worksheetData.Name;
-            TypeData typeData = parser.ExportTypeData(typeName, sheetRawData);
-            return typeData;
-        }
-
         private void SaveFile(string path, string data)
         {
             _ = Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -383,12 +371,7 @@ namespace Physalia.ExcelDataExporter
             writer.Write(data);
         }
 
-        private static string AssetToAbsolutePath(string assetPath)
-        {
-            return Application.dataPath + assetPath["Assets".Length..];
-        }
-
-        private static string AbsoluteToAssetPath(string absolutePath)
+        private static string FullPathToAssetPath(string absolutePath)
         {
             return "Assets" + absolutePath[Application.dataPath.Length..];
         }

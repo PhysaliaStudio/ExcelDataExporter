@@ -23,6 +23,23 @@ namespace Physalia.ExcelDataExporter.Tests
         }
 
         [Test]
+        public void SetNameAsTest_NameReturnsTest()
+        {
+            var sheetRawData = new SheetRawData(5, 3);
+            sheetRawData.SetName("Test");
+            Assert.AreEqual("Test", sheetRawData.Name);
+        }
+
+        [Test]
+        public void SetNameAsTest_SetOverrideNameAsTestOverride_NameReturnsTestOverride()
+        {
+            var sheetRawData = new SheetRawData(5, 3);
+            sheetRawData.SetMetadata("name=TestOverride");
+            sheetRawData.SetName("Test");
+            Assert.AreEqual("TestOverride", sheetRawData.Name);
+        }
+
+        [Test]
         public void ResizeBounds()
         {
             var sheetRawData = new SheetRawData(5, 3);
