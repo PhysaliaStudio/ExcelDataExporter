@@ -7,6 +7,16 @@ namespace Physalia.ExcelDataExporter
 
     public class Metadata
     {
+        private string namespaceName;
+        private SheetLayout sheetLayout = SheetLayout.Horizontal;
+        private SheetType sheetType = SheetType.DataTable;
+
+        public string NamespaceName => namespaceName;
+        public SheetLayout SheetLayout => sheetLayout;
+        public SheetType SheetType => sheetType;
+
+        private Metadata() { }
+
         public static Metadata Parse(string text)
         {
             var metadata = new Metadata();
@@ -57,15 +67,5 @@ namespace Physalia.ExcelDataExporter
 
             return metadata;
         }
-
-        private string namespaceName;
-        private SheetLayout sheetLayout = SheetLayout.Horizontal;
-        private SheetType sheetType = SheetType.DataTable;
-
-        public string NamespaceName => namespaceName;
-        public SheetLayout SheetLayout => sheetLayout;
-        public SheetType SheetType => sheetType;
-
-        private Metadata() { }
     }
 }
