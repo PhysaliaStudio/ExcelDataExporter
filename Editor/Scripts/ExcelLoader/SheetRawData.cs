@@ -5,7 +5,7 @@ namespace Physalia.ExcelDataExporter
 {
     public class SheetRawData
     {
-        private string name;
+        private string name = string.Empty;
         private Metadata metadata;
         private int rowCount;
         private int columnCount;
@@ -29,6 +29,11 @@ namespace Physalia.ExcelDataExporter
 
         public void SetName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                name = string.Empty;
+            }
+
             this.name = name;
         }
 

@@ -14,7 +14,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
@@ -31,7 +31,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
@@ -49,7 +49,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
@@ -66,7 +66,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "bool", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);
@@ -84,7 +84,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             var validator = new TypeDataValidator();
             TypeDataValidator.Result result = validator.Validate(typeData);

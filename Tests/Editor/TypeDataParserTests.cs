@@ -14,7 +14,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int", "string", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             Assert.AreEqual("Test", typeData.namespaceName);
             Assert.AreEqual(3, typeData.fieldDatas.Count);
@@ -36,7 +36,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "int[]", "bool[]");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
@@ -56,7 +56,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "Vector2Int", "", "Vector3Int", "", "");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
@@ -74,7 +74,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "Vector2Int", "", "", "", "Vector3Int", "", "");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
@@ -103,7 +103,7 @@ namespace Physalia.ExcelDataExporter.Tests
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             Assert.AreEqual(1, typeData.fieldDatas.Count);
             Assert.AreEqual("類型", typeData.fieldDatas[0].comment);
@@ -127,7 +127,7 @@ namespace Physalia.ExcelDataExporter.Tests
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             Assert.AreEqual(1, typeData.fieldDatas.Count);
             Assert.AreEqual("類型", typeData.fieldDatas[0].comment);
@@ -145,7 +145,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(2, "欄位3", "field3", "bool");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             Assert.AreEqual("Test", typeData.namespaceName);
             Assert.AreEqual(3, typeData.fieldDatas.Count);
@@ -166,7 +166,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(1, "欄位2", "field2", "bool[]");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
@@ -188,7 +188,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(4, "", "field2.z", "");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
@@ -210,7 +210,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.SetRow(6, "", "field2[0].z", "");
 
             var parser = new TypeDataParser();
-            TypeData typeData = parser.ExportTypeData("", sheetRawData);
+            TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.AreEqual(2, typeData.fieldDatas.Count);
             Assert.AreEqual("欄位1", typeData.fieldDatas[0].comment);
             Assert.AreEqual("欄位2", typeData.fieldDatas[1].comment);
