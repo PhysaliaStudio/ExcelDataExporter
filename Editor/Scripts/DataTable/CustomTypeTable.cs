@@ -23,84 +23,82 @@ namespace Physalia.ExcelDataExporter
 
         private static void ParseSheet(CustomTypeTable table, SheetRawData sheetRawData)
         {
-            var readyForTypeRow = false;
-            TypeData currentTypeData = null;
-
             for (var i = 0; i < sheetRawData.RowCount; i++)
             {
-                string[] row = sheetRawData.GetRow(i);
-                if (!readyForTypeRow)
+                bool success = TryParseType(sheetRawData, i, out TypeData typeData);
+                if (success)
                 {
-                    currentTypeData = ParseNameRow(row);
-                    if (currentTypeData == null)
-                    {
-                        continue;
-                    }
-
-                    readyForTypeRow = true;
-                }
-                else
-                {
-                    bool success;
-                    if (currentTypeData.define != TypeData.Define.Enum)
-                    {
-                        success = ParseTypeRow(currentTypeData, row);
-                    }
-                    else
-                    {
-                        success = ParseEnumValueRow(currentTypeData, row);
-                    }
-
-                    if (success)
-                    {
-                        Metadata metadata = sheetRawData.Metadata;
-                        currentTypeData.namespaceName = metadata.NamespaceName;
-
-                        table.typeTable.Add(currentTypeData.name, currentTypeData);
-                    }
-
-                    currentTypeData = null;
-                    readyForTypeRow = false;
+                    Metadata metadata = sheetRawData.Metadata;
+                    typeData.namespaceName = metadata.NamespaceName;
+                    table.typeTable.Add(typeData.name, typeData);
+                    i += 2;
                 }
             }
         }
 
-        private static TypeData ParseNameRow(string[] row)
+        private static bool TryParseType(SheetRawData sheetRawData, int startIndex, out TypeData typeData)
         {
-            if (string.IsNullOrWhiteSpace(row[0]))
+            typeData = null;
+
+            string[] startRow = sheetRawData.GetRow(startIndex);
+            if (string.IsNullOrWhiteSpace(startRow[0]))
             {
-                return null;
+                return false;
             }
 
-            TypeData typeData = StartTypeData(row[0]);
-            if (typeData == null)  // Encounter invalid data
+            TypeData typeDataToContinued = StartTypeData(sheetRawData, startIndex);
+            if (typeDataToContinued == null)  // Encounter invalid data
             {
-                return null;
+                return false;
             }
 
-            for (var i = 1; i < row.Length; i++)
+            if (!ParseCommentRow(typeDataToContinued, sheetRawData.GetRow(startIndex)))
             {
-                string fieldName = row[i];
-                if (string.IsNullOrWhiteSpace(fieldName))
+                return false;
+            }
+
+            if (!ParseNameRow(typeDataToContinued, sheetRawData.GetRow(startIndex + 1)))
+            {
+                return false;
+            }
+
+            if (typeDataToContinued.define != TypeData.Define.Enum)
+            {
+                if (!ParseTypeRow(typeDataToContinued, sheetRawData.GetRow(startIndex + 2)))
                 {
-                    break;
+                    return false;
                 }
-
-                var fieldData = new FieldData { name = fieldName };
-                typeData.fieldDatas.Add(fieldData);
+            }
+            else
+            {
+                if (!ParseEnumValueRow(typeDataToContinued, sheetRawData.GetRow(startIndex + 2)))
+                {
+                    return false;
+                }
             }
 
-            return typeData;
+            typeData = typeDataToContinued;
+            return true;
         }
 
-        private static TypeData StartTypeData(string cell)
+        private static TypeData StartTypeData(SheetRawData sheetRawData, int startIndex)
         {
-            string[] splits = cell.Split(' ');
+            // If row count is not enough, then it must failed.
+            if (startIndex + 2 >= sheetRawData.RowCount)
+            {
+                return null;
+            }
+
+            string[] startRow = sheetRawData.GetRow(startIndex);
+            string startCell = startRow[0];
+            string[] splits = startCell.Split(' ');
             if (splits.Length != 2)
             {
                 return null;
             }
 
+            // Type define and type name
+            TypeData typeData;
             string typeDefine = splits[0];
             string typeName = splits[1];
             switch (typeDefine)
@@ -108,12 +106,52 @@ namespace Physalia.ExcelDataExporter
                 default:
                     return null;
                 case "class":
-                    return new TypeData { name = typeName, define = TypeData.Define.Class };
+                    typeData = new TypeData { name = typeName, define = TypeData.Define.Class };
+                    break;
                 case "struct":
-                    return new TypeData { name = typeName, define = TypeData.Define.Struct };
+                    typeData = new TypeData { name = typeName, define = TypeData.Define.Struct };
+                    break;
                 case "enum":
-                    return new TypeData { name = typeName, define = TypeData.Define.Enum };
+                    typeData = new TypeData { name = typeName, define = TypeData.Define.Enum };
+                    break;
             }
+
+            // Field count
+            string[] nameRow = sheetRawData.GetRow(startIndex + 1);
+            for (var i = 1; i < nameRow.Length; i++)
+            {
+                string fieldName = nameRow[i];
+                if (string.IsNullOrWhiteSpace(fieldName))
+                {
+                    break;
+                }
+
+                typeData.fieldDatas.Add(new FieldData());
+            }
+
+            return typeData;
+        }
+
+        private static bool ParseCommentRow(TypeData typeDataToContinued, string[] row)
+        {
+            for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
+            {
+                string comment = row[i + 1];
+                typeDataToContinued.fieldDatas[i].comment = comment;
+            }
+
+            return true;
+        }
+
+        private static bool ParseNameRow(TypeData typeDataToContinued, string[] row)
+        {
+            for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
+            {
+                string name = row[i + 1];
+                typeDataToContinued.fieldDatas[i].name = name;
+            }
+
+            return true;
         }
 
         private static bool ParseTypeRow(TypeData typeDataToContinued, string[] row)
