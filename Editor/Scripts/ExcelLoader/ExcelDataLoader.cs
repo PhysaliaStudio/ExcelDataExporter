@@ -17,15 +17,23 @@ namespace Physalia.ExcelDataExporter
             {
                 int rowCount = reader.RowCount;
                 int columnCount = reader.FieldCount;
-                var sheetRawData = new SheetRawData(rowCount, columnCount);
+                var sheetRawData = new SheetRawData(rowCount - 1, columnCount);
 
                 var rowIndex = 0;
                 while (reader.Read())
                 {
-                    for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                    if (rowIndex == 0)
                     {
-                        string text = reader.GetValue(columnIndex)?.ToString();
-                        sheetRawData.Set(rowIndex, columnIndex, text);
+                        string metadataText = reader.GetValue(0)?.ToString();
+                        sheetRawData.SetMetadata(metadataText);
+                    }
+                    else
+                    {
+                        for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                        {
+                            string text = reader.GetValue(columnIndex)?.ToString();
+                            sheetRawData.Set(rowIndex - 1, columnIndex, text);
+                        }
                     }
 
                     rowIndex++;

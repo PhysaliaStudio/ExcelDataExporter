@@ -9,6 +9,9 @@ namespace Physalia.ExcelDataExporter
         private readonly int columnCount;
         private readonly string[][] table;
 
+        private Metadata metadata;
+
+        public Metadata Metadata => metadata;
         public int RowCount => rowCount;
         public int ColumnCount => columnCount;
 
@@ -21,6 +24,11 @@ namespace Physalia.ExcelDataExporter
             {
                 table[i] = new string[columnCount];
             }
+        }
+
+        public void SetMetadata(string metadataText)
+        {
+            metadata = Metadata.Parse(metadataText);
         }
 
         public string Get(int rowIndex, int columnIndex)
