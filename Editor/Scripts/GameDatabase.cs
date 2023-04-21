@@ -158,9 +158,9 @@ namespace Physalia.ExcelDataExporter
             var parser = new TypeDataParser(customTypeTable);
 
             var invalidResults = new List<TypeDataValidator.Result>();
-            CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForData();
-            CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForDataTable();
-            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForSetting();
+            CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForAssetData();
+            CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForAssetDataTable();
+            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForAssetSetting();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
