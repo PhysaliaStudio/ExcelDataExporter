@@ -56,6 +56,23 @@ namespace Physalia.ExcelDataExporter
             return namespaces;
         }
 
+        protected static List<string> GenerateUsingBlock(List<string> namespaces, string ending)
+        {
+            if (namespaces.Count == 0)
+            {
+                return new List<string>();
+            }
+
+            var codes = new List<string>(namespaces.Count + 1);
+            for (var i = 0; i < namespaces.Count; i++)
+            {
+                codes.Add($"using {namespaces[i]};{ending}");
+            }
+            codes.Add(ending);
+
+            return codes;
+        }
+
         protected static string BuildScriptText(List<string> header, List<string> usingBlock, List<string> typeBlock,
             string ending, string namespaceName = null)
         {

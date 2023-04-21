@@ -30,12 +30,8 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            var codes = new List<string> {
-                $"using UnityEngine;{ending}",
-                ending,
-            };
-
-            return codes;
+            List<string> namespaces = CollectNamespaces(typeData, "UnityEngine");
+            return GenerateUsingBlock(namespaces, ending);
         }
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)

@@ -30,23 +30,8 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            // Collect namespaces
             List<string> namespaces = CollectNamespaces(typeData);
-
-            // Build string
-            if (namespaces.Count == 0)
-            {
-                return new List<string>();
-            }
-
-            var codes = new List<string>(namespaces.Count + 1);
-            for (var i = 0; i < namespaces.Count; i++)
-            {
-                codes.Add($"using {namespaces[i]};{ending}");
-            }
-            codes.Add(ending);
-
-            return codes;
+            return GenerateUsingBlock(namespaces, ending);
         }
 
         private static List<string> GenerateTypeBlock(TypeData typeData, string tab, string ending)
