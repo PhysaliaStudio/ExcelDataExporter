@@ -122,9 +122,10 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 // Write property
+                string fieldName = fieldData.NameForPrivateField;
                 string propertyName = fieldData.NameForProperty;
                 string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {propertyName} {{ get; }}{ending}");
+                codes.Add($"{tab}public {fieldTypeName} {propertyName} => {fieldName};{ending}");
             }
 
             codes.Add($"}}{ending}");
