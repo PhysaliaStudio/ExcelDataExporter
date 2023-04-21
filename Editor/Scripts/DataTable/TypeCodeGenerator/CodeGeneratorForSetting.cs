@@ -17,7 +17,10 @@ namespace Physalia.ExcelDataExporter
             {
                 for (var i = 0; i < typeBlock.Count; i++)
                 {
-                    typeBlock[i] = tab + typeBlock[i];
+                    if (typeBlock[i] != ending)
+                    {
+                        typeBlock[i] = tab + typeBlock[i];
+                    }
                 }
             }
 
@@ -59,6 +62,22 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
+
+                // Write comment as summary
+                string comment = fieldData.Comment;
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    if (i != 0)
+                    {
+                        codes.Add(ending);
+                    }
+
+                    codes.Add($"{tab}/// <summary>{ending}");
+                    codes.Add($"{tab}/// {comment}{ending}");
+                    codes.Add($"{tab}/// </summary>{ending}");
+                }
+
+                // Write property
                 string propertyName = fieldData.NameForProperty;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {propertyName} {{ get; }}{ending}");
