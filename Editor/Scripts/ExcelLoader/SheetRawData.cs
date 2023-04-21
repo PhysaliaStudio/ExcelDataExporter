@@ -11,7 +11,19 @@ namespace Physalia.ExcelDataExporter
         private int columnCount;
         private string[][] table;
 
-        public string Name => name;
+        public string Name
+        {
+            get
+            {
+                if (metadata != null && !string.IsNullOrEmpty(metadata.OverrideName))
+                {
+                    return metadata.OverrideName;
+                }
+
+                return name;
+            }
+        }
+
         public Metadata Metadata => metadata;
         public int RowCount => rowCount;
         public int ColumnCount => columnCount;
