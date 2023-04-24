@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e5f4a6b8f208c418a8aa4aee4ca22a, type: 3}
+  m_Name: ValidSetting
+  m_EditorClassIdentifier: 
+  _spawnGapTime: 200
+  _defModelID: 10005
+  _defWeaponDataID: 0
+  _hitEffectDestroyTime: 5000
+  _decalDestroyTime: 10000
+  _bulletShellDestroyTime: 8000
+  _fireSparkDestroyTime: 2000
+  _updataAIGapTime: 80
+  _zombieDeadEffectTime: 5000
+  _zombieHitSlowSpd: 5000
+  _zombieHitSlowTime: 1000
+  _zombieDefSpd: 30000
+  _zombieNotLegDefSpd: 10000
+  _hurtEffectGapTime: 1000
+  _zombieDeadStayTime: 2000
+  _deadDelayCallTime: 3000
+  _hitTheWallGapTime: 1000
+  _hitTheWallDamage: 20
+  _deadPosY: 2000
+  _minHeight: 165
+  _maxHeight: 200

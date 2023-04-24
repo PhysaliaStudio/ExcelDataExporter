@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e2143b6aeea3a4192f5e848a94fb21, type: 3}
+  m_Name: ValidExampleDataTable
+  m_EditorClassIdentifier: 
+  items:
+  - _id: 1000
+    _name: ABC
+    _attack: 0200000005000000080000000d000000
+    _type: 1
+    _startPos:
+    - {x: 5, y: 3}
