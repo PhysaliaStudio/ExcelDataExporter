@@ -43,7 +43,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void Validate_NoIdField_ButIsSettingType()
         {
             var sheetRawData = new SheetRawData(3, 3);
-            sheetRawData.SetMetadata("namespace=Test\ntype=setting");
+            sheetRawData.SetMetadata("namespace=Test\ntype=setting\nlayout=horizontal");
             sheetRawData.SetRow(0);
             sheetRawData.SetRow(1, "Field1", "Field2", "Field3");
             sheetRawData.SetRow(2, "int", "string", "bool");
