@@ -104,8 +104,8 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "studio.physalia.excel-data-exporter": {
-      "version": "file:studio.physalia.excel-data-exporter",
+    "studio.physalia.exceldataexporter": {
+      "version": "file:studio.physalia.exceldataexporter",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
