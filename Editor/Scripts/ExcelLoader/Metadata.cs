@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 
 namespace Physalia.ExcelDataExporter
@@ -7,6 +8,12 @@ namespace Physalia.ExcelDataExporter
 
     public class Metadata
     {
+        private class Item
+        {
+            public string key;
+            public string value;
+        }
+
         private bool export = true;
         private string overrideName;
         private string namespaceName;
@@ -23,64 +30,74 @@ namespace Physalia.ExcelDataExporter
 
         public static Metadata Parse(string text)
         {
-            var metadata = new Metadata();
-
+            var items = new List<Item>();
             string[] lines = text.Replace("\r\n", "\n").Split('\n');
             for (var i = 0; i < lines.Length; i++)
             {
-                string line = lines[i];
-
-                if (line.StartsWith("export="))
+                string[] splits = lines[i].Trim().Split('=');
+                if (splits.Length == 2)
                 {
-                    metadata.export = line["export=".Length..] != "false";
-                }
-
-                if (line.StartsWith("name="))
-                {
-                    metadata.overrideName = line["name=".Length..];
-                }
-
-                if (line.StartsWith("namespace="))
-                {
-                    metadata.namespaceName = line["namespace=".Length..];
-                }
-
-                if (line.StartsWith("layout="))
-                {
-                    string value = line["layout=".Length..];
-                    if (value == "horizontal")
-                    {
-                        metadata.sheetLayout = SheetLayout.Horizontal;
-                    }
-                    else if (value == "vertical")
-                    {
-                        metadata.sheetLayout = SheetLayout.Vertical;
-                    }
-                    else
-                    {
-                        throw new InvalidDataException($"Unknown layout value: {value}");
-                    }
-                }
-
-                if (line.StartsWith("type="))
-                {
-                    string value = line["type=".Length..];
-                    if (value == "data-table")
-                    {
-                        metadata.sheetType = SheetType.DataTable;
-                    }
-                    else if (value == "setting")
-                    {
-                        metadata.sheetType = SheetType.Setting;
-                    }
-                    else
-                    {
-                        throw new InvalidDataException($"Unknown type value: {value}");
-                    }
+                    items.Add(new Item { key = splits[0], value = splits[1] });
                 }
             }
 
+            var metadata = new Metadata();
+            for (var i = 0; i < items.Count; i++)
+            {
+                HandleItem(metadata, items[i]);
+            }
+
             return metadata;
+        }
+
+        private static void HandleItem(Metadata metadata, Item item)
+        {
+            if (item.key == "name")
+            {
+                metadata.overrideName = item.value;
+            }
+
+            if (item.key == "namespace")
+            {
+                metadata.namespaceName = item.value;
+            }
+
+            if (item.key == "layout")
+            {
+                if (item.value == "horizontal")
+                {
+                    metadata.sheetLayout = SheetLayout.Horizontal;
+                }
+                else if (item.value == "vertical")
+                {
+                    metadata.sheetLayout = SheetLayout.Vertical;
+                }
+                else
+                {
+                    throw new InvalidDataException($"Unknown layout value: {item.value}");
+                }
+            }
+
+            if (item.key == "type")
+            {
+                if (item.value == "data-table")
+                {
+                    metadata.sheetType = SheetType.DataTable;
+                }
+                else if (item.value == "setting")
+                {
+                    metadata.sheetType = SheetType.Setting;
+                }
+                else
+                {
+                    throw new InvalidDataException($"Unknown type value: {item.value}");
+                }
+            }
+
+            if (item.key == "export")
+            {
+                metadata.export = item.value == "false";
+            }
         }
     }
 }
