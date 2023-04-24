@@ -40,6 +40,7 @@ namespace Physalia.ExcelDataExporter
                     items.Add(new Item { key = splits[0], value = splits[1] });
                 }
             }
+            items.Sort(CompareItems);
 
             var metadata = new Metadata();
             for (var i = 0; i < items.Count; i++)
@@ -48,6 +49,28 @@ namespace Physalia.ExcelDataExporter
             }
 
             return metadata;
+        }
+
+        private static int CompareItems(Item a, Item b)
+        {
+            bool aIsType = a.key == "type";
+            bool bIsType = b.key == "type";
+            if (aIsType && bIsType)
+            {
+                return 0;
+            }
+            else if (aIsType)
+            {
+                return -1;
+            }
+            else if (bIsType)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         private static void HandleItem(Metadata metadata, Item item)
@@ -78,15 +101,18 @@ namespace Physalia.ExcelDataExporter
                 }
             }
 
+            // Note: "type" must be handled before "layout" because "type" defines the default layout.
             if (item.key == "type")
             {
                 if (item.value == "data-table")
                 {
                     metadata.sheetType = SheetType.DataTable;
+                    metadata.sheetLayout = SheetLayout.Horizontal;
                 }
                 else if (item.value == "setting")
                 {
                     metadata.sheetType = SheetType.Setting;
+                    metadata.sheetLayout = SheetLayout.Vertical;
                 }
                 else
                 {
