@@ -14,11 +14,11 @@ namespace Physalia.ExcelDataExporter
         private SerializedObject serializedObject;
         private DataTablePanel dataTablePanel;
 
-        [MenuItem("Tools/Excel Data Exporter")]
+        [MenuItem("Tools/ExcelDataExporter")]
         private static void Open()
         {
             var window = GetWindow<ExcelDataExporterWindow>();
-            window.titleContent = new GUIContent("Excel Data Exporter");
+            window.titleContent = new GUIContent("ExcelDataExporter");
             window.Show();
         }
 
