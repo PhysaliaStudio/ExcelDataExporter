@@ -107,6 +107,29 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
+        public void AddRow(params string[] texts)
+        {
+            if (texts.Length > columnCount)
+            {
+                Debug.LogError($"[{nameof(SheetRawData)}] The column count of the inserted row doesn't match.\n" +
+                    $"Expected: <={columnCount}  But was: {texts.Length}");
+                return;
+            }
+
+            var newRow = new List<string>(columnCount);
+            table.Add(newRow);
+            rowCount++;
+
+            for (var i = 0; i < texts.Length; i++)
+            {
+                newRow.Add(texts[i]);
+            }
+            for (var i = texts.Length; i < columnCount; i++)
+            {
+                newRow.Add(null);
+            }
+        }
+
         public void ResizeBounds()
         {
             // Calculate new table size
