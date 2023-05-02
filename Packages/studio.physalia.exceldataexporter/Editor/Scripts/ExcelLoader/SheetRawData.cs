@@ -147,6 +147,20 @@ namespace Physalia.ExcelDataExporter
             rowCount--;
         }
 
+        public void RemoveColumn(int columnIndex)
+        {
+            if (columnIndex < 0 || columnIndex >= columnCount)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            for (var i = 0; i < rowCount; i++)
+            {
+                table[i].RemoveAt(columnIndex);
+            }
+            columnCount--;
+        }
+
         public void ResizeBounds()
         {
             // Calculate new table size

@@ -64,6 +64,33 @@ namespace Physalia.ExcelDataExporter.Tests
         }
 
         [Test]
+        public void RemoveColumn()
+        {
+            var sheetRawData = new SheetRawData(3);
+            sheetRawData.AddRow("a", "b", "c");
+            sheetRawData.AddRow("d", "e", "f");
+
+            sheetRawData.RemoveColumn(1);
+
+            Assert.AreEqual(2, sheetRawData.RowCount);
+            Assert.AreEqual(2, sheetRawData.ColumnCount);
+            Assert.AreEqual("a", sheetRawData.Get(0, 0));
+            Assert.AreEqual("c", sheetRawData.Get(0, 1));
+            Assert.AreEqual("d", sheetRawData.Get(1, 0));
+            Assert.AreEqual("f", sheetRawData.Get(1, 1));
+        }
+
+        [Test]
+        public void RemoveColumn_IndexOutOfRange_ThrowsException()
+        {
+            var sheetRawData = new SheetRawData(3);
+            sheetRawData.AddRow("a", "b", "c");
+            sheetRawData.AddRow("d", "e", "f");
+
+            Assert.Catch<IndexOutOfRangeException>(() => sheetRawData.RemoveColumn(3));
+        }
+
+        [Test]
         public void SetNameAsTest_NameReturnsTest()
         {
             var sheetRawData = new SheetRawData(5, 3);
