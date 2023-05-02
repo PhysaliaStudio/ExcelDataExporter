@@ -7,11 +7,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_LegalType()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0);
-            sheetRawData.SetRow(1, "Id", "Field2", "Field3");
-            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("Id", "Field2", "Field3");
+            sheetRawData.AddRow("int", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -24,11 +24,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_NoIdField()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0);
-            sheetRawData.SetRow(1, "Field1", "Field2", "Field3");
-            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("Field1", "Field2", "Field3");
+            sheetRawData.AddRow("int", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -42,11 +42,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_NoIdField_ButIsSettingType()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\ntype=setting\nlayout=horizontal");
-            sheetRawData.SetRow(0);
-            sheetRawData.SetRow(1, "Field1", "Field2", "Field3");
-            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("Field1", "Field2", "Field3");
+            sheetRawData.AddRow("int", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -59,11 +59,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_IdFieldIsNotInt()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0);
-            sheetRawData.SetRow(1, "Id", "Field2", "Field3");
-            sheetRawData.SetRow(2, "bool", "string", "bool");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("Id", "Field2", "Field3");
+            sheetRawData.AddRow("bool", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -77,11 +77,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_HasDuplicatedNames()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0);
-            sheetRawData.SetRow(1, "Id", "Field2", "Field2");
-            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("Id", "Field2", "Field2");
+            sheetRawData.AddRow("int", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);

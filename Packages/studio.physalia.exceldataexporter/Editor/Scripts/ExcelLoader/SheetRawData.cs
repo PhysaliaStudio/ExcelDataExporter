@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Physalia.ExcelDataExporter
         private Metadata metadata;
         private int rowCount;
         private int columnCount;
-        private string[][] table;
+        private List<List<string>> table;
 
         public string Name
         {
@@ -28,14 +29,26 @@ namespace Physalia.ExcelDataExporter
         public int RowCount => rowCount;
         public int ColumnCount => columnCount;
 
+        public SheetRawData(int columnCount) : this(0, columnCount)
+        {
+
+        }
+
         public SheetRawData(int rowCount, int columnCount)
         {
             this.rowCount = rowCount;
             this.columnCount = columnCount;
-            table = new string[rowCount][];
+
+            table = new List<List<string>>(rowCount);
             for (var i = 0; i < rowCount; i++)
             {
-                table[i] = new string[columnCount];
+                var row = new List<string>(columnCount);
+                table.Add(row);
+
+                for (var j = 0; j < columnCount; j++)
+                {
+                    row.Add(null);
+                }
             }
         }
 
@@ -99,6 +112,29 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
+        public void AddRow(params string[] texts)
+        {
+            if (texts.Length > columnCount)
+            {
+                Debug.LogError($"[{nameof(SheetRawData)}] The column count of the inserted row doesn't match.\n" +
+                    $"Expected: <={columnCount}  But was: {texts.Length}");
+                return;
+            }
+
+            var newRow = new List<string>(columnCount);
+            table.Add(newRow);
+            rowCount++;
+
+            for (var i = 0; i < texts.Length; i++)
+            {
+                newRow.Add(texts[i]);
+            }
+            for (var i = texts.Length; i < columnCount; i++)
+            {
+                newRow.Add(null);
+            }
+        }
+
         public void ResizeBounds()
         {
             // Calculate new table size
@@ -128,13 +164,15 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            string[][] newTable = new string[newRowCount][];
+            var newTable = new List<List<string>>(newRowCount);
             for (var i = 0; i < newRowCount; i++)
             {
-                newTable[i] = new string[newColumnCount];
+                var row = new List<string>(newColumnCount);
+                newTable.Add(row);
+
                 for (var j = 0; j < newColumnCount; j++)
                 {
-                    newTable[i][j] = table[i][j];
+                    row.Add(table[i][j]);
                 }
             }
 
