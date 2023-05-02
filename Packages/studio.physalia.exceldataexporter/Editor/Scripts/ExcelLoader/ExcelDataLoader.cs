@@ -16,46 +16,55 @@ namespace Physalia.ExcelDataExporter
 
             do
             {
-                int rowCount = reader.RowCount;
-                int columnCount = reader.FieldCount;
-                var sheetRawData = new SheetRawData(rowCount - 1, columnCount);
-                sheetRawData.SetName(reader.Name);
-
-                // Read the first row as metadata
-                bool success = reader.Read();
-                if (!success)
+                var sheetRawData = ReadSheet(reader);
+                if (sheetRawData != null)
                 {
-                    continue;
+                    sheetRawDatas.Add(sheetRawData);
                 }
-
-                string metadataText = reader.GetValue(0)?.ToString();
-                sheetRawData.SetMetadata(metadataText);
-                if (!sheetRawData.Metadata.Export)
-                {
-                    var fileInfo = new FileInfo(filePath);
-                    Debug.LogWarning($"Skip {fileInfo.Name[..^".xlsx".Length]}/{reader.Name}, export=false");
-                    continue;
-                }
-
-                // Read remain rows
-                var rowIndex = 1;
-                while (reader.Read())
-                {
-                    for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
-                    {
-                        string text = reader.GetValue(columnIndex)?.ToString();
-                        sheetRawData.Set(rowIndex - 1, columnIndex, text);
-                    }
-
-                    rowIndex++;
-                }
-
-                sheetRawData.ResizeBounds();
-                sheetRawDatas.Add(sheetRawData);
             }
             while (reader.NextResult());
 
             return sheetRawDatas;
+        }
+
+        private SheetRawData ReadSheet(IExcelDataReader reader)
+        {
+            int rowCount = reader.RowCount;
+            int columnCount = reader.FieldCount;
+            var sheetRawData = new SheetRawData(rowCount, columnCount);
+            sheetRawData.SetName(reader.Name);
+
+            var rowIndex = 0;
+            while (reader.Read())
+            {
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                {
+                    string text = reader.GetValue(columnIndex)?.ToString();
+                    sheetRawData.Set(rowIndex, columnIndex, text);
+                }
+
+                rowIndex++;
+            }
+
+            sheetRawData.ResizeBounds();
+
+            return PostProcessSheetRawData(sheetRawData);
+        }
+
+        private SheetRawData PostProcessSheetRawData(SheetRawData sheetRawData)
+        {
+            string metadataText = sheetRawData.Get(0, 0);
+            sheetRawData.SetMetadata(metadataText);
+
+            // Skip if export=false
+            if (!sheetRawData.Metadata.Export)
+            {
+                Debug.LogWarning($"Skip {sheetRawData.Name}, export=false");
+                return null;
+            }
+
+            sheetRawData.RemoveRow(0);  // Remove metadata row
+            return sheetRawData;
         }
     }
 }

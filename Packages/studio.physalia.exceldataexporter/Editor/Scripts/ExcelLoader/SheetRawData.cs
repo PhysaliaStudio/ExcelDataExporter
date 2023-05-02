@@ -161,6 +161,9 @@ namespace Physalia.ExcelDataExporter
             columnCount--;
         }
 
+        /// <summary>
+        /// Trim empty rows and columns
+        /// </summary>
         public void ResizeBounds()
         {
             // Calculate new table size
