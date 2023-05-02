@@ -7,11 +7,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(0, 3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "欄位1", "欄位2", "欄位3");
-            sheetRawData.SetRow(1, "field1", "field2", "field3");
-            sheetRawData.SetRow(2, "int", "string", "bool");
+            sheetRawData.AddRow("欄位1", "欄位2", "欄位3");
+            sheetRawData.AddRow("field1", "field2", "field3");
+            sheetRawData.AddRow("int", "string", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -29,11 +29,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(3, 2);
+            var sheetRawData = new SheetRawData(0, 2);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "欄位1", "欄位2");
-            sheetRawData.SetRow(1, "field1", "field2");
-            sheetRawData.SetRow(2, "int[]", "bool[]");
+            sheetRawData.AddRow("欄位1", "欄位2");
+            sheetRawData.AddRow("field1", "field2");
+            sheetRawData.AddRow("int[]", "bool[]");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -49,11 +49,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(3, 5);
+            var sheetRawData = new SheetRawData(0, 5);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "欄位1", "", "欄位2", "", "");
-            sheetRawData.SetRow(1, "field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
-            sheetRawData.SetRow(2, "Vector2Int", "", "Vector3Int", "", "");
+            sheetRawData.AddRow("欄位1", "", "欄位2", "", "");
+            sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
+            sheetRawData.AddRow("Vector2Int", "", "Vector3Int", "", "");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -67,11 +67,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(3, 7);
+            var sheetRawData = new SheetRawData(0, 7);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "欄位1", "", "", "", "欄位2", "", "");
-            sheetRawData.SetRow(1, "field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
-            sheetRawData.SetRow(2, "Vector2Int", "", "", "", "Vector3Int", "", "");
+            sheetRawData.AddRow("欄位1", "", "", "", "欄位2", "", "");
+            sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
+            sheetRawData.AddRow("Vector2Int", "", "", "", "Vector3Int", "", "");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -89,17 +89,17 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_CustomEnums()
         {
-            var sheetRawData = new SheetRawData(3, 1);
+            var sheetRawData = new SheetRawData(0, 1);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "類型");
-            sheetRawData.SetRow(1, "type");
-            sheetRawData.SetRow(2, "EnemyType");
+            sheetRawData.AddRow("類型");
+            sheetRawData.AddRow("type");
+            sheetRawData.AddRow("EnemyType");
 
-            var sheetForCustomEnum = new SheetRawData(3, 4);
+            var sheetForCustomEnum = new SheetRawData(0, 4);
             sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetForCustomEnum.SetRow(0, "enum EnemyType", "普通", "菁英", "魔王");
-            sheetForCustomEnum.SetRow(1, "", "Normal", "Elite", "Boss");
-            sheetForCustomEnum.SetRow(2, "", "0", "1", "2");
+            sheetForCustomEnum.AddRow("enum EnemyType", "普通", "菁英", "魔王");
+            sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
+            sheetForCustomEnum.AddRow("", "0", "1", "2");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
@@ -113,17 +113,17 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_CustomEnumArrays()
         {
-            var sheetRawData = new SheetRawData(3, 1);
+            var sheetRawData = new SheetRawData(0, 1);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetRawData.SetRow(0, "類型");
-            sheetRawData.SetRow(1, "types");
-            sheetRawData.SetRow(2, "EnemyType[]");
+            sheetRawData.AddRow("類型");
+            sheetRawData.AddRow("types");
+            sheetRawData.AddRow("EnemyType[]");
 
-            var sheetForCustomEnum = new SheetRawData(3, 4);
+            var sheetForCustomEnum = new SheetRawData(0, 4);
             sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
-            sheetForCustomEnum.SetRow(0, "enum EnemyType", "普通", "菁英", "魔王");
-            sheetForCustomEnum.SetRow(1, "", "Normal", "Elite", "Boss");
-            sheetForCustomEnum.SetRow(2, "", "0", "1", "2");
+            sheetForCustomEnum.AddRow("enum EnemyType", "普通", "菁英", "魔王");
+            sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
+            sheetForCustomEnum.AddRow("", "0", "1", "2");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
@@ -138,11 +138,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(3, 3);
+            var sheetRawData = new SheetRawData(0, 3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
-            sheetRawData.SetRow(0, "欄位1", "field1", "int");
-            sheetRawData.SetRow(1, "欄位2", "field2", "string");
-            sheetRawData.SetRow(2, "欄位3", "field3", "bool");
+            sheetRawData.AddRow("欄位1", "field1", "int");
+            sheetRawData.AddRow("欄位2", "field2", "string");
+            sheetRawData.AddRow("欄位3", "field3", "bool");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -160,10 +160,10 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(2, 3);
+            var sheetRawData = new SheetRawData(0, 3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
-            sheetRawData.SetRow(0, "欄位1", "field1", "int[]");
-            sheetRawData.SetRow(1, "欄位2", "field2", "bool[]");
+            sheetRawData.AddRow("欄位1", "field1", "int[]");
+            sheetRawData.AddRow("欄位2", "field2", "bool[]");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -179,13 +179,13 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(5, 3);
+            var sheetRawData = new SheetRawData(0, 3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
-            sheetRawData.SetRow(0, "欄位1", "field1.x", "Vector2Int");
-            sheetRawData.SetRow(1, "", "field1.y", "");
-            sheetRawData.SetRow(2, "欄位2", "field2.x", "Vector3Int");
-            sheetRawData.SetRow(3, "", "field2.y", "");
-            sheetRawData.SetRow(4, "", "field2.z", "");
+            sheetRawData.AddRow("欄位1", "field1.x", "Vector2Int");
+            sheetRawData.AddRow("", "field1.y", "");
+            sheetRawData.AddRow("欄位2", "field2.x", "Vector3Int");
+            sheetRawData.AddRow("", "field2.y", "");
+            sheetRawData.AddRow("", "field2.z", "");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -199,15 +199,15 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(7, 3);
+            var sheetRawData = new SheetRawData(0, 3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
-            sheetRawData.SetRow(0, "欄位1", "field1[0].x", "Vector2Int");
-            sheetRawData.SetRow(1, "", "field1[0].y", "");
-            sheetRawData.SetRow(2, "", "field1[1].x", "");
-            sheetRawData.SetRow(3, "", "field1[1].y", "");
-            sheetRawData.SetRow(4, "欄位2", "field2[0].x", "Vector3Int");
-            sheetRawData.SetRow(5, "", "field2[0].y", "");
-            sheetRawData.SetRow(6, "", "field2[0].z", "");
+            sheetRawData.AddRow("欄位1", "field1[0].x", "Vector2Int");
+            sheetRawData.AddRow("", "field1[0].y", "");
+            sheetRawData.AddRow("", "field1[1].x", "");
+            sheetRawData.AddRow("", "field1[1].y", "");
+            sheetRawData.AddRow("欄位2", "field2[0].x", "Vector3Int");
+            sheetRawData.AddRow("", "field2[0].y", "");
+            sheetRawData.AddRow("", "field2[0].z", "");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);

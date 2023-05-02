@@ -10,14 +10,14 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable()
         {
-            var sheetRawData = new SheetRawData(6, 4);
+            var sheetRawData = new SheetRawData(0, 4);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0, "class Vector2", "", "");
-            sheetRawData.SetRow(1, "", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "int");
-            sheetRawData.SetRow(3, "class Vector3", "", "", "");
-            sheetRawData.SetRow(4, "", "x", "y", "z");
-            sheetRawData.SetRow(5, "", "int", "int", "int");
+            sheetRawData.AddRow("class Vector2", "", "");
+            sheetRawData.AddRow("", "x", "y");
+            sheetRawData.AddRow("", "int", "int");
+            sheetRawData.AddRow("class Vector3", "", "", "");
+            sheetRawData.AddRow("", "x", "y", "z");
+            sheetRawData.AddRow("", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -49,15 +49,15 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEmptyRow()
         {
-            var sheetRawData = new SheetRawData(7, 4);
+            var sheetRawData = new SheetRawData(0, 4);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0, "struct Vector2", "", "");
-            sheetRawData.SetRow(1, "", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "int");
-            sheetRawData.SetRow(3);
-            sheetRawData.SetRow(4, "struct Vector3", "", "", "");
-            sheetRawData.SetRow(5, "", "x", "y", "z");
-            sheetRawData.SetRow(6, "", "int", "int", "int");
+            sheetRawData.AddRow("struct Vector2", "", "");
+            sheetRawData.AddRow("", "x", "y");
+            sheetRawData.AddRow("", "int", "int");
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("struct Vector3", "", "", "");
+            sheetRawData.AddRow("", "x", "y", "z");
+            sheetRawData.AddRow("", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -89,15 +89,15 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsInvalidData()
         {
-            var sheetRawData = new SheetRawData(7, 4);
+            var sheetRawData = new SheetRawData(0, 4);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0, "struct Vector2", "", "");
-            sheetRawData.SetRow(1, "", "x", "y");
-            sheetRawData.SetRow(2, "", "int", "");  // Missing type name, which is invalid.
-            sheetRawData.SetRow(3);
-            sheetRawData.SetRow(4, "struct Vector3", "", "", "");
-            sheetRawData.SetRow(5, "", "x", "y", "z");
-            sheetRawData.SetRow(6, "", "int", "int", "int");
+            sheetRawData.AddRow("struct Vector2", "", "");
+            sheetRawData.AddRow("", "x", "y");
+            sheetRawData.AddRow("", "int", "");  // Missing type name, which is invalid.
+            sheetRawData.AddRow();
+            sheetRawData.AddRow("struct Vector3", "", "", "");
+            sheetRawData.AddRow("", "x", "y", "z");
+            sheetRawData.AddRow("", "int", "int", "int");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
@@ -121,11 +121,11 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEnum()
         {
-            var sheetRawData = new SheetRawData(3, 4);
+            var sheetRawData = new SheetRawData(0, 4);
             sheetRawData.SetMetadata("namespace=Test");
-            sheetRawData.SetRow(0, "enum EnemyType", "普通", "菁英", "魔王");
-            sheetRawData.SetRow(1, "", "Normal", "Elite", "Boss");
-            sheetRawData.SetRow(2, "", "0", "1", "2");
+            sheetRawData.AddRow("enum EnemyType", "普通", "菁英", "魔王");
+            sheetRawData.AddRow("", "Normal", "Elite", "Boss");
+            sheetRawData.AddRow("", "0", "1", "2");
 
             CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
 
