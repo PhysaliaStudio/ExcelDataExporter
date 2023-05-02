@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -133,6 +134,17 @@ namespace Physalia.ExcelDataExporter
             {
                 newRow.Add(null);
             }
+        }
+
+        public void RemoveRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= rowCount)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            table.RemoveAt(rowIndex);
+            rowCount--;
         }
 
         public void ResizeBounds()

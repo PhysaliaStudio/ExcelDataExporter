@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 
 namespace Physalia.ExcelDataExporter.Tests
 {
@@ -20,6 +21,46 @@ namespace Physalia.ExcelDataExporter.Tests
             Assert.AreEqual("a", sheetRawData.Get(1, 0));
             Assert.AreEqual("b", sheetRawData.Get(1, 1));
             Assert.AreEqual("c", sheetRawData.Get(1, 2));
+        }
+
+        [Test]
+        public void AddRow()
+        {
+            var sheetRawData = new SheetRawData(3);
+            sheetRawData.AddRow("a", "b", "c");
+            sheetRawData.AddRow("d", "e", "f");
+
+            Assert.AreEqual(2, sheetRawData.RowCount);
+            Assert.AreEqual("a", sheetRawData.Get(0, 0));
+            Assert.AreEqual("b", sheetRawData.Get(0, 1));
+            Assert.AreEqual("c", sheetRawData.Get(0, 2));
+            Assert.AreEqual("d", sheetRawData.Get(1, 0));
+            Assert.AreEqual("e", sheetRawData.Get(1, 1));
+            Assert.AreEqual("f", sheetRawData.Get(1, 2));
+        }
+
+        [Test]
+        public void RemoveRow()
+        {
+            var sheetRawData = new SheetRawData(3);
+            sheetRawData.AddRow("a", "b", "c");
+            sheetRawData.AddRow("d", "e", "f");
+            sheetRawData.RemoveRow(0);
+
+            Assert.AreEqual(1, sheetRawData.RowCount);
+            Assert.AreEqual("d", sheetRawData.Get(0, 0));
+            Assert.AreEqual("e", sheetRawData.Get(0, 1));
+            Assert.AreEqual("f", sheetRawData.Get(0, 2));
+        }
+
+        [Test]
+        public void RemoveRow_IndexOutOfRange_ThrowsException()
+        {
+            var sheetRawData = new SheetRawData(3);
+            sheetRawData.AddRow("a", "b", "c");
+            sheetRawData.AddRow("d", "e", "f");
+
+            Assert.Catch<IndexOutOfRangeException>(() => sheetRawData.RemoveRow(2));
         }
 
         [Test]
