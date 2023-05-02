@@ -7,7 +7,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2", "field3");
@@ -25,7 +25,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 2);
+            var sheetRawData = new SheetRawData(2);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2");
@@ -43,7 +43,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(0, 5);
+            var sheetRawData = new SheetRawData(5);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
@@ -61,7 +61,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_Horizontally_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 7);
+            var sheetRawData = new SheetRawData(7);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
@@ -79,7 +79,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_Vertically_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 4);
+            var sheetRawData = new SheetRawData(4);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("", "field1[0].x", "Vector2Int", "1");
             sheetRawData.AddRow("", "field1[0].y", "", "2");
@@ -100,7 +100,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_UnityTypeArraysWithNA()
         {
-            var sheetRawData = new SheetRawData(0, 7);
+            var sheetRawData = new SheetRawData(7);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");

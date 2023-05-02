@@ -10,7 +10,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable()
         {
-            var sheetRawData = new SheetRawData(0, 4);
+            var sheetRawData = new SheetRawData(4);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow("class Vector2", "", "");
             sheetRawData.AddRow("", "x", "y");
@@ -49,7 +49,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEmptyRow()
         {
-            var sheetRawData = new SheetRawData(0, 4);
+            var sheetRawData = new SheetRawData(4);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow("struct Vector2", "", "");
             sheetRawData.AddRow("", "x", "y");
@@ -89,7 +89,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsInvalidData()
         {
-            var sheetRawData = new SheetRawData(0, 4);
+            var sheetRawData = new SheetRawData(4);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow("struct Vector2", "", "");
             sheetRawData.AddRow("", "x", "y");
@@ -121,7 +121,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ParseToTypeTable_ContainsEnum()
         {
-            var sheetRawData = new SheetRawData(0, 4);
+            var sheetRawData = new SheetRawData(4);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow("enum EnemyType", "普通", "菁英", "魔王");
             sheetRawData.AddRow("", "Normal", "Elite", "Boss");

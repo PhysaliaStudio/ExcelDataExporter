@@ -7,7 +7,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_LegalType()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("Id", "Field2", "Field3");
@@ -24,7 +24,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_NoIdField()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("Field1", "Field2", "Field3");
@@ -42,7 +42,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_NoIdField_ButIsSettingType()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\ntype=setting\nlayout=horizontal");
             sheetRawData.AddRow();
             sheetRawData.AddRow("Field1", "Field2", "Field3");
@@ -59,7 +59,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_IdFieldIsNotInt()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("Id", "Field2", "Field3");
@@ -77,7 +77,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void Validate_HasDuplicatedNames()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("Id", "Field2", "Field2");

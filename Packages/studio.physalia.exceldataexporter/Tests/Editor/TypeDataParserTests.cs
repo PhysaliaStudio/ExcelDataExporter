@@ -7,7 +7,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("欄位1", "欄位2", "欄位3");
             sheetRawData.AddRow("field1", "field2", "field3");
@@ -29,7 +29,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 2);
+            var sheetRawData = new SheetRawData(2);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("欄位1", "欄位2");
             sheetRawData.AddRow("field1", "field2");
@@ -49,7 +49,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(0, 5);
+            var sheetRawData = new SheetRawData(5);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("欄位1", "", "欄位2", "", "");
             sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
@@ -67,7 +67,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 7);
+            var sheetRawData = new SheetRawData(7);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("欄位1", "", "", "", "欄位2", "", "");
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
@@ -89,13 +89,13 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_CustomEnums()
         {
-            var sheetRawData = new SheetRawData(0, 1);
+            var sheetRawData = new SheetRawData(1);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("類型");
             sheetRawData.AddRow("type");
             sheetRawData.AddRow("EnemyType");
 
-            var sheetForCustomEnum = new SheetRawData(0, 4);
+            var sheetForCustomEnum = new SheetRawData(4);
             sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetForCustomEnum.AddRow("enum EnemyType", "普通", "菁英", "魔王");
             sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
@@ -113,13 +113,13 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Horizontally_CustomEnumArrays()
         {
-            var sheetRawData = new SheetRawData(0, 1);
+            var sheetRawData = new SheetRawData(1);
             sheetRawData.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetRawData.AddRow("類型");
             sheetRawData.AddRow("types");
             sheetRawData.AddRow("EnemyType[]");
 
-            var sheetForCustomEnum = new SheetRawData(0, 4);
+            var sheetForCustomEnum = new SheetRawData(4);
             sheetForCustomEnum.SetMetadata("namespace=Test\nlayout=horizontal");
             sheetForCustomEnum.AddRow("enum EnemyType", "普通", "菁英", "魔王");
             sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
@@ -138,7 +138,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_SystemTypes()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("欄位1", "field1", "int");
             sheetRawData.AddRow("欄位2", "field2", "string");
@@ -160,7 +160,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_SystemTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("欄位1", "field1", "int[]");
             sheetRawData.AddRow("欄位2", "field2", "bool[]");
@@ -179,7 +179,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_UnityTypes()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("欄位1", "field1.x", "Vector2Int");
             sheetRawData.AddRow("", "field1.y", "");
@@ -199,7 +199,7 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportTypeData_Vertically_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(0, 3);
+            var sheetRawData = new SheetRawData(3);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("欄位1", "field1[0].x", "Vector2Int");
             sheetRawData.AddRow("", "field1[0].y", "");

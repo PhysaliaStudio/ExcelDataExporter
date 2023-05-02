@@ -29,6 +29,11 @@ namespace Physalia.ExcelDataExporter
         public int RowCount => rowCount;
         public int ColumnCount => columnCount;
 
+        public SheetRawData(int columnCount) : this(0, columnCount)
+        {
+
+        }
+
         public SheetRawData(int rowCount, int columnCount)
         {
             this.rowCount = rowCount;
