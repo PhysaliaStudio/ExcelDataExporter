@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Physalia.ExcelDataExporter
         private Metadata metadata;
         private int rowCount;
         private int columnCount;
-        private string[][] table;
+        private List<List<string>> table;
 
         public string Name
         {
@@ -32,10 +33,17 @@ namespace Physalia.ExcelDataExporter
         {
             this.rowCount = rowCount;
             this.columnCount = columnCount;
-            table = new string[rowCount][];
+
+            table = new List<List<string>>(rowCount);
             for (var i = 0; i < rowCount; i++)
             {
-                table[i] = new string[columnCount];
+                var row = new List<string>(columnCount);
+                table.Add(row);
+
+                for (var j = 0; j < columnCount; j++)
+                {
+                    row.Add(null);
+                }
             }
         }
 
@@ -128,13 +136,15 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            string[][] newTable = new string[newRowCount][];
+            var newTable = new List<List<string>>(newRowCount);
             for (var i = 0; i < newRowCount; i++)
             {
-                newTable[i] = new string[newColumnCount];
+                var row = new List<string>(newColumnCount);
+                newTable.Add(row);
+
                 for (var j = 0; j < newColumnCount; j++)
                 {
-                    newTable[i][j] = table[i][j];
+                    row.Add(table[i][j]);
                 }
             }
 
