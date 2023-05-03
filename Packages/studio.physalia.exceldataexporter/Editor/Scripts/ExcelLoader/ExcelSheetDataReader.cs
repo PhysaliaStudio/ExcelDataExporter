@@ -107,8 +107,8 @@ namespace Physalia.ExcelDataExporter
                     // Note: +1 because the metadata row is still there.
                     string text = sheetRawData.Get(Const.DataTableFilterLine + 1, columnIndex);
                     int filter = TypeUtility.ParseFilterCell(text);
-                    bool isExport = IsExport(filter);
-                    if (!isExport)
+                    bool isExported = TypeUtility.IsDataLineExported(filter);
+                    if (!isExported)
                     {
                         sheetRawData.RemoveColumn(columnIndex);
                     }
@@ -121,19 +121,13 @@ namespace Physalia.ExcelDataExporter
                 {
                     string text = sheetRawData.Get(rowIndex, Const.DataTableFilterLine);
                     int filter = TypeUtility.ParseFilterCell(text);
-                    bool isExport = IsExport(filter);
-                    if (!isExport)
+                    bool isExported = TypeUtility.IsDataLineExported(filter);
+                    if (!isExported)
                     {
                         sheetRawData.RemoveRow(rowIndex);
                     }
                 }
             }
-        }
-
-        // Check filter with bit flag
-        private bool IsExport(int filter)
-        {
-            return (filter & 1 << ExporterSetting.FilterFlag) != 0;
         }
     }
 }

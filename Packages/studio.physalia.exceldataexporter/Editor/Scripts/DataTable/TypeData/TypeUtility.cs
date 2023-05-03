@@ -233,5 +233,20 @@ namespace Physalia.ExcelDataExporter
             int filter = ParseIntWithBinary(valueText);
             return filter;
         }
+
+        public static bool IsDataLineExported(int filter)
+        {
+            if (filter == 0)
+            {
+                return false;
+            }
+
+            if (ExporterSetting.FilterFlag < 0)
+            {
+                return true;
+            }
+
+            return (filter & 1 << ExporterSetting.FilterFlag) != 0;
+        }
     }
 }
