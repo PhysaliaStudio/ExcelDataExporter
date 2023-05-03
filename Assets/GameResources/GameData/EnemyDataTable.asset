@@ -20,5 +20,32 @@ MonoBehaviour:
     _startPos:
     - {x: 5, y: 3}
     _reward:
-      itemId: 1003
+      itemId: 6003
       count: 5
+  - _id: 1002
+    _name: ABC
+    _type: 1
+    _attack: 0200000005000000080000000f000000
+    _startPos:
+    - {x: 7, y: 5}
+    _reward:
+      itemId: 6005
+      count: 7
+  - _id: 1003
+    _name: ABC
+    _type: 2
+    _attack: 02000000050000000800000010000000
+    _startPos:
+    - {x: 8, y: 6}
+    _reward:
+      itemId: 6006
+      count: 8
+  - _id: 1004
+    _name: ABC
+    _type: 3
+    _attack: 02000000050000000800000011000000
+    _startPos:
+    - {x: 9, y: 7}
+    _reward:
+      itemId: 6007
+      count: 9
