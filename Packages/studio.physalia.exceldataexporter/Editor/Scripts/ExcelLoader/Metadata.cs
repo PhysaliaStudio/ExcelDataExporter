@@ -4,7 +4,7 @@ using System.IO;
 namespace Physalia.ExcelDataExporter
 {
     public enum SheetLayout { Horizontal, Vertical }
-    public enum SheetType { DataTable, Setting }
+    public enum SheetType { DataTable, Setting, CustomTypeTable }
 
     public class Metadata
     {
@@ -113,6 +113,11 @@ namespace Physalia.ExcelDataExporter
                 {
                     metadata.sheetType = SheetType.Setting;
                     metadata.sheetLayout = SheetLayout.Vertical;
+                }
+                else if (item.value == "custom-type")
+                {
+                    metadata.sheetType = SheetType.CustomTypeTable;
+                    metadata.sheetLayout = SheetLayout.Horizontal;
                 }
                 else
                 {
