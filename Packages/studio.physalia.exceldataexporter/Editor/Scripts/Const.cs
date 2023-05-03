@@ -10,6 +10,8 @@ namespace Physalia.ExcelDataExporter
         public const int DataTableFilterLine = 3;
         public const int DataTableStartLine = 4;
 
+        public const int SettingTableStartLine = 3;
+
         public const string DefineDataActive = "#active";
         public const string NotApplicable = "N/A";
     }
