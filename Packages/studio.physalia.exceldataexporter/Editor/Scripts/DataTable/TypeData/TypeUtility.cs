@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Physalia.ExcelDataExporter
 {
@@ -181,6 +183,70 @@ namespace Physalia.ExcelDataExporter
                         return success ? result : default;
                     }
             }
+        }
+
+        public static int ParseInt(string text)
+        {
+            bool success = int.TryParse(text, out int result);
+            return success ? result : default;
+        }
+
+        public static int ParseIntWithBinary(string text)
+        {
+            if (text.StartsWith("0b"))
+            {
+                text = text[2..];
+            }
+            return Convert.ToInt32(text, 2);
+        }
+
+        public static bool ParseBool(string text)
+        {
+            bool success = bool.TryParse(text, out bool result);
+            if (success)
+            {
+                return result;
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            if (text == "0")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static int ParseFilterCell(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return -1;
+            }
+
+            MatchCollection matches = Regex.Matches(text, @"\d+");
+            string valueText = matches[^1].Value;
+            int filter = ParseIntWithBinary(valueText);
+            return filter;
+        }
+
+        public static bool IsDataLineExported(int filter)
+        {
+            if (filter == 0)
+            {
+                return false;
+            }
+
+            if (ExporterSetting.FilterFlag < 0)
+            {
+                return true;
+            }
+
+            return (filter & 1 << ExporterSetting.FilterFlag) != 0;
         }
     }
 }

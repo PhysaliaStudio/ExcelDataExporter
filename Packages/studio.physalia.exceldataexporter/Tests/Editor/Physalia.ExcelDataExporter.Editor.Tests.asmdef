@@ -11,6 +11,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
+        "ExcelDataReader.dll",
         "nunit.framework.dll"
     ],
     "autoReferenced": false,

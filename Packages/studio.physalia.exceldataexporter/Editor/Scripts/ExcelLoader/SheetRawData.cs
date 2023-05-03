@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -135,6 +136,34 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
+        public void RemoveRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= rowCount)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            table.RemoveAt(rowIndex);
+            rowCount--;
+        }
+
+        public void RemoveColumn(int columnIndex)
+        {
+            if (columnIndex < 0 || columnIndex >= columnCount)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            for (var i = 0; i < rowCount; i++)
+            {
+                table[i].RemoveAt(columnIndex);
+            }
+            columnCount--;
+        }
+
+        /// <summary>
+        /// Trim empty rows and columns
+        /// </summary>
         public void ResizeBounds()
         {
             // Calculate new table size

@@ -15,8 +15,8 @@ namespace Physalia.ExcelDataExporter
             Metadata metadata = sheetRawData.Metadata;
 
             string[] dataLine = metadata.SheetLayout == SheetLayout.Horizontal ?
-                sheetRawData.GetRow(Const.DataTableStartLine) :
-                sheetRawData.GetColumn(Const.DataTableStartLine);
+                sheetRawData.GetRow(Const.SettingTableStartLine) :
+                sheetRawData.GetColumn(Const.SettingTableStartLine);
             ExportDataAsItem(serializedObject, typeData, dataLine);
 
             serializedObject.ApplyModifiedPropertiesWithoutUndo();

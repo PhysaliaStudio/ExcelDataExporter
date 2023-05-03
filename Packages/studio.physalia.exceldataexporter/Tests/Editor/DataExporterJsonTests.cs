@@ -12,6 +12,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2", "field3");
             sheetRawData.AddRow("int", "string", "bool");
+            sheetRawData.AddRow();
             sheetRawData.AddRow("42", "abc", "true");
 
             var parser = new TypeDataParser();
@@ -30,6 +31,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2");
             sheetRawData.AddRow("int[]", "bool[]");
+            sheetRawData.AddRow();
             sheetRawData.AddRow("1,2,3", "true,false,true");
 
             var parser = new TypeDataParser();
@@ -48,6 +50,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
             sheetRawData.AddRow("Vector2Int", "", "Vector3Int", "", "");
+            sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "3", "4", "5");
 
             var parser = new TypeDataParser();
@@ -66,6 +69,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
             sheetRawData.AddRow("Vector2Int", "", "", "", "Vector3Int", "", "");
+            sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "3", "4", "5", "6", "7");
 
             var parser = new TypeDataParser();
@@ -79,15 +83,15 @@ namespace Physalia.ExcelDataExporter.Tests
         [Test]
         public void ExportDataTableToJson_Vertically_UnityTypeArrays()
         {
-            var sheetRawData = new SheetRawData(4);
+            var sheetRawData = new SheetRawData(5);
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
-            sheetRawData.AddRow("", "field1[0].x", "Vector2Int", "1");
-            sheetRawData.AddRow("", "field1[0].y", "", "2");
-            sheetRawData.AddRow("", "field1[1].x", "", "3");
-            sheetRawData.AddRow("", "field1[1].y", "", "4");
-            sheetRawData.AddRow("", "field2[0].x", "Vector3Int", "5");
-            sheetRawData.AddRow("", "field2[0].y", "", "6");
-            sheetRawData.AddRow("", "field2[0].z", "", "7");
+            sheetRawData.AddRow("", "field1[0].x", "Vector2Int", "", "1");
+            sheetRawData.AddRow("", "field1[0].y", "", "", "2");
+            sheetRawData.AddRow("", "field1[1].x", "", "", "3");
+            sheetRawData.AddRow("", "field1[1].y", "", "", "4");
+            sheetRawData.AddRow("", "field2[0].x", "Vector3Int", "", "5");
+            sheetRawData.AddRow("", "field2[0].y", "", "", "6");
+            sheetRawData.AddRow("", "field2[0].z", "", "", "7");
 
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
@@ -105,6 +109,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
             sheetRawData.AddRow("Vector2Int", "", "", "", "Vector3Int", "", "");
+            sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "N/A", "N/A", "5", "6", "7");
 
             var parser = new TypeDataParser();

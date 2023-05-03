@@ -1,7 +1,6 @@
 using ExcelDataReader;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
@@ -13,45 +12,14 @@ namespace Physalia.ExcelDataExporter
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
 
             var sheetRawDatas = new List<SheetRawData>();
-
+            var sheetDataReader = new ExcelSheetDataReader();
             do
             {
-                int rowCount = reader.RowCount;
-                int columnCount = reader.FieldCount;
-                var sheetRawData = new SheetRawData(rowCount - 1, columnCount);
-                sheetRawData.SetName(reader.Name);
-
-                // Read the first row as metadata
-                bool success = reader.Read();
-                if (!success)
+                var sheetRawData = sheetDataReader.ReadSheet(reader);
+                if (sheetRawData != null)
                 {
-                    continue;
+                    sheetRawDatas.Add(sheetRawData);
                 }
-
-                string metadataText = reader.GetValue(0)?.ToString();
-                sheetRawData.SetMetadata(metadataText);
-                if (!sheetRawData.Metadata.Export)
-                {
-                    var fileInfo = new FileInfo(filePath);
-                    Debug.LogWarning($"Skip {fileInfo.Name[..^".xlsx".Length]}/{reader.Name}, export=false");
-                    continue;
-                }
-
-                // Read remain rows
-                var rowIndex = 1;
-                while (reader.Read())
-                {
-                    for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
-                    {
-                        string text = reader.GetValue(columnIndex)?.ToString();
-                        sheetRawData.Set(rowIndex - 1, columnIndex, text);
-                    }
-
-                    rowIndex++;
-                }
-
-                sheetRawData.ResizeBounds();
-                sheetRawDatas.Add(sheetRawData);
             }
             while (reader.NextResult());
 
