@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Physalia.ExcelDataExporter
 {
@@ -189,6 +191,15 @@ namespace Physalia.ExcelDataExporter
             return success ? result : default;
         }
 
+        public static int ParseIntWithBinary(string text)
+        {
+            if (text.StartsWith("0b"))
+            {
+                text = text[2..];
+            }
+            return Convert.ToInt32(text, 2);
+        }
+
         public static bool ParseBool(string text)
         {
             bool success = bool.TryParse(text, out bool result);
@@ -208,6 +219,19 @@ namespace Physalia.ExcelDataExporter
             }
 
             return true;
+        }
+
+        public static int ParseFilterCell(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return -1;
+            }
+
+            MatchCollection matches = Regex.Matches(text, @"\d+");
+            string valueText = matches[^1].Value;
+            int filter = ParseIntWithBinary(valueText);
+            return filter;
         }
     }
 }

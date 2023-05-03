@@ -106,7 +106,7 @@ namespace Physalia.ExcelDataExporter
                 {
                     // Note: +1 because the metadata row is still there.
                     string text = sheetRawData.Get(Const.DataTableFilterLine + 1, columnIndex);
-                    int filter = string.IsNullOrWhiteSpace(text) ? -1 : TypeUtility.ParseInt(text);
+                    int filter = TypeUtility.ParseFilterCell(text);
                     bool isExport = IsExport(filter);
                     if (!isExport)
                     {
@@ -120,7 +120,7 @@ namespace Physalia.ExcelDataExporter
                 for (var rowIndex = sheetRawData.RowCount - 1; rowIndex >= 1; rowIndex--)
                 {
                     string text = sheetRawData.Get(rowIndex, Const.DataTableFilterLine);
-                    int filter = string.IsNullOrWhiteSpace(text) ? -1 : TypeUtility.ParseInt(text);
+                    int filter = TypeUtility.ParseFilterCell(text);
                     bool isExport = IsExport(filter);
                     if (!isExport)
                     {
