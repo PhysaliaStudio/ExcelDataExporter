@@ -182,5 +182,11 @@ namespace Physalia.ExcelDataExporter
                     }
             }
         }
+
+        public static int ParseInt(string text)
+        {
+            bool success = int.TryParse(text, out int result);
+            return success ? result : default;
+        }
     }
 }
