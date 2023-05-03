@@ -44,11 +44,58 @@ namespace Physalia.ExcelDataExporter
             // If the type is DataTable, check skipped columns/rows
             if (sheetRawData.Metadata.SheetType == SheetType.DataTable)
             {
+                HandleDefineSkipData(sheetRawData);
                 FilterOutLines(sheetRawData);
             }
 
             sheetRawData.RemoveRow(0);  // Remove metadata row
             return sheetRawData;
+        }
+
+        private void HandleDefineSkipData(SheetRawData sheetRawData)
+        {
+            if (sheetRawData.Metadata.SheetLayout == SheetLayout.Horizontal)
+            {
+                for (var columnIndex = sheetRawData.ColumnCount - 1; columnIndex >= 0; columnIndex--)
+                {
+                    string name = sheetRawData.Get(Const.DataTableNameLine + 1, columnIndex);
+                    if (name == Const.DefineDataActive)
+                    {
+                        for (var rowIndex = sheetRawData.RowCount - 1; rowIndex >= Const.DataTableStartLine + 1; rowIndex--)
+                        {
+                            string text = sheetRawData.Get(rowIndex, columnIndex);
+                            bool isExport = TypeUtility.ParseBool(text);
+                            if (!isExport)
+                            {
+                                sheetRawData.RemoveRow(rowIndex);
+                            }
+                        }
+
+                        sheetRawData.RemoveColumn(columnIndex);  // Remove the skip column
+                    }
+                }
+            }
+            else if (sheetRawData.Metadata.SheetLayout == SheetLayout.Vertical)
+            {
+                for (var rowIndex = sheetRawData.RowCount - 1; rowIndex >= 1; rowIndex--)
+                {
+                    string name = sheetRawData.Get(rowIndex, Const.DataTableNameLine);
+                    if (name == Const.DefineDataActive)
+                    {
+                        for (var columnIndex = sheetRawData.ColumnCount - 1; columnIndex >= Const.DataTableStartLine; columnIndex--)
+                        {
+                            string text = sheetRawData.Get(rowIndex, columnIndex);
+                            bool isExport = TypeUtility.ParseBool(text);
+                            if (!isExport)
+                            {
+                                sheetRawData.RemoveColumn(columnIndex);
+                            }
+                        }
+
+                        sheetRawData.RemoveRow(rowIndex);  // Remove the skip row
+                    }
+                }
+            }
         }
 
         private void FilterOutLines(SheetRawData sheetRawData)

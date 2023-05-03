@@ -188,5 +188,26 @@ namespace Physalia.ExcelDataExporter
             bool success = int.TryParse(text, out int result);
             return success ? result : default;
         }
+
+        public static bool ParseBool(string text)
+        {
+            bool success = bool.TryParse(text, out bool result);
+            if (success)
+            {
+                return result;
+            }
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            if (text == "0")
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
