@@ -144,10 +144,13 @@ namespace Physalia.ExcelDataExporter
             {
                 writer.WriteStartArray();
 
-                string[] splits = dataText.Split(',');
-                for (var j = 0; j < splits.Length; j++)
+                if (!string.IsNullOrWhiteSpace(dataText))
                 {
-                    WriteValueForSystemType(writer, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
+                    string[] splits = dataText.Split(',');
+                    for (var j = 0; j < splits.Length; j++)
+                    {
+                        WriteValueForSystemType(writer, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
+                    }
                 }
 
                 writer.WriteEndArray();

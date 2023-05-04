@@ -113,13 +113,20 @@ namespace Physalia.ExcelDataExporter
         {
             if (fieldData.IsArray)
             {
-                string[] splits = dataText.Split(',');
-
-                fieldProperty.arraySize = splits.Length;
-                for (var j = 0; j < splits.Length; j++)
+                if (string.IsNullOrWhiteSpace(dataText))
                 {
-                    SerializedProperty item = fieldProperty.GetArrayElementAtIndex(j);
-                    WriteValueForSystemType(item, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
+                    fieldProperty.arraySize = 0;
+                }
+                else
+                {
+                    string[] splits = dataText.Split(',');
+
+                    fieldProperty.arraySize = splits.Length;
+                    for (var j = 0; j < splits.Length; j++)
+                    {
+                        SerializedProperty item = fieldProperty.GetArrayElementAtIndex(j);
+                        WriteValueForSystemType(item, fieldData.IsEnum ? "int" : fieldData.BaseTypeName, splits[j]);
+                    }
                 }
             }
             else
