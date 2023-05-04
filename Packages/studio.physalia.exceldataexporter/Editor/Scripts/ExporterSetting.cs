@@ -4,8 +4,6 @@ namespace Physalia.ExcelDataExporter
 {
     public static class ExporterSetting
     {
-        public static int FilterFlag = -1;
-
         private static readonly FilterSetting filterSetting = new();
 
         public static void SetFilterWords(params string[] words)

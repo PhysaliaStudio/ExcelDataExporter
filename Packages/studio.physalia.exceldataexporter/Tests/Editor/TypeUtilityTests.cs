@@ -26,13 +26,5 @@ namespace Physalia.ExcelDataExporter.Tests
         {
             Assert.AreEqual(expected, TypeUtility.ParseInt(text));
         }
-
-        [TestCase(0, "0b0000")]
-        [TestCase(3, "0b0011")]
-        [TestCase(15, "1111")]
-        public void ParseIntWithBinaryTest(int expected, string text)
-        {
-            Assert.AreEqual(expected, TypeUtility.ParseIntWithBinary(text));
-        }
     }
 }

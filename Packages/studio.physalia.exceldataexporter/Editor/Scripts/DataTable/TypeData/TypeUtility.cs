@@ -191,15 +191,6 @@ namespace Physalia.ExcelDataExporter
             return success ? result : default;
         }
 
-        public static int ParseIntWithBinary(string text)
-        {
-            if (text.StartsWith("0b"))
-            {
-                text = text[2..];
-            }
-            return Convert.ToInt32(text, 2);
-        }
-
         public static bool ParseBool(string text)
         {
             bool success = bool.TryParse(text, out bool result);
