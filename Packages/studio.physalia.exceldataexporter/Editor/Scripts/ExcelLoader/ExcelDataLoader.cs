@@ -20,7 +20,7 @@ namespace Physalia.ExcelDataExporter
 
         public List<SheetRawData> LoadExcelData(string filePath)
         {
-            using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
 
             var sheetRawDatas = new List<SheetRawData>();
