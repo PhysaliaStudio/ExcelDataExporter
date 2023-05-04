@@ -220,33 +220,5 @@ namespace Physalia.ExcelDataExporter
 
             return true;
         }
-
-        public static int ParseFilterCell(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return -1;
-            }
-
-            MatchCollection matches = Regex.Matches(text, @"\d+");
-            string valueText = matches[^1].Value;
-            int filter = ParseIntWithBinary(valueText);
-            return filter;
-        }
-
-        public static bool IsDataLineExported(int filter)
-        {
-            if (filter == 0)
-            {
-                return false;
-            }
-
-            if (ExporterSetting.FilterFlag < 0)
-            {
-                return true;
-            }
-
-            return (filter & 1 << ExporterSetting.FilterFlag) != 0;
-        }
     }
 }
