@@ -6,13 +6,24 @@ namespace Physalia.ExcelDataExporter
 {
     public class ExcelDataLoader
     {
+        private readonly ExcelSheetDataReader sheetDataReader;
+
+        public ExcelDataLoader()
+        {
+            sheetDataReader = new ExcelSheetDataReader();
+        }
+
+        public ExcelDataLoader(params string[] filterWords)
+        {
+            sheetDataReader = new ExcelSheetDataReader(filterWords);
+        }
+
         public List<SheetRawData> LoadExcelData(string filePath)
         {
             using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
             using IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
 
             var sheetRawDatas = new List<SheetRawData>();
-            var sheetDataReader = new ExcelSheetDataReader();
             do
             {
                 var sheetRawData = sheetDataReader.ReadSheet(reader);
