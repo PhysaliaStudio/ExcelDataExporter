@@ -26,6 +26,11 @@ namespace Physalia.ExcelDataExporter
             var sheetRawDatas = new List<SheetRawData>();
             do
             {
+                if (reader.Name.StartsWith('$'))
+                {
+                    continue;
+                }
+
                 var sheetRawData = sheetDataReader.ReadSheet(reader);
                 if (sheetRawData != null)
                 {
