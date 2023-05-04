@@ -22,17 +22,21 @@ While thinking **the 1st row doesn't exist**:
 - The 1st line is for `field summaries`. They will become the summaries of the generated code.
 - The 2nd line is for `field names`. The names should follow the general naming convention.
 - The 3rd line is for `field types`. Supported types are `int`, `string`, `bool`, `Vector2Int`, `Vector3Int`, custom types defined in the `$CustomTypes.xlsx`, and any array of these types.
+- The 4th line is for `filter words`. You can decide which column/row to export with your words.
 - Why do we use the word 'line' here? Since the layout can be either `horizontal` or `vertical`, the 'line' can means 'row' or 'column'.
+
+- So your data row start from the 5th row. (Or 6th row if contains metadata row.)
 
 ### Sheet Example
 
-| name=ItemData ||           |           | <- Metadata Line
-| :---: | :---:  | :---:     | :---:     | --- |
-| ItemId | Name  | Minimum Damage | Maximum Damage | <- Field Summary Line |
-| id    | name   | damageMin | damageMax | <- Field Name Line |
-| int   | string | int       | int       | <- Field Type Line |
-| 1001  | Sword  | 5         | 8         | <- Data Start Line |
-| 1002  | Axe    | 3         | 12        |                    |
+| name=ItemData   |||                  |           | <- Metadata Line
+| :---:  | :---:  | :---:  | :---:     | :---:     | --- |
+| \#skip | ItemId | Name   | Minimum Damage | Maximum Damage | <- Field Summary Line |
+| \#skip | id     | name   | damageMin | damageMax | <- Field Name Line  |
+| bool   | int    | string | int       | int       | <- Field Type Line  |
+| skip   | both   | both   | both      | <- Filter Word Line |
+| 1      | 1001   | Sword  | 5         | 8         | <- Data Start Line  |
+| 0      | 1002   | Axe    | 3         | 12        |                     |
 
 Click the **Generate Code** button. The exporter generates the following `.cs` files.
 
