@@ -150,6 +150,7 @@ namespace Physalia.ExcelDataExporter
             }
 
             AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("Success", $"Generate {customTypeTable.Count} custom types successfully!", "OK");
         }
 
         public void GenerateCodeForSelectedTables()
@@ -173,7 +174,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = GenerateCustomTypeTable();
             var parser = new TypeDataParser(customTypeTable);
 
-            var invalidResults = new List<TypeDataValidator.Result>();
+            var results = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForJsonData();
             CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForJsonSetting();
 
@@ -188,9 +189,10 @@ namespace Physalia.ExcelDataExporter
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        results.Add(result);
+
                         if (!result.IsValid)
                         {
-                            invalidResults.Add(result);
                             continue;
                         }
 
@@ -213,7 +215,7 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            ShowInvalidResults(invalidResults);
+            ShowValidationResults(results);
         }
 
         private void GenerateCodeForSelectedTablesForAsset()
@@ -221,7 +223,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = GenerateCustomTypeTable();
             var parser = new TypeDataParser(customTypeTable);
 
-            var invalidResults = new List<TypeDataValidator.Result>();
+            var results = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForAssetData();
             CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForAssetDataTable();
             CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForAssetSetting();
@@ -237,9 +239,10 @@ namespace Physalia.ExcelDataExporter
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        results.Add(result);
+
                         if (!result.IsValid)
                         {
-                            invalidResults.Add(result);
                             continue;
                         }
 
@@ -270,7 +273,7 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            ShowInvalidResults(invalidResults);
+            ShowValidationResults(results);
         }
 
         public void ExportSelectedTables()
@@ -294,7 +297,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = GenerateCustomTypeTable();
             var parser = new TypeDataParser(customTypeTable);
 
-            var invalidResults = new List<TypeDataValidator.Result>();
+            var results = new List<TypeDataValidator.Result>();
             var dataExporter = new DataExporterJson();
 
             for (var i = 0; i < dataTables.Count; i++)
@@ -308,9 +311,10 @@ namespace Physalia.ExcelDataExporter
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        results.Add(result);
+
                         if (!result.IsValid)
                         {
-                            invalidResults.Add(result);
                             continue;
                         }
 
@@ -324,7 +328,7 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            ShowInvalidResults(invalidResults);
+            ShowValidationResults(results);
         }
 
         private void ExportSelectedTablesAsAsset()
@@ -332,7 +336,7 @@ namespace Physalia.ExcelDataExporter
             CustomTypeTable customTypeTable = GenerateCustomTypeTable();
             var parser = new TypeDataParser(customTypeTable);
 
-            var invalidResults = new List<TypeDataValidator.Result>();
+            var results = new List<TypeDataValidator.Result>();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -345,9 +349,10 @@ namespace Physalia.ExcelDataExporter
                         SheetRawData sheetRawData = sheetRawDatas[j];
                         TypeData typeData = parser.ExportTypeData(sheetRawData);
                         TypeDataValidator.Result result = new TypeDataValidator().Validate(typeData);
+                        results.Add(result);
+
                         if (!result.IsValid)
                         {
-                            invalidResults.Add(result);
                             continue;
                         }
 
@@ -400,7 +405,7 @@ namespace Physalia.ExcelDataExporter
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            ShowInvalidResults(invalidResults);
+            ShowValidationResults(results);
         }
 
         private CustomTypeTable GenerateCustomTypeTable()
@@ -440,18 +445,19 @@ namespace Physalia.ExcelDataExporter
             return "Assets" + absolutePath[Application.dataPath.Length..];
         }
 
-        private static void ShowInvalidResults(IReadOnlyList<TypeDataValidator.Result> invalidResults)
+        private static void ShowValidationResults(IReadOnlyList<TypeDataValidator.Result> results)
         {
-            if (invalidResults.Count == 0)
+            if (results.Count == 0)
             {
+                EditorUtility.DisplayDialog("Warning", $"You didn't select any worksheet!", "Oh...");
                 return;
             }
 
             var sb = new StringBuilder();
 
-            for (var i = 0; i < invalidResults.Count; i++)
+            for (var i = 0; i < results.Count; i++)
             {
-                TypeDataValidator.Result result = invalidResults[i];
+                TypeDataValidator.Result result = results[i];
                 if (result.IsValid)
                 {
                     continue;
@@ -471,7 +477,14 @@ namespace Physalia.ExcelDataExporter
                 sb.AppendLine();
             }
 
-            EditorUtility.DisplayDialog("Some table failed!", sb.ToString(), "OK");
+            if (sb.Length > 0)
+            {
+                EditorUtility.DisplayDialog("Some tables failed!", sb.ToString(), "OK");
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Success", $"Exported {results.Count} sheets successfully!", "OK");
+            }
         }
     }
 }
