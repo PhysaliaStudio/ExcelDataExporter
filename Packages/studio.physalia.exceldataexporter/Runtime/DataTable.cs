@@ -28,7 +28,14 @@ namespace Physalia.ExcelDataExporter
             {
                 for (int i = 0; i < items.Count; i++)
                 {
-                    table.Add((items[i] as IHasId).Id, items[i]);
+                    T item = items[i];
+                    int id = (item as IHasId).Id;
+
+                    bool success = table.TryAdd(id, item);
+                    if (!success)
+                    {
+                        Debug.LogError($"ID Conflict! <{GetType().Name}> Id: {id} at index {i}", this);
+                    }
                 }
             }
             else
