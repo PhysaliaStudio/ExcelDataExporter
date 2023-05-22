@@ -1,9 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
-    public abstract class DataTable<T> : ScriptableObject where T : IHasId
+    public abstract class DataTable : ScriptableObject
+    {
+        public abstract Type DataType { get; }
+    }
+
+    public abstract class DataTable<T> : DataTable, ISerializationCallbackReceiver
     {
         [SerializeField]
         private List<T> items = new();
@@ -11,16 +17,34 @@ namespace Physalia.ExcelDataExporter
         private readonly Dictionary<int, T> table = new();
 
         public int Count => items.Count;
+        public override Type DataType => typeof(T);
 
-        public void BuildTable()
+        #region Implement ISerializationCallbackReceiver
+        public void OnAfterDeserialize()
         {
             table.Clear();
-            for (var i = 0; i < items.Count; i++)
+
+            if (typeof(IHasId).IsAssignableFrom(typeof(T)))
             {
-                T item = items[i];
-                table.Add(item.Id, item);
+                for (int i = 0; i < items.Count; i++)
+                {
+                    table.Add((items[i] as IHasId).Id, items[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    table.Add(i, items[i]);
+                }
             }
         }
+
+        public void OnBeforeSerialize()
+        {
+
+        }
+        #endregion
 
         public bool Contains(int id)
         {
@@ -37,11 +61,16 @@ namespace Physalia.ExcelDataExporter
             bool success = table.TryGetValue(id, out T data);
             if (!success)
             {
-                Debug.LogError($"Data not found. id: {id}");
+                Debug.LogError($"Data not found. type: {typeof(T)}, id: {id}");
                 return default;
             }
 
             return data;
+        }
+
+        public IReadOnlyList<T> GetDataList()
+        {
+            return items;
         }
     }
 }
