@@ -1,7 +1,7 @@
 {
   "name": "studio.physalia.exceldataexporter",
   "displayName": "ExcelDataExporter",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "unity": "2021.3",
   "keywords": [
     "excel",
