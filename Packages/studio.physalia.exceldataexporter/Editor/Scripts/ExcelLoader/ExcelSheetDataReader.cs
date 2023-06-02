@@ -53,10 +53,15 @@ namespace Physalia.ExcelDataExporter
                 return null;
             }
 
-            // If the type is DataTable, check skipped columns/rows
+            // Check skipped columns/rows
             if (sheetRawData.Metadata.SheetType == SheetType.DataTable)
             {
                 HandleDefineSkipData(sheetRawData);
+            }
+
+            // Check skipped lines
+            if (sheetRawData.Metadata.SheetType == SheetType.DataTable || sheetRawData.Metadata.SheetType == SheetType.Setting)
+            {
                 FilterOutLines(sheetRawData);
             }
 
@@ -64,6 +69,9 @@ namespace Physalia.ExcelDataExporter
             return sheetRawData;
         }
 
+        /// <summary>
+        /// Check #active column/row and remove skipped data, only necessary for DataTable
+        /// </summary>
         private void HandleDefineSkipData(SheetRawData sheetRawData)
         {
             if (sheetRawData.Metadata.SheetLayout == SheetLayout.Horizontal)
@@ -110,6 +118,9 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
+        /// <summary>
+        /// Remove skipped lines
+        /// </summary>
         private void FilterOutLines(SheetRawData sheetRawData)
         {
             if (sheetRawData.Metadata.SheetLayout == SheetLayout.Horizontal)
