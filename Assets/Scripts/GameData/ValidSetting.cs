@@ -2,11 +2,12 @@
 // #### AUTO GENERATED CODE, DO NOT MODIFY!! #####
 // ###############################################
 
+using Physalia.ExcelDataExporter;
 using UnityEngine;
 
 namespace TestData
 {
-    public class ValidSetting : ScriptableObject
+    public class ValidSetting : SettingTable
     {
         [SerializeField]
         private int _spawnGapTime;

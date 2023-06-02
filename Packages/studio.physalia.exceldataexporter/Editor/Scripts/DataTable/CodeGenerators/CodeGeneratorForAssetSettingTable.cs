@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CodeGeneratorForAssetSetting : CodeGeneratorBase
+    public class CodeGeneratorForAssetSettingTable : CodeGeneratorBase
     {
         public override string Generate(TypeData typeData)
         {
@@ -30,7 +30,7 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            List<string> namespaces = CollectNamespaces(typeData, "UnityEngine");
+            List<string> namespaces = CollectNamespaces(typeData, "Physalia.ExcelDataExporter", "UnityEngine");
             return GenerateUsingBlock(namespaces, ending);
         }
 
@@ -38,7 +38,7 @@ namespace Physalia.ExcelDataExporter
         {
             var codes = new List<string>
             {
-                $"public class {typeData.name} : ScriptableObject{ending}",
+                $"public class {typeData.name} : SettingTable{ending}",
                 $"{{{ending}",
             };
 

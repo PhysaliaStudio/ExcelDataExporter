@@ -7,7 +7,7 @@ namespace Physalia.ExcelDataExporter
     public class DataManager
     {
         private readonly Dictionary<Type, DataTable> tables = new(128);
-        private readonly Dictionary<Type, Setting> settings = new(128);
+        private readonly Dictionary<Type, SettingTable> settings = new(128);
 
         public void AddDataTable(DataTable dataTable)
         {
@@ -48,11 +48,11 @@ namespace Physalia.ExcelDataExporter
             return dataList;
         }
 
-        public void AddSetting<T>(T setting) where T : class
+        public void AddSettingTable(SettingTable settingTable)
         {
-            Type type = typeof(T);
+            Type type = settingTable.GetType();
 
-            if (!typeof(Setting).IsAssignableFrom(type))
+            if (!typeof(SettingTable).IsAssignableFrom(type))
             {
                 Debug.LogError($"[{nameof(DataManager)}] Type '{type}' is not assignable from Setting.");
                 return;
@@ -64,26 +64,26 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            settings.Add(type, setting as Setting);
+            settings.Add(type, settingTable);
         }
 
-        public T GetSetting<T>() where T : class
+        public T GetSettingTable<T>() where T : class
         {
             Type type = typeof(T);
 
-            if (!typeof(Setting).IsAssignableFrom(type))
+            if (!typeof(SettingTable).IsAssignableFrom(type))
             {
-                Debug.LogError($"[{nameof(DataManager)}] Type '{type}' is not assignable from Setting.");
+                Debug.LogError($"[{nameof(DataManager)}] Type '{type}' is not assignable from SettingTable.");
                 return default;
             }
 
-            if (!settings.TryGetValue(type, out Setting setting))
+            if (!settings.TryGetValue(type, out SettingTable settingTable))
             {
-                Debug.LogError($"[{nameof(DataManager)}] Setting with '{type}' is not found.");
+                Debug.LogError($"[{nameof(DataManager)}] SettingTable with '{type}' is not found.");
                 return default;
             }
 
-            return setting as T;
+            return settingTable as T;
         }
 
         public void Clear()
