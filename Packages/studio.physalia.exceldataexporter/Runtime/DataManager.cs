@@ -48,9 +48,9 @@ namespace Physalia.ExcelDataExporter
             return dataList;
         }
 
-        public void AddSetting<T>(T setting) where T : class
+        public void AddSettingTable(SettingTable settingTable)
         {
-            Type type = typeof(T);
+            Type type = settingTable.GetType();
 
             if (!typeof(SettingTable).IsAssignableFrom(type))
             {
@@ -64,26 +64,26 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            settings.Add(type, setting as SettingTable);
+            settings.Add(type, settingTable);
         }
 
-        public T GetSetting<T>() where T : class
+        public T GetSettingTable<T>() where T : class
         {
             Type type = typeof(T);
 
             if (!typeof(SettingTable).IsAssignableFrom(type))
             {
-                Debug.LogError($"[{nameof(DataManager)}] Type '{type}' is not assignable from Setting.");
+                Debug.LogError($"[{nameof(DataManager)}] Type '{type}' is not assignable from SettingTable.");
                 return default;
             }
 
-            if (!settings.TryGetValue(type, out SettingTable setting))
+            if (!settings.TryGetValue(type, out SettingTable settingTable))
             {
-                Debug.LogError($"[{nameof(DataManager)}] Setting with '{type}' is not found.");
+                Debug.LogError($"[{nameof(DataManager)}] SettingTable with '{type}' is not found.");
                 return default;
             }
 
-            return setting as T;
+            return settingTable as T;
         }
 
         public void Clear()
