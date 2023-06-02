@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CodeGeneratorForAssetSetting : CodeGeneratorBase
+    public class CodeGeneratorForAssetSettingTable : CodeGeneratorBase
     {
         public override string Generate(TypeData typeData)
         {

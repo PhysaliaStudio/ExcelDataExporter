@@ -226,7 +226,7 @@ namespace Physalia.ExcelDataExporter
             var results = new List<TypeDataValidator.Result>();
             CodeGeneratorBase codeGeneratorForData = new CodeGeneratorForAssetData();
             CodeGeneratorBase codeGeneratorForDataTable = new CodeGeneratorForAssetDataTable();
-            CodeGeneratorBase codeGeneratorForSetting = new CodeGeneratorForAssetSetting();
+            CodeGeneratorBase codeGeneratorForSettingTable = new CodeGeneratorForAssetSettingTable();
 
             for (var i = 0; i < dataTables.Count; i++)
             {
@@ -262,7 +262,7 @@ namespace Physalia.ExcelDataExporter
                         }
                         else
                         {
-                            string scriptText = codeGeneratorForSetting.Generate(typeData);
+                            string scriptText = codeGeneratorForSettingTable.Generate(typeData);
                             string path = $"{codePath}{worksheetData.RelativeFolder}/{sheetRawData.Name}.cs";
                             SaveFile(path, scriptText);
                         }
