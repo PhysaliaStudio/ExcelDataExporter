@@ -36,6 +36,6 @@
         <ui:VisualElement style="height: 10px;" />
     </ui:VisualElement>
     <ui:ScrollView style="flex-grow: 1;">
-        <ui:VisualElement name="data-table-view" style="flex-direction: row; flex-wrap: wrap;" />
+        <ui:VisualElement name="data-table-view" style="flex-direction: column; flex-wrap: wrap; margin-left: 5px; margin-right: 5px;" />
     </ui:ScrollView>
 </ui:UXML>
