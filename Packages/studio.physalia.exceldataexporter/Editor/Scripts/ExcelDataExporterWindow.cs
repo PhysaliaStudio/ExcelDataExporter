@@ -73,5 +73,23 @@ namespace Physalia.ExcelDataExporter
         {
             gameDatabase.Reload();
         }
+
+        private void OnGUI()
+        {
+            if (EditorApplication.isCompiling)
+            {
+                if (rootVisualElement.enabledSelf)
+                {
+                    rootVisualElement.SetEnabled(false);
+                }
+            }
+            else
+            {
+                if (!rootVisualElement.enabledSelf)
+                {
+                    rootVisualElement.SetEnabled(true);
+                }
+            }
+        }
     }
 }
