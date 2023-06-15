@@ -1,28 +1,31 @@
 using System;
 using System.IO;
+using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
     [Serializable]
     public class WorksheetData
     {
-        private readonly FileInfo fileInfo;
-        private readonly string name;
-        private readonly string relativeFolder;
-
+        [SerializeField]
         private bool isSelected;
-
-        public string FullPath => fileInfo.FullName;
-        public string Name => name;
-        public string RelativeFolder => relativeFolder;
+        [SerializeField]
+        private string name;
+        [SerializeField]
+        private string relativeFolder;
+        [SerializeField]
+        private string fullPath;
 
         public bool IsSelected => isSelected;
+        public string Name => name;
+        public string RelativeFolder => relativeFolder;
+        public string FullPath => fullPath;
 
         public WorksheetData(string rootFolderPath, FileInfo fileInfo)
         {
-            this.fileInfo = fileInfo;
             name = fileInfo.Name[..^".xlsx".Length];
             relativeFolder = fileInfo.DirectoryName[rootFolderPath.Length..].Replace('\\', '/');
+            fullPath = fileInfo.FullName;
         }
 
         public void Switch()

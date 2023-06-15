@@ -20,6 +20,7 @@ namespace Physalia.ExcelDataExporter
             button = new Button(Switch) { text = worksheetData.Name };
             button.style.width = ButtonSize.x;
             button.style.height = ButtonSize.y;
+            Refresh();
             Add(button);
         }
 

@@ -9,8 +9,9 @@ namespace Physalia.ExcelDataExporter
     {
         [SerializeField]
         private VisualTreeAsset uiAsset;
-
+        [SerializeField]
         private GameDatabase gameDatabase;
+
         private SerializedObject serializedObject;
         private DataTablePanel dataTablePanel;
 
@@ -24,7 +25,11 @@ namespace Physalia.ExcelDataExporter
 
         private void CreateGUI()
         {
-            gameDatabase = CreateInstance<GameDatabase>();
+            if (gameDatabase == null)
+            {
+                gameDatabase = CreateInstance<GameDatabase>();
+            }
+
             serializedObject = new SerializedObject(gameDatabase);
 
             uiAsset.CloneTree(rootVisualElement);

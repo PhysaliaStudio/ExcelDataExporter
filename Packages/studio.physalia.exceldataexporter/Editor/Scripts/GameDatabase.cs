@@ -85,7 +85,12 @@ namespace Physalia.ExcelDataExporter
 
         private void CollectAllWorksheetDatas()
         {
-            dataTables.Clear();
+            // Note: We use scriptable object to cache each file path and selection status, so use replace instead of clear
+            var existedDataTables = new Dictionary<string, WorksheetData>(dataTables.Count);
+            for (var i = 0; i < dataTables.Count; i++)
+            {
+                existedDataTables.Add(dataTables[i].FullPath, dataTables[i]);
+            }
 
             // Get all Excel files
             DirectoryInfo directoryInfo = new DirectoryInfo(dataPath);
@@ -105,9 +110,20 @@ namespace Physalia.ExcelDataExporter
                     continue;
                 }
 
-                var worksheetData = new WorksheetData(dataPath, fileInfo);
-                dataTables.Add(worksheetData);
+                if (!existedDataTables.Remove(fileInfo.FullName))
+                {
+                    var worksheetData = new WorksheetData(dataPath, fileInfo);
+                    dataTables.Add(worksheetData);
+                }
             }
+
+            // Remove those not existed anymore
+            foreach (var existedDataTable in existedDataTables)
+            {
+                dataTables.Remove(existedDataTable.Value);
+            }
+
+            dataTables.Sort((a, b) => a.Name.CompareTo(b.Name));
         }
 
         public void SelectAll()
