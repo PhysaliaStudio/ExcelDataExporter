@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement>
+    <ui:VisualElement style="height: 230px; min-height: 230px;">
         <ui:VisualElement style="flex-direction: row;">
             <ui:Label text="Code Path:" style="width: 80px; -unity-text-align: middle-left;" />
             <ui:VisualElement style="flex-grow: 1;">
@@ -35,7 +35,5 @@
         </ui:VisualElement>
         <ui:VisualElement style="height: 10px;" />
     </ui:VisualElement>
-    <ui:ScrollView style="flex-grow: 1;">
-        <ui:VisualElement name="data-table-view" style="flex-direction: column; flex-wrap: wrap; margin-left: 5px; margin-right: 5px;" />
-    </ui:ScrollView>
+    <ui:VisualElement name="data-table-view" style="flex-direction: column; flex-wrap: wrap; height: 100%; width: 100%; padding-left: 5px; padding-right: 5px;" />
 </ui:UXML>
