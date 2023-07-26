@@ -18,6 +18,8 @@ namespace TestGame.BattleSystem
         [SerializeField]
         private EnemyType _type;
         [SerializeField]
+        private bool _isShow;
+        [SerializeField]
         private int[] _attack;
         [SerializeField]
         private Vector2Int[] _startPos;
@@ -31,6 +33,7 @@ namespace TestGame.BattleSystem
         /// Enemy Type
         /// </summary>
         public EnemyType Type => _type;
+        public bool IsShow => _isShow;
 
         /// <summary>
         /// ATK for each level

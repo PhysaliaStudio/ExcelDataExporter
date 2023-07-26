@@ -16,6 +16,7 @@ MonoBehaviour:
   - _id: 1000
     _name: ABC
     _type: 1
+    _isShow: 1
     _attack: 0200000005000000080000000d000000
     _startPos:
     - {x: 5, y: 3}
@@ -25,6 +26,7 @@ MonoBehaviour:
   - _id: 1002
     _name: ABC
     _type: 1
+    _isShow: 0
     _attack: 0200000005000000080000000f000000
     _startPos:
     - {x: 7, y: 5}
@@ -34,6 +36,7 @@ MonoBehaviour:
   - _id: 1003
     _name: ABC
     _type: 2
+    _isShow: 0
     _attack: 02000000050000000800000010000000
     _startPos:
     - {x: 8, y: 6}
@@ -43,6 +46,7 @@ MonoBehaviour:
   - _id: 1004
     _name: ABC
     _type: 3
+    _isShow: 1
     _attack: 02000000050000000800000011000000
     _startPos:
     - {x: 9, y: 7}
