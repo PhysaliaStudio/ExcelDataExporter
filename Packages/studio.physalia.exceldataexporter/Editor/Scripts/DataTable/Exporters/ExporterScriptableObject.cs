@@ -221,8 +221,7 @@ namespace Physalia.ExcelDataExporter
                     }
                 case "bool":
                     {
-                        bool success = bool.TryParse(text, out bool result);
-                        fieldProperty.boolValue = success ? result : default;
+                        fieldProperty.boolValue = TypeUtility.ParseBool(text);
                         break;
                     }
             }

@@ -123,10 +123,7 @@ namespace Physalia.ExcelDataExporter
                 case "string":
                     return text;
                 case "bool":
-                    {
-                        bool success = bool.TryParse(text, out bool result);
-                        return success ? result : default;
-                    }
+                    return ParseBool(text);
                 case "byte":
                     {
                         bool success = byte.TryParse(text, out byte result);
