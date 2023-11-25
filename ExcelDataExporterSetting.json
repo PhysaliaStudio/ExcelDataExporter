@@ -1,0 +1,5 @@
+{
+  "excelFolderPath": "GameData",
+  "codeExportFolderPath": "Assets/Scripts/GameData",
+  "dataExportFolderPath": "Assets/GameResources/GameData"
+}
