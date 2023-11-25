@@ -84,15 +84,13 @@ namespace Physalia.ExcelDataExporter
 
         private void PingCodeFolder()
         {
-            string assetPath = gameDatabase.CodePath.Replace(Application.dataPath, "Assets");
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
+            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.CodePath);
             EditorGUIUtility.PingObject(folder);
         }
 
         private void PingExportFolder()
         {
-            string assetPath = gameDatabase.ExportPath.Replace(Application.dataPath, "Assets");
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
+            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportPath);
             EditorGUIUtility.PingObject(folder);
         }
 
@@ -104,7 +102,8 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            gameDatabase.SetCodePath(fullPath);
+            string assetPath = fullPath.Replace(Application.dataPath, "Assets");
+            gameDatabase.SetCodePath(assetPath);
         }
 
         private void BrowseExportFolder()
@@ -115,7 +114,8 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            gameDatabase.SetExportPath(fullPath);
+            string assetPath = fullPath.Replace(Application.dataPath, "Assets");
+            gameDatabase.SetExportPath(assetPath);
         }
 
         private void SelectAll()

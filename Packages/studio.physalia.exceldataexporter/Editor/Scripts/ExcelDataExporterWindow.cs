@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -55,7 +56,8 @@ namespace Physalia.ExcelDataExporter
 
         private void ShowDataFolder()
         {
-            EditorUtility.RevealInFinder(gameDatabase.DataPath);
+            string fullDataPath = Path.GetFullPath(gameDatabase.DataPath, Application.dataPath + "/../");
+            EditorUtility.RevealInFinder(fullDataPath);
         }
 
         private void BrowseDataFolder()
