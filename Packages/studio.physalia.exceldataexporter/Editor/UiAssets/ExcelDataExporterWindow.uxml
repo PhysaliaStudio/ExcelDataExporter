@@ -3,7 +3,7 @@
     <ui:Label text="Data Folder Path:" display-tooltip-when-elided="true" />
     <ui:VisualElement style="flex-direction: row;">
         <ui:VisualElement style="flex-grow: 1;">
-            <ui:TextField picking-mode="Ignore" readonly="true" binding-path="dataPath" />
+            <ui:TextField picking-mode="Ignore" readonly="true" binding-path="setting.excelFolderPath" />
         </ui:VisualElement>
         <ui:Button text="S" name="show-data-folder-button" style="width: 24px;" />
         <ui:Button text="..." name="browse-data-folder-button" style="width: 24px;" />

@@ -3,7 +3,7 @@
         <ui:VisualElement style="flex-direction: row;">
             <ui:Label text="Code Path:" style="width: 80px; -unity-text-align: middle-left;" />
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="codePath" />
+                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="setting.codeExportFolderPath" />
             </ui:VisualElement>
             <ui:Button text="P" name="ping-code-folder-button" style="width: 24px;" />
             <ui:Button text="..." name="browse-code-folder-button" style="width: 24px;" />
@@ -11,7 +11,7 @@
         <ui:VisualElement style="flex-direction: row;">
             <ui:Label text="Export Path:" style="width: 80px; -unity-text-align: middle-left;" />
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="exportPath" />
+                <ui:TextField picking-mode="Ignore" readonly="true" binding-path="setting.dataExportFolderPath" />
             </ui:VisualElement>
             <ui:Button text="P" name="ping-export-folder-button" style="width: 24px;" />
             <ui:Button text="..." name="browse-export-folder-button" style="width: 24px;" />
