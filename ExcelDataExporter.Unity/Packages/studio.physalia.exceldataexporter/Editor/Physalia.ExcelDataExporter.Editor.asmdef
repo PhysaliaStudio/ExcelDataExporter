@@ -11,6 +11,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
+        "ExcelDataExporter.dll",
+        "ExcelDataExporter.Loader.dll",
         "ExcelDataReader.dll",
         "Newtonsoft.Json.dll"
     ],
