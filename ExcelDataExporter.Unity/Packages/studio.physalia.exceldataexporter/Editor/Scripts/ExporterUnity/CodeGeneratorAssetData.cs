@@ -30,7 +30,7 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            List<string> namespaces = CollectNamespaces(typeData, "System", "Physalia.ExcelDataExporter", "UnityEngine");
+            List<string> namespaces = CollectNamespaces(typeData, "System", "Physalia.ExcelDataRuntime", "UnityEngine");
             return GenerateUsingBlock(namespaces, ending);
         }
 

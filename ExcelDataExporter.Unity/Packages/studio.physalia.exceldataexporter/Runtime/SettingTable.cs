@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.ExcelDataExporter
+namespace Physalia.ExcelDataRuntime
 {
     public abstract class SettingTable : ScriptableObject
     {

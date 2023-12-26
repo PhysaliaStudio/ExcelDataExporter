@@ -2,28 +2,28 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.ExcelDataExporter
+namespace Physalia.ExcelDataRuntime
 {
     public class DataManager
     {
-        private readonly Dictionary<Type, DataTable> tables = new(128);
-        private readonly Dictionary<Type, SettingTable> settings = new(128);
+        private readonly Dictionary<Type, DataTable> _dataTables = new(64);
+        private readonly Dictionary<Type, SettingTable> _settingTables = new(8);
 
         public void AddDataTable(DataTable dataTable)
         {
             Type type = dataTable.DataType;
-            if (tables.ContainsKey(type))
+            if (_dataTables.ContainsKey(type))
             {
                 Debug.LogError($"[{nameof(DataManager)}] DataTable with '{type}' is already added.");
                 return;
             }
-            tables.Add(type, dataTable);
+            _dataTables.Add(type, dataTable);
         }
 
         public T GetData<T>(int id)
         {
             Type type = typeof(T);
-            if (!tables.TryGetValue(type, out DataTable dataTable))
+            if (!_dataTables.TryGetValue(type, out DataTable dataTable))
             {
                 Debug.LogError($"[{nameof(DataManager)}] DataTable with '{type}' is not found.");
                 return default;
@@ -37,7 +37,7 @@ namespace Physalia.ExcelDataExporter
         public IReadOnlyList<T> GetDataList<T>()
         {
             Type type = typeof(T);
-            if (!tables.TryGetValue(type, out DataTable dataTable))
+            if (!_dataTables.TryGetValue(type, out DataTable dataTable))
             {
                 Debug.LogError($"[{nameof(DataManager)}] DataTable with '{type}' is not found.");
                 return default;
@@ -58,13 +58,13 @@ namespace Physalia.ExcelDataExporter
                 return;
             }
 
-            if (settings.ContainsKey(type))
+            if (_settingTables.ContainsKey(type))
             {
                 Debug.LogError($"[{nameof(DataManager)}] Setting with '{type}' is already added.");
                 return;
             }
 
-            settings.Add(type, settingTable);
+            _settingTables.Add(type, settingTable);
         }
 
         public T GetSettingTable<T>() where T : class
@@ -77,7 +77,7 @@ namespace Physalia.ExcelDataExporter
                 return default;
             }
 
-            if (!settings.TryGetValue(type, out SettingTable settingTable))
+            if (!_settingTables.TryGetValue(type, out SettingTable settingTable))
             {
                 Debug.LogError($"[{nameof(DataManager)}] SettingTable with '{type}' is not found.");
                 return default;
@@ -88,8 +88,8 @@ namespace Physalia.ExcelDataExporter
 
         public void Clear()
         {
-            tables.Clear();
-            settings.Clear();
+            _dataTables.Clear();
+            _settingTables.Clear();
         }
     }
 }

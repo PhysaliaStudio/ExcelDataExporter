@@ -13,7 +13,7 @@ namespace Physalia.ExcelDataExporter
             ScriptableObject dataTable = ScriptableObject.CreateInstance(tableType);
             var serializedObject = new SerializedObject(dataTable);
 
-            SerializedProperty property = serializedObject.FindProperty("items");
+            SerializedProperty property = serializedObject.FindProperty("_items");
 
             Metadata metadata = sheetRawData.Metadata;
             if (metadata.GetSheetLayout() == SheetLayout.Horizontal)

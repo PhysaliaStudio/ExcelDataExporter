@@ -1,6 +1,6 @@
 {
-    "name": "Physalia.ExcelDataExporter",
-    "rootNamespace": "Physalia.ExcelDataExporter",
+    "name": "Physalia.ExcelDataRuntime",
+    "rootNamespace": "Physalia.ExcelDataRuntime",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

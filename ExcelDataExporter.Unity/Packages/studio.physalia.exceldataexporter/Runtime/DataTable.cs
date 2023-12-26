@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.ExcelDataExporter
+namespace Physalia.ExcelDataRuntime
 {
     public abstract class DataTable : ScriptableObject
     {
@@ -12,26 +12,26 @@ namespace Physalia.ExcelDataExporter
     public abstract class DataTable<T> : DataTable, ISerializationCallbackReceiver
     {
         [SerializeField]
-        private List<T> items = new();
+        private List<T> _items = new();
 
-        private readonly Dictionary<int, T> table = new();
+        private readonly Dictionary<int, T> _table = new();
 
-        public int Count => items.Count;
+        public int Count => _items.Count;
         public override Type DataType => typeof(T);
 
         #region Implement ISerializationCallbackReceiver
         public void OnAfterDeserialize()
         {
-            table.Clear();
+            _table.Clear();
 
             if (typeof(IHasId).IsAssignableFrom(typeof(T)))
             {
-                for (int i = 0; i < items.Count; i++)
+                for (int i = 0; i < _items.Count; i++)
                 {
-                    T item = items[i];
+                    T item = _items[i];
                     int id = (item as IHasId).Id;
 
-                    bool success = table.TryAdd(id, item);
+                    bool success = _table.TryAdd(id, item);
                     if (!success)
                     {
                         Debug.LogError($"ID Conflict! <{GetType().Name}> Id: {id} at index {i}", this);
@@ -40,9 +40,9 @@ namespace Physalia.ExcelDataExporter
             }
             else
             {
-                for (int i = 0; i < items.Count; i++)
+                for (int i = 0; i < _items.Count; i++)
                 {
-                    table.Add(i, items[i]);
+                    _table.Add(i, _items[i]);
                 }
             }
         }
@@ -55,17 +55,17 @@ namespace Physalia.ExcelDataExporter
 
         public bool Contains(int id)
         {
-            return table.ContainsKey(id);
+            return _table.ContainsKey(id);
         }
 
         public bool TryGetData(int id, out T data)
         {
-            return table.TryGetValue(id, out data);
+            return _table.TryGetValue(id, out data);
         }
 
         public T GetData(int id)
         {
-            bool success = table.TryGetValue(id, out T data);
+            bool success = _table.TryGetValue(id, out T data);
             if (!success)
             {
                 Debug.LogError($"Data not found. type: {typeof(T)}, id: {id}");
@@ -77,7 +77,7 @@ namespace Physalia.ExcelDataExporter
 
         public IReadOnlyList<T> GetDataList()
         {
-            return items;
+            return _items;
         }
     }
 }

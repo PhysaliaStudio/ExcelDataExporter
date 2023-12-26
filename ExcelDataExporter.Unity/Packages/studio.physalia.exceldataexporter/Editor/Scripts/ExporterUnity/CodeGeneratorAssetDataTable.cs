@@ -29,7 +29,7 @@ namespace Physalia.ExcelDataExporter
         {
             var codes = new List<string>
             {
-                $"using Physalia.ExcelDataExporter;{ending}",
+                $"using Physalia.ExcelDataRuntime;{ending}",
                 $"{ending}",
             };
             return codes;

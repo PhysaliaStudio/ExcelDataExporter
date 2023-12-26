@@ -1,3 +1,4 @@
+using Physalia.ExcelDataRuntime;
 using System;
 
 namespace Physalia.ExcelDataExporter

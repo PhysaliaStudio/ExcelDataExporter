@@ -1,4 +1,4 @@
-namespace Physalia.ExcelDataExporter
+namespace Physalia.ExcelDataRuntime
 {
     public interface IHasId
     {
