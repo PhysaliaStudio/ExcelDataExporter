@@ -2,7 +2,7 @@
 // #### AUTO GENERATED CODE, DO NOT MODIFY!! #####
 // ###############################################
 
-using Physalia.ExcelDataExporter;
+using Physalia.ExcelDataRuntime;
 using UnityEngine;
 
 namespace TestData

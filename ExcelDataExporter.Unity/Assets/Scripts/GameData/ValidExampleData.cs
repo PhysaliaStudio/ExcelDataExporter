@@ -3,7 +3,7 @@
 // ###############################################
 
 using System;
-using Physalia.ExcelDataExporter;
+using Physalia.ExcelDataRuntime;
 using UnityEngine;
 
 namespace TestGame

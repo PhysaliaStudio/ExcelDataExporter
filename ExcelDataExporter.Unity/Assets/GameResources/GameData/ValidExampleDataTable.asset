@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21e2143b6aeea3a4192f5e848a94fb21, type: 3}
   m_Name: ValidExampleDataTable
   m_EditorClassIdentifier: 
-  items:
+  _items:
   - _id: 1000
     _name: ABC
     _attack: 0200000005000000080000000d000000
