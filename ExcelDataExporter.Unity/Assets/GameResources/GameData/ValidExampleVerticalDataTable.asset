@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29350a35bd6571b49a73cd00785961c2, type: 3}
   m_Name: ValidExampleVerticalDataTable
   m_EditorClassIdentifier: 
-  items:
+  _items:
   - _id: 1000
     _name: ABC
     _attack: 0200000005000000080000000d000000

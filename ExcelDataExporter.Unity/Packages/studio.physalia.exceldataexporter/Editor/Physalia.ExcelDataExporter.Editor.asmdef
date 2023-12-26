@@ -2,7 +2,7 @@
     "name": "Physalia.ExcelDataExporter.Editor",
     "rootNamespace": "Physalia.ExcelDataExporter",
     "references": [
-        "Physalia.ExcelDataExporter"
+        "Physalia.ExcelDataRuntime"
     ],
     "includePlatforms": [
         "Editor"
@@ -11,6 +11,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
+        "ExcelDataExporter.dll",
+        "ExcelDataExporter.Loader.dll",
         "ExcelDataReader.dll",
         "Newtonsoft.Json.dll"
     ],
