@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Physalia.ExcelDataExporter.Loader
@@ -7,6 +8,8 @@ namespace Physalia.ExcelDataExporter.Loader
     public class SheetRawData
     {
         private string _name = string.Empty;
+        private string _filePath = string.Empty;
+
         private Metadata _metadata;
         private int _rowCount;
         private int _columnCount;
@@ -24,6 +27,9 @@ namespace Physalia.ExcelDataExporter.Loader
                 return _name;
             }
         }
+
+        public string FilePath => _filePath;
+        public string ParentDirectory => !string.IsNullOrEmpty(_filePath) ? Path.GetDirectoryName(_filePath) : string.Empty;
 
         public Metadata Metadata => _metadata;
         public int RowCount => _rowCount;
@@ -60,6 +66,16 @@ namespace Physalia.ExcelDataExporter.Loader
             }
 
             _name = name;
+        }
+
+        public void SetFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                filePath = string.Empty;
+            }
+
+            _filePath = filePath;
         }
 
         public void SetMetadata(string metadataText)

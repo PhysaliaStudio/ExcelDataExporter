@@ -22,6 +22,7 @@ namespace Physalia.ExcelDataExporter.Loader
                 }
 
                 SheetRawData sheetRawData = _sheetDataReader.ReadSheet(reader);
+                sheetRawData.SetFilePath(filePath);
                 if (sheetRawData != null)
                 {
                     sheetRawDatas.Add(sheetRawData);
