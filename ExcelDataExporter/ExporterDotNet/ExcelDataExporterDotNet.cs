@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Physalia.ExcelDataExporter.Loader;
 
@@ -7,6 +8,92 @@ namespace Physalia.ExcelDataExporter
     {
         private readonly CodeGeneratorCSharpData _codeGeneratorJsonData = new CodeGeneratorCSharpData();
         private readonly CodeGeneratorCSharpSetting _codeGeneratorJsonSetting = new CodeGeneratorCSharpSetting();
+
+        protected override List<TypeData> GetAdditionalTypesForDefault()
+        {
+            const string NamespaceName = "Physalia.ExcelDataRuntime";
+
+            return new List<TypeData> {
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Vector2",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "x", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "y", typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Vector3",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "x", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "y", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "z", typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Vector4",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "x", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "y", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "z", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "w", typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Vector2Int",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "x", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "y", typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Vector3Int",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "x", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "y", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "z", typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Color",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "r", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "g", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "b", typeData = TypeUtility.TypeDataFloat },
+                        new FieldData { name = "a", typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new TypeData
+                {
+                    namespaceName = NamespaceName,
+                    name = "Color32",
+                    fieldDatas = new List<FieldData>
+                    {
+                        new FieldData { name = "r", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "g", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "b", typeData = TypeUtility.TypeDataInt },
+                        new FieldData { name = "a", typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+            };
+        }
 
         protected override void GenerateCodeForDataTable(TypeData typeData, SheetRawData sheetRawData)
         {

@@ -4,29 +4,47 @@ using Physalia.ExcelDataExporter.Loader;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CustomTypeTable
+    internal class CustomTypeTable
     {
         private readonly Dictionary<string, TypeData> _typeTable = new Dictionary<string, TypeData>();
+        private readonly Dictionary<string, TypeData> _additionalTypeTable = new Dictionary<string, TypeData>();
 
         public int Count => _typeTable.Count;
         public IEnumerable<TypeData> CustomTypes => _typeTable.Values;
 
-        public static CustomTypeTable Parse(params SheetRawData[] sheetRawDatas)
+        public CustomTypeTable()
         {
-            var table = new CustomTypeTable();
+
+        }
+
+        public void AddAdditionalTypes(IReadOnlyList<TypeData> typeDatas)
+        {
+            for (var i = 0; i < typeDatas.Count; i++)
+            {
+                TypeData typeData = typeDatas[i];
+                bool success = _additionalTypeTable.TryAdd(typeData.name, typeData);
+                if (!success)
+                {
+                    throw new Exception($"Failed to add additional type: {typeData.name}");
+                }
+            }
+        }
+
+        public CustomTypeTable Parse(params SheetRawData[] sheetRawDatas)
+        {
             for (var i = 0; i < sheetRawDatas.Length; i++)
             {
-                ParseSheet(table, sheetRawDatas[i]);
+                ParseSheet(this, sheetRawDatas[i]);
             }
 
-            return table;
+            return this;
         }
 
         private static void ParseSheet(CustomTypeTable table, SheetRawData sheetRawData)
         {
             for (var i = 0; i < sheetRawData.RowCount; i++)
             {
-                bool success = TryParseType(sheetRawData, i, out TypeData typeData);
+                bool success = TryParseType(table, sheetRawData, i, out TypeData typeData);
                 if (success)
                 {
                     Metadata metadata = sheetRawData.Metadata;
@@ -37,7 +55,7 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private static bool TryParseType(SheetRawData sheetRawData, int startIndex, out TypeData typeData)
+        private static bool TryParseType(CustomTypeTable table, SheetRawData sheetRawData, int startIndex, out TypeData typeData)
         {
             typeData = null;
 
@@ -65,7 +83,7 @@ namespace Physalia.ExcelDataExporter
 
             if (typeDataToContinued.define != TypeData.Define.Enum)
             {
-                if (!ParseTypeRow(typeDataToContinued, sheetRawData.GetRow(startIndex + 2)))
+                if (!ParseTypeRow(table, typeDataToContinued, sheetRawData.GetRow(startIndex + 2)))
                 {
                     return false;
                 }
@@ -155,7 +173,7 @@ namespace Physalia.ExcelDataExporter
             return true;
         }
 
-        private static bool ParseTypeRow(TypeData typeDataToContinued, string[] row)
+        private static bool ParseTypeRow(CustomTypeTable table, TypeData typeDataToContinued, string[] row)
         {
             for (var i = 0; i < typeDataToContinued.fieldDatas.Count; i++)
             {
@@ -165,7 +183,7 @@ namespace Physalia.ExcelDataExporter
                     throw new Exception($"Parse type failed! Invalid format. Type: {typeDataToContinued.name}");
                 }
 
-                typeDataToContinued.fieldDatas[i].typeData = TypeUtility.GetDefaultType(typeName);
+                typeDataToContinued.fieldDatas[i].typeData = table.GetTypeData(typeName); ;
             }
 
             return true;
@@ -196,6 +214,12 @@ namespace Physalia.ExcelDataExporter
         public TypeData GetTypeData(string typeName)
         {
             bool success = _typeTable.TryGetValue(typeName, out TypeData typeData);
+            if (success)
+            {
+                return typeData;
+            }
+
+            success = _additionalTypeTable.TryGetValue(typeName, out typeData);
             if (success)
             {
                 return typeData;

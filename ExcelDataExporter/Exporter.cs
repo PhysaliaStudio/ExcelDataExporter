@@ -36,8 +36,20 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Parse
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawDatas.ToArray());
+            CustomTypeTable customTypeTable = new CustomTypeTable();
+            List<TypeData> additionalTypes = GetAdditionalTypesForDefault();
+            if (additionalTypes != null)
+            {
+                customTypeTable.AddAdditionalTypes(additionalTypes);
+            }
+
+            customTypeTable = customTypeTable.Parse(sheetRawDatas.ToArray());
             return customTypeTable;
+        }
+
+        protected virtual List<TypeData> GetAdditionalTypesForDefault()
+        {
+            return null;
         }
 
         protected static void SaveFile(string fullPath, string data)

@@ -54,7 +54,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "3", "4", "5");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             string expected = "{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
@@ -73,7 +73,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "3", "4", "5", "6", "7");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             string expected = "{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
@@ -94,7 +94,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "field2[0].y", "", "", "6");
             sheetRawData.AddRow("", "field2[0].z", "", "", "7");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             string expected = "{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
@@ -113,7 +113,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow();
             sheetRawData.AddRow("1", "2", "N/A", "N/A", "5", "6", "7");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
             string expected = "{\"field1\":[{\"x\":1,\"y\":2}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";

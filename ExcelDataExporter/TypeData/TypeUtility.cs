@@ -4,19 +4,19 @@ namespace Physalia.ExcelDataExporter
 {
     public static class TypeUtility
     {
-        private static readonly TypeData TypeDataString = new TypeData { name = "string" };
-        private static readonly TypeData TypeDataBool = new TypeData { name = "bool" };
-        private static readonly TypeData TypeDataByte = new TypeData { name = "byte" };
-        private static readonly TypeData TypeDataSByte = new TypeData { name = "sbyte" };
-        private static readonly TypeData TypeDataShort = new TypeData { name = "short" };
-        private static readonly TypeData TypeDataUShort = new TypeData { name = "ushort" };
-        private static readonly TypeData TypeDataInt = new TypeData { name = "int" };
-        private static readonly TypeData TypeDataUInt = new TypeData { name = "uint" };
-        private static readonly TypeData TypeDataLong = new TypeData { name = "long" };
-        private static readonly TypeData TypeDataULong = new TypeData { name = "ulong" };
-        private static readonly TypeData TypeDataFloat = new TypeData { name = "float" };
-        private static readonly TypeData TypeDataDouble = new TypeData { name = "double" };
-        private static readonly TypeData TypeDataDecimal = new TypeData { name = "decimal" };
+        public static readonly TypeData TypeDataString = new TypeData { name = "string" };
+        public static readonly TypeData TypeDataBool = new TypeData { name = "bool" };
+        public static readonly TypeData TypeDataByte = new TypeData { name = "byte" };
+        public static readonly TypeData TypeDataSByte = new TypeData { name = "sbyte" };
+        public static readonly TypeData TypeDataShort = new TypeData { name = "short" };
+        public static readonly TypeData TypeDataUShort = new TypeData { name = "ushort" };
+        public static readonly TypeData TypeDataInt = new TypeData { name = "int" };
+        public static readonly TypeData TypeDataUInt = new TypeData { name = "uint" };
+        public static readonly TypeData TypeDataLong = new TypeData { name = "long" };
+        public static readonly TypeData TypeDataULong = new TypeData { name = "ulong" };
+        public static readonly TypeData TypeDataFloat = new TypeData { name = "float" };
+        public static readonly TypeData TypeDataDouble = new TypeData { name = "double" };
+        public static readonly TypeData TypeDataDecimal = new TypeData { name = "decimal" };
 
         private static readonly Dictionary<string, TypeData> DefaultTypeTable = new Dictionary<string, TypeData>
         {
@@ -33,30 +33,6 @@ namespace Physalia.ExcelDataExporter
             { TypeDataFloat.name, TypeDataFloat },
             { TypeDataDouble.name, TypeDataDouble },
             { TypeDataDecimal.name, TypeDataDecimal },
-
-            { "Vector2Int", new TypeData
-                {
-                    namespaceName = "UnityEngine",
-                    name = "Vector2Int",
-                    fieldDatas = new List<FieldData>
-                    {
-                        new FieldData { name = "x", typeData = TypeDataInt },
-                        new FieldData { name = "y", typeData = TypeDataInt },
-                    }
-                }
-            },
-            { "Vector3Int", new TypeData
-                {
-                    namespaceName = "UnityEngine",
-                    name = "Vector3Int",
-                    fieldDatas = new List<FieldData>
-                    {
-                        new FieldData { name = "x", typeData = TypeDataInt },
-                        new FieldData { name = "y", typeData = TypeDataInt },
-                        new FieldData { name = "z", typeData = TypeDataInt },
-                    }
-                }
-            },
         };
 
         public static bool IsDefaultType(string typeName)
@@ -73,43 +49,6 @@ namespace Physalia.ExcelDataExporter
             }
 
             return null;
-        }
-
-        public static bool IsSystemType(string typeName)
-        {
-            switch (typeName)
-            {
-                default:
-                    return false;
-                case "string":
-                case "bool":
-                case "byte":
-                case "sbyte":
-                case "short":
-                case "ushort":
-                case "int":
-                case "uint":
-                case "long":
-                case "ulong":
-                case "float":
-                case "double":
-                case "decimal":
-                    return true;
-            }
-        }
-
-        public static bool IsUnityType(string typeName)
-        {
-            switch (typeName)
-            {
-                default:
-                    return false;
-                case "Vector2":
-                case "Vector3":
-                case "Vector2Int":
-                case "Vector3Int":
-                    return true;
-            }
         }
 
         public static object ParseValueToSystemType(string typeName, string text)
