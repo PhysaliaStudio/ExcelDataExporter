@@ -1,0 +1,6 @@
+{
+  "sourceDataDirectory": "data",
+  "exportDataDirectory": "export",
+  "exportScriptDirectory": "codegen",
+  "filters": ["client", "both"]
+}

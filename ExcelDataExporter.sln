@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelDataExporter.Loader.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelDataExporter", "ExcelDataExporter\ExcelDataExporter.csproj", "{DB50AFEA-46AA-487B-9C83-60CA818E2D19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDataExporter.Tests", "ExcelDataExporter.Tests\ExcelDataExporter.Tests.csproj", "{3693272C-49A2-4F0B-9F72-456BEE7E631D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelDataExporter.Tests", "ExcelDataExporter.Tests\ExcelDataExporter.Tests.csproj", "{3693272C-49A2-4F0B-9F72-456BEE7E631D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDataRuntime", "ExcelDataRuntime\ExcelDataRuntime.csproj", "{880DF6AA-CF0D-453E-957D-FD0E622312C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelDataRuntime", "ExcelDataRuntime\ExcelDataRuntime.csproj", "{880DF6AA-CF0D-453E-957D-FD0E622312C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelDataConsole", "ExcelDataConsole\ExcelDataConsole.csproj", "{02705BC8-DDD8-423B-B769-0C4702259A0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{880DF6AA-CF0D-453E-957D-FD0E622312C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{880DF6AA-CF0D-453E-957D-FD0E622312C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{880DF6AA-CF0D-453E-957D-FD0E622312C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02705BC8-DDD8-423B-B769-0C4702259A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02705BC8-DDD8-423B-B769-0C4702259A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02705BC8-DDD8-423B-B769-0C4702259A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02705BC8-DDD8-423B-B769-0C4702259A0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

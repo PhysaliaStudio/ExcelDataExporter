@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ExcelDataConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "-gencode -export"
+    }
+  }
+}
