@@ -10,7 +10,7 @@ public static class UnityPackageExporter
     [MenuItem("Tools/Export ExcelDataExporter Package", priority = 10000)]
     private static void ExportPackage()
     {
-        const string AssemblyName = "Physalia.ExcelDataExporter";
+        const string AssemblyName = "Physalia.ExcelDataRuntime";
 
         // Find the package info
         PackageInfo packageInfo = FindPackageInfo(AssemblyName);
@@ -42,7 +42,7 @@ public static class UnityPackageExporter
         Assembly assembly = FindAssembly(assemblyName);
         if (assembly == null)
         {
-            Debug.LogError($"Cannot find Assembly with name '{assembly.GetName().Name}'");
+            Debug.LogError($"Cannot find Assembly with name '{assemblyName}'");
             return null;
         }
 
