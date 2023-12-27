@@ -13,7 +13,7 @@ namespace Physalia.ExcelDataExporter
         public List<FieldData> fieldDatas = new List<FieldData>();
 
         public bool IsTypeWithId => isTypeWithId;
-        public bool IsSystemType => TypeUtility.IsSystemType(name);
+        public bool IsSystemType => TypeUtility.IsDefaultType(name);
         public bool IsEnum => define == Define.Enum;
         public bool IsSystemTypeOrEnum => IsSystemType || IsEnum;
 
