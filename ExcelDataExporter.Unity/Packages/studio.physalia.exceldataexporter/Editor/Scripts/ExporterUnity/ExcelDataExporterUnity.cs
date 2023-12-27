@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Physalia.ExcelDataExporter.Loader;
 using UnityEditor;
@@ -11,6 +12,92 @@ namespace Physalia.ExcelDataExporter
         private readonly CodeGeneratorAssetData _codeGeneratorAssetData = new();
         private readonly CodeGeneratorAssetDataTable _codeGeneratorAssetDataTable = new();
         private readonly CodeGeneratorAssetSettingTable _codeGeneratorAssetSettingTable = new();
+
+        protected override List<TypeData> GetAdditionalTypesForDefault()
+        {
+            const string NamespaceName = "UnityEngine";
+
+            return new List<TypeData> {
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Vector2),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Vector2.x), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector2.y), typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Vector3),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Vector3.x), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector3.y), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector3.z), typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Vector4),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Vector4.x), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector4.y), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector4.z), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Vector4.w), typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Vector2Int),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Vector2Int.x), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Vector2Int.y), typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Vector3Int),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Vector3Int.x), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Vector3Int.y), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Vector3Int.z), typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Color),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Color.r), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Color.g), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Color.b), typeData = TypeUtility.TypeDataFloat },
+                        new() { name = nameof(Color.a), typeData = TypeUtility.TypeDataFloat },
+                    }
+                },
+                new()
+                {
+                    namespaceName = NamespaceName,
+                    name = nameof(Color32),
+                    fieldDatas = new List<FieldData>
+                    {
+                        new() { name = nameof(Color32.r), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Color32.g), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Color32.b), typeData = TypeUtility.TypeDataInt },
+                        new() { name = nameof(Color32.a), typeData = TypeUtility.TypeDataInt },
+                    }
+                },
+            };
+        }
 
         protected override void GenerateCodeForDataTable(TypeData typeData, SheetRawData sheetRawData)
         {
