@@ -31,6 +31,12 @@ namespace Physalia.ExcelDataExporter
             _customTypeTable = new CustomTypeTable();
         }
 
+        public TypeDataParser(IReadOnlyList<TypeData> typeDatas)
+        {
+            _customTypeTable = new CustomTypeTable();
+            _customTypeTable.AddAdditionalTypes(typeDatas);
+        }
+
         public TypeDataParser(CustomTypeTable customTypeTable)
         {
             _customTypeTable = customTypeTable;

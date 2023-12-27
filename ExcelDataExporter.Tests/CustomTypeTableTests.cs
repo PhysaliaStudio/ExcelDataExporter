@@ -18,7 +18,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "x", "y", "z");
             sheetRawData.AddRow("", "int", "int", "int");
 
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
+            CustomTypeTable customTypeTable = new CustomTypeTable().Parse(sheetRawData);
 
             Assert.That(customTypeTable.Count, Is.EqualTo(2));
             {
@@ -64,7 +64,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "x", "y", "z");
             sheetRawData.AddRow("", "int", "int", "int");
 
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
+            CustomTypeTable customTypeTable = new CustomTypeTable().Parse(sheetRawData);
 
             Assert.That(customTypeTable.Count, Is.EqualTo(2));
             {
@@ -112,7 +112,7 @@ namespace Physalia.ExcelDataExporter.Tests
 
             Assert.Catch<Exception>(() =>
             {
-                _ = CustomTypeTable.Parse(sheetRawData);
+                _ = new CustomTypeTable().Parse(sheetRawData);
             });
         }
 
@@ -125,7 +125,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "Normal", "Elite", "Boss");
             sheetRawData.AddRow("", "0", "1", "2");
 
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetRawData);
+            CustomTypeTable customTypeTable = new CustomTypeTable().Parse(sheetRawData);
 
             Assert.That(customTypeTable.Count, Is.EqualTo(1));
             TypeData typeData = customTypeTable.GetTypeData("EnemyType");

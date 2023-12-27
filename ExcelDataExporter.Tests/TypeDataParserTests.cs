@@ -61,7 +61,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
             sheetRawData.AddRow("Vector2Int", "", "Vector3Int", "", "");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
             {
@@ -82,7 +82,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
             sheetRawData.AddRow("Vector2Int", "", "", "", "Vector3Int", "", "");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
             {
@@ -113,7 +113,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
             sheetForCustomEnum.AddRow("", "0", "1", "2");
 
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
+            CustomTypeTable customTypeTable = new CustomTypeTable().Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
@@ -139,7 +139,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetForCustomEnum.AddRow("", "Normal", "Elite", "Boss");
             sheetForCustomEnum.AddRow("", "0", "1", "2");
 
-            CustomTypeTable customTypeTable = CustomTypeTable.Parse(sheetForCustomEnum);
+            CustomTypeTable customTypeTable = new CustomTypeTable().Parse(sheetForCustomEnum);
             var parser = new TypeDataParser(customTypeTable);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
@@ -208,7 +208,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "field2.y", "");
             sheetRawData.AddRow("", "field2.z", "");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
             {
@@ -233,7 +233,7 @@ namespace Physalia.ExcelDataExporter.Tests
             sheetRawData.AddRow("", "field2[0].y", "");
             sheetRawData.AddRow("", "field2[0].z", "");
 
-            var parser = new TypeDataParser();
+            var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
             Assert.Multiple(() =>
             {

@@ -4,22 +4,40 @@ using Physalia.ExcelDataExporter.Loader;
 
 namespace Physalia.ExcelDataExporter
 {
-    public class CustomTypeTable
+    internal class CustomTypeTable
     {
         private readonly Dictionary<string, TypeData> _typeTable = new Dictionary<string, TypeData>();
+        private readonly Dictionary<string, TypeData> _additionalTypeTable = new Dictionary<string, TypeData>();
 
         public int Count => _typeTable.Count;
         public IEnumerable<TypeData> CustomTypes => _typeTable.Values;
 
-        public static CustomTypeTable Parse(params SheetRawData[] sheetRawDatas)
+        public CustomTypeTable()
         {
-            var table = new CustomTypeTable();
+
+        }
+
+        public void AddAdditionalTypes(IReadOnlyList<TypeData> typeDatas)
+        {
+            for (var i = 0; i < typeDatas.Count; i++)
+            {
+                TypeData typeData = typeDatas[i];
+                bool success = _additionalTypeTable.TryAdd(typeData.name, typeData);
+                if (!success)
+                {
+                    throw new Exception($"Failed to add additional type: {typeData.name}");
+                }
+            }
+        }
+
+        public CustomTypeTable Parse(params SheetRawData[] sheetRawDatas)
+        {
             for (var i = 0; i < sheetRawDatas.Length; i++)
             {
-                ParseSheet(table, sheetRawDatas[i]);
+                ParseSheet(this, sheetRawDatas[i]);
             }
 
-            return table;
+            return this;
         }
 
         private static void ParseSheet(CustomTypeTable table, SheetRawData sheetRawData)
@@ -196,6 +214,12 @@ namespace Physalia.ExcelDataExporter
         public TypeData GetTypeData(string typeName)
         {
             bool success = _typeTable.TryGetValue(typeName, out TypeData typeData);
+            if (success)
+            {
+                return typeData;
+            }
+
+            success = _additionalTypeTable.TryGetValue(typeName, out typeData);
             if (success)
             {
                 return typeData;
