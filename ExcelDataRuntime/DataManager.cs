@@ -18,6 +18,20 @@ namespace Physalia.ExcelDataRuntime
             _dataTables.Add(type, dataTable);
         }
 
+        public bool TryGetData<T>(int id, out T data)
+        {
+            Type type = typeof(T);
+            if (!_dataTables.TryGetValue(type, out DataTable dataTable))
+            {
+                data = default;
+                return false;
+            }
+
+            var genericTable = dataTable as DataTable<T>;
+            bool success = genericTable.TryGetData(id, out data);
+            return success;
+        }
+
         public T GetData<T>(int id)
         {
             Type type = typeof(T);
