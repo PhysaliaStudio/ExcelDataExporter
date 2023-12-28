@@ -1,5 +1,24 @@
-{
-  "excelFolderPath": "GameData",
-  "codeExportFolderPath": "Assets/Scripts/GameData",
-  "dataExportFolderPath": "Assets/GameResources/GameData"
-}
+[
+  {
+    "exportType": 0,
+    "name": "Unity",
+    "sourceDataDirectory": "GameData",
+    "exportDataDirectory": "Assets/GameResources/GameData",
+    "exportScriptDirectory": "Assets/Scripts/GameData",
+    "filters": [
+      "client",
+      "both"
+    ]
+  },
+  {
+    "exportType": 1,
+    "name": "Server",
+    "sourceDataDirectory": "GameData",
+    "exportDataDirectory": "export/output",
+    "exportScriptDirectory": "export/src",
+    "filters": [
+      "server",
+      "both"
+    ]
+  }
+]
