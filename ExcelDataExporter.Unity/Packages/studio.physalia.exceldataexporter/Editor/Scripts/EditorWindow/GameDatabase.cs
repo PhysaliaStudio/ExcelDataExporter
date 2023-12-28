@@ -7,79 +7,76 @@ using UnityEngine;
 
 namespace Physalia.ExcelDataExporter
 {
-    public enum ExportFormat
-    {
-        Asset = 0,
-        Json = 1,
-    }
-
     public class GameDatabase : ScriptableObject
     {
         public event Action Reloaded;
-
-        [SerializeField]
-        private ExporterSetting setting;
-        [SerializeField]
-        private ExportFormat exportFormat;
 
         public List<WorksheetData> dataTables = new();
 
         private readonly ExcelDataExporterUnity _exporterUnity = new();
         private readonly ExcelDataExporterDotNet _exporterDotNet = new();
 
-        public string DataPath => setting.excelFolderPath;
-        public string CodePath => setting.codeExportFolderPath;
-        public string ExportPath => setting.dataExportFolderPath;
-        public ExportFormat ExportFormat => exportFormat;
+        public int CurrentSettingIndex => ExporterSettings.CurrentIndex;
+        public ExporterSetting CurrentSetting => ExporterSettings.CurrentSetting;
+        public IReadOnlyList<ExporterSetting> Settings => ExporterSettings.Settings;
+
+        public string DataPath => ExporterSettings.CurrentSetting.sourceDataDirectory;
+        public string CodePath => ExporterSettings.CurrentSetting.exportScriptDirectory;
+        public string ExportPath => ExporterSettings.CurrentSetting.exportDataDirectory;
 
         private void Awake()
         {
-            setting = ExporterSetting.Load();
-            exportFormat = (ExportFormat)PlayerPrefs.GetInt("ExcelDataExporter.ExportFormat", 0);
+            ExporterSettings.LoadSettings();
+            ExporterSettings.CurrentIndex = PlayerPrefs.GetInt("ExcelDataExporter.SettingIndex", 0);
         }
 
         private void OnEnable()
         {
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
+
             _exporterUnity.baseDirectory = Application.dataPath[..^"/Assets".Length];
-            _exporterUnity.sourceDataDirectory = setting.excelFolderPath;
-            _exporterUnity.exportDataDirectory = setting.dataExportFolderPath;
-            _exporterUnity.exportScriptDirectory = setting.codeExportFolderPath;
-            _exporterUnity.filters = new List<string> { "client", "both" };
+            _exporterUnity.sourceDataDirectory = setting.sourceDataDirectory;
+            _exporterUnity.exportDataDirectory = setting.exportDataDirectory;
+            _exporterUnity.exportScriptDirectory = setting.exportScriptDirectory;
+            _exporterUnity.filters = setting.filters;
 
             _exporterDotNet.baseDirectory = Application.dataPath[..^"/Assets".Length];
-            _exporterDotNet.sourceDataDirectory = setting.excelFolderPath;
-            _exporterDotNet.exportDataDirectory = setting.dataExportFolderPath;
-            _exporterDotNet.exportScriptDirectory = setting.codeExportFolderPath;
-            _exporterDotNet.filters = new List<string> { "server", "both" };
+            _exporterDotNet.sourceDataDirectory = setting.sourceDataDirectory;
+            _exporterDotNet.exportDataDirectory = setting.exportDataDirectory;
+            _exporterDotNet.exportScriptDirectory = setting.exportScriptDirectory;
+            _exporterDotNet.filters = setting.filters;
         }
 
         public void SetCodePath(string path)
         {
-            setting.codeExportFolderPath = path;
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
+            setting.exportScriptDirectory = path;
             _exporterUnity.exportScriptDirectory = path;
-            setting.Save();
+            ExporterSettings.SaveSettings();
         }
 
         public void SetExportPath(string path)
         {
-            setting.dataExportFolderPath = path;
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
+            setting.exportDataDirectory = path;
             _exporterUnity.exportDataDirectory = path;
-            setting.Save();
+            ExporterSettings.SaveSettings();
         }
 
-        public void SetExportFormat(int index)
+        public void SetSettingIndex(int index)
         {
-            exportFormat = (ExportFormat)index;
-            PlayerPrefs.SetInt("ExcelDataExporter.ExportFormat", index);
+            ExporterSettings.CurrentIndex = index;
+            PlayerPrefs.SetInt("ExcelDataExporter.SettingIndex", index);
         }
 
         public void Load(string path)
         {
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
             string relativePath = Path.GetRelativePath(Application.dataPath + "/../", path);
             relativePath = relativePath.Replace('\\', '/');
-            setting.excelFolderPath = relativePath;
+            setting.sourceDataDirectory = relativePath;
             _exporterUnity.sourceDataDirectory = relativePath;
-            setting.Save();
+            ExporterSettings.SaveSettings();
 
             CollectAllWorksheetDatas();
             Reloaded?.Invoke();
@@ -113,7 +110,7 @@ namespace Physalia.ExcelDataExporter
 
             // Get all Excel files
             string fullDataPath = RelativePathToFullPath(DataPath);
-            DirectoryInfo directoryInfo = new DirectoryInfo(fullDataPath);
+            var directoryInfo = new DirectoryInfo(fullDataPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories);
 
             foreach (FileInfo fileInfo in fileInfos)
@@ -174,15 +171,16 @@ namespace Physalia.ExcelDataExporter
             List<string> paths = GetSelectedWorksheetPaths();
 
             List<TypeDataValidator.Result> results;
-            switch (exportFormat)
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
+            switch (setting.exportType)
             {
                 default:
-                    Debug.LogError($"Unknown export format: {exportFormat}");
+                    Debug.LogError($"Unknown export format: {setting.exportType}");
                     return;
-                case ExportFormat.Asset:
+                case ExporterSetting.ExportType.Unity:
                     results = _exporterUnity.GenerateCodeForTables(paths);
                     break;
-                case ExportFormat.Json:
+                case ExporterSetting.ExportType.DotNet:
                     results = _exporterDotNet.GenerateCodeForTables(paths);
                     break;
             }
@@ -197,15 +195,16 @@ namespace Physalia.ExcelDataExporter
             List<string> paths = GetSelectedWorksheetPaths();
 
             List<TypeDataValidator.Result> results;
-            switch (exportFormat)
+            ExporterSetting setting = ExporterSettings.CurrentSetting;
+            switch (setting.exportType)
             {
                 default:
-                    Debug.LogError($"Unknown export format: {exportFormat}");
+                    Debug.LogError($"Unknown export format: {setting.exportType}");
                     return;
-                case ExportFormat.Asset:
+                case ExporterSetting.ExportType.Unity:
                     results = _exporterUnity.GenerateDataForTables(paths);
                     break;
-                case ExportFormat.Json:
+                case ExporterSetting.ExportType.DotNet:
                     results = _exporterDotNet.GenerateDataForTables(paths);
                     break;
             }

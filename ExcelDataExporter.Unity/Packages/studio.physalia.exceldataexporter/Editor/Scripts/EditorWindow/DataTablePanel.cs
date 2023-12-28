@@ -73,10 +73,15 @@ namespace Physalia.ExcelDataExporter
             var codeGenerateButton = visualElement.Q<Button>("code-generate-button");
             codeGenerateButton.clicked += GenerateCode;
 
+            var settingNames = new List<string>(gameDatabase.Settings.Count);
+            for (var i = 0; i < gameDatabase.Settings.Count; i++)
+            {
+                settingNames.Add(gameDatabase.Settings[i].name);
+            }
             var exportFormatDropdown = visualElement.Q<DropdownField>("export-format-dropdown");
-            exportFormatDropdown.choices = new List<string>(System.Enum.GetNames(typeof(ExportFormat)));
-            exportFormatDropdown.index = (int)gameDatabase.ExportFormat;
-            exportFormatDropdown.RegisterValueChangedCallback(evt => gameDatabase.SetExportFormat(exportFormatDropdown.index));
+            exportFormatDropdown.choices = settingNames;
+            exportFormatDropdown.index = gameDatabase.CurrentSettingIndex;
+            exportFormatDropdown.RegisterValueChangedCallback(evt => gameDatabase.SetSettingIndex(exportFormatDropdown.index));
 
             var exportButton = visualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
