@@ -30,10 +30,10 @@ namespace Physalia.ExcelDataExporter
 
         private static string _settingPath;
 
-        private static int _currentIndex = -1;
+        private static int _currentFlags = 0;
         private static List<ExporterSetting> _settings;
 
-        public static string SettingPath
+        private static string SettingPath
         {
             get
             {
@@ -49,51 +49,7 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        public static int CurrentIndex
-        {
-            get => _currentIndex;
-            set
-            {
-                if (_currentIndex == value)
-                {
-                    return;
-                }
-
-                if (_currentIndex < 0 || _currentIndex >= _settings.Count)
-                {
-                    _currentIndex = 0;
-                }
-
-                _currentIndex = value;
-            }
-        }
-
-        public static ExporterSetting CurrentSetting
-        {
-            get
-            {
-                if (_settings == null)
-                {
-                    LoadSettings();
-                }
-
-                if (_settings.Count == 0)
-                {
-                    _currentIndex = 0;
-                    var setting = new ExporterSetting();
-                    _settings.Add(setting);
-                    return setting;
-                }
-
-                if (_currentIndex < 0 || _currentIndex >= _settings.Count)
-                {
-                    _currentIndex = 0;
-                }
-
-                return _settings[_currentIndex];
-            }
-        }
-
+        public static int CurrentFlags { get { return _currentFlags; } set { _currentFlags = value; } }
         public static IReadOnlyList<ExporterSetting> Settings => _settings;
 
         public static void LoadSettings()

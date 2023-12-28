@@ -16,61 +16,37 @@ namespace Physalia.ExcelDataExporter
         private readonly ExcelDataExporterUnity _exporterUnity = new();
         private readonly ExcelDataExporterDotNet _exporterDotNet = new();
 
-        public int CurrentSettingIndex => ExporterSettings.CurrentIndex;
+        public int ExportFlags => ExporterSettings.CurrentFlags;
         public IReadOnlyList<ExporterSetting> Settings => ExporterSettings.Settings;
-
-        public string SourceDataPath => ExporterSettings.CurrentSetting.sourceDataDirectory;
-        public string ExportDataPath => ExporterSettings.CurrentSetting.exportDataDirectory;
-        public string ExportScriptPath => ExporterSettings.CurrentSetting.exportScriptDirectory;
 
         private void OnEnable()
         {
             ExporterSettings.LoadSettings();
-            ExporterSettings.CurrentIndex = PlayerPrefs.GetInt("ExcelDataExporter.SettingIndex", 0);
+            ExporterSettings.CurrentFlags = PlayerPrefs.GetInt("ExcelDataExporter.ExportFlags", 0);
             _exporterUnity.baseDirectory = Application.dataPath[..^"/Assets".Length];
             _exporterDotNet.baseDirectory = Application.dataPath[..^"/Assets".Length];
         }
 
-        public void SetSettingIndex(int index)
+        public void SetExportFlags(int value)
         {
-            ExporterSettings.CurrentIndex = index;
-            PlayerPrefs.SetInt("ExcelDataExporter.SettingIndex", index);
-        }
-
-        public void SetExportDataPath(string path)
-        {
-            ExporterSetting setting = ExporterSettings.CurrentSetting;
-            setting.exportDataDirectory = path;
-            ExporterSettings.SaveSettings();
-        }
-
-        public void SetExportScriptPath(string path)
-        {
-            ExporterSetting setting = ExporterSettings.CurrentSetting;
-            setting.exportScriptDirectory = path;
-            ExporterSettings.SaveSettings();
-        }
-
-        public void Load(string path)
-        {
-            ExporterSetting setting = ExporterSettings.CurrentSetting;
-            string relativePath = Path.GetRelativePath(Application.dataPath + "/../", path);
-            relativePath = relativePath.Replace('\\', '/');
-            setting.sourceDataDirectory = relativePath;
-            ExporterSettings.SaveSettings();
-
-            CollectAllWorksheetDatas();
-            Reloaded?.Invoke();
+            ExporterSettings.CurrentFlags = value;
+            PlayerPrefs.SetInt("ExcelDataExporter.ExportFlags", value);
         }
 
         public void Reload()
         {
-            if (string.IsNullOrEmpty(SourceDataPath))
+            if (ExporterSettings.Settings.Count == 0)
             {
                 return;
             }
 
-            string fullDataPath = RelativePathToFullPath(SourceDataPath);
+            string sourceDataDirectory = ExporterSettings.Settings[0].sourceDataDirectory;
+            if (string.IsNullOrEmpty(sourceDataDirectory))
+            {
+                return;
+            }
+
+            string fullDataPath = RelativePathToFullPath(sourceDataDirectory);
             if (!Directory.Exists(fullDataPath))
             {
                 return;
@@ -90,7 +66,8 @@ namespace Physalia.ExcelDataExporter
             }
 
             // Get all Excel files
-            string fullDataPath = RelativePathToFullPath(SourceDataPath);
+            string sourceDataDirectory = ExporterSettings.Settings[0].sourceDataDirectory;
+            string fullDataPath = RelativePathToFullPath(sourceDataDirectory);
             var directoryInfo = new DirectoryInfo(fullDataPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories);
 
@@ -140,9 +117,8 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private Exporter SetupAndGetCurrentExporter()
+        private Exporter SetupAndGetExporter(ExporterSetting setting)
         {
-            ExporterSetting setting = ExporterSettings.CurrentSetting;
             switch (setting.exportType)
             {
                 default:
@@ -165,27 +141,39 @@ namespace Physalia.ExcelDataExporter
 
         public void GenerateCodeForCustomTypes()
         {
-            Exporter exporter = SetupAndGetCurrentExporter();
-            if (exporter == null)
+            int exportFlags = ExporterSettings.CurrentFlags;
+            for (var i = 0; i < ExporterSettings.Settings.Count; i++)
             {
-                return;
+                if ((exportFlags & (1 << i)) == 0)
+                {
+                    continue;
+                }
+
+                Exporter exporter = SetupAndGetExporter(ExporterSettings.Settings[i]);
+                exporter.GenerateCodeForCustomTypes();
             }
 
-            exporter.GenerateCodeForCustomTypes();
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("Success", $"Generate custom types successfully!", "OK");
         }
 
         public void GenerateCodeForSelectedTables()
         {
-            Exporter exporter = SetupAndGetCurrentExporter();
-            if (exporter == null)
+            List<string> paths = GetSelectedWorksheetPaths();
+            var results = new List<TypeDataValidator.Result>();
+
+            int exportFlags = ExporterSettings.CurrentFlags;
+            for (var i = 0; i < ExporterSettings.Settings.Count; i++)
             {
-                return;
+                if ((exportFlags & (1 << i)) == 0)
+                {
+                    continue;
+                }
+
+                Exporter exporter = SetupAndGetExporter(ExporterSettings.Settings[i]);
+                results = exporter.GenerateCodeForTables(paths);
             }
 
-            List<string> paths = GetSelectedWorksheetPaths();
-            List<TypeDataValidator.Result> results = exporter.GenerateCodeForTables(paths);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             ShowValidationResults(results);
@@ -193,14 +181,21 @@ namespace Physalia.ExcelDataExporter
 
         public void ExportSelectedTables()
         {
-            Exporter exporter = SetupAndGetCurrentExporter();
-            if (exporter == null)
+            List<string> paths = GetSelectedWorksheetPaths();
+            var results = new List<TypeDataValidator.Result>();
+
+            int exportFlags = ExporterSettings.CurrentFlags;
+            for (var i = 0; i < ExporterSettings.Settings.Count; i++)
             {
-                return;
+                if ((exportFlags & (1 << i)) == 0)
+                {
+                    continue;
+                }
+
+                Exporter exporter = SetupAndGetExporter(ExporterSettings.Settings[i]);
+                results = exporter.GenerateDataForTables(paths);
             }
 
-            List<string> paths = GetSelectedWorksheetPaths();
-            List<TypeDataValidator.Result> results = exporter.GenerateDataForTables(paths);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             ShowValidationResults(results);
@@ -224,16 +219,6 @@ namespace Physalia.ExcelDataExporter
         public static string RelativePathToFullPath(string relativePath)
         {
             return Path.GetFullPath(relativePath, Application.dataPath + "/../");
-        }
-
-        private static string AssetPathToFullPath(string assetPath)
-        {
-            return Application.dataPath + assetPath["Assets".Length..];
-        }
-
-        private static string FullPathToAssetPath(string absolutePath)
-        {
-            return "Assets" + absolutePath[Application.dataPath.Length..];
         }
 
         private static void ShowValidationResults(IReadOnlyList<TypeDataValidator.Result> results)

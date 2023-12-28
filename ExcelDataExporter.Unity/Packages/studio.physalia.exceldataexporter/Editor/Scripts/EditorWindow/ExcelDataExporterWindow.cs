@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -15,11 +14,7 @@ namespace Physalia.ExcelDataExporter
         private GameDatabase gameDatabase;
 
         private SerializedObject serializedObject;
-
-        private TextField _textFieldSourceDataPath;
-        private TextField _textFieldExportDataPath;
-        private TextField _textFieldExportScriptPath;
-        private DropdownField _dropdownSetting;
+        private MaskField _dropdownExportFlags;
 
         [MenuItem("Tools/ExcelDataExporter")]
         private static void Open()
@@ -49,43 +44,13 @@ namespace Physalia.ExcelDataExporter
             {
                 settingNames.Add(gameDatabase.Settings[i].name);
             }
-            _dropdownSetting = rootVisualElement.Q<DropdownField>("export-format-dropdown");
-            _dropdownSetting.choices = settingNames;
-            _dropdownSetting.index = gameDatabase.CurrentSettingIndex;
-            _dropdownSetting.RegisterValueChangedCallback(OnDropdownSettingChanged);
+            _dropdownExportFlags = rootVisualElement.Q<MaskField>("dropdown-export-flags");
+            _dropdownExportFlags.choices = settingNames;
+            _dropdownExportFlags.value = gameDatabase.ExportFlags;
+            _dropdownExportFlags.RegisterValueChangedCallback(OnDropdownExportFlagsChanged);
 
             var reloadButton = rootVisualElement.Q<Button>("reload-button");
             reloadButton.clicked += Reload;
-
-            // Paths
-            _textFieldSourceDataPath = rootVisualElement.Q<TextField>("text-field-source-data-path");
-            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.SourceDataPath);
-
-            _textFieldExportScriptPath = rootVisualElement.Q<TextField>("text-field-export-script-path");
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
-
-            _textFieldExportDataPath = rootVisualElement.Q<TextField>("text-field-export-data-path");
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
-
-            // Ping Buttons
-            var showDataFolderbutton = rootVisualElement.Q<Button>("show-data-folder-button");
-            showDataFolderbutton.clicked += ShowDataFolder;
-
-            var pingCodeFolderbutton = rootVisualElement.Q<Button>("ping-code-folder-button");
-            pingCodeFolderbutton.clicked += PingCodeFolder;
-
-            var pingExportFolderbutton = rootVisualElement.Q<Button>("ping-export-folder-button");
-            pingExportFolderbutton.clicked += PingExportFolder;
-
-            // Browse Buttons
-            var browseDataFolderbutton = rootVisualElement.Q<Button>("browse-data-folder-button");
-            browseDataFolderbutton.clicked += BrowseDataFolder;
-
-            var browseCodeFolderbutton = rootVisualElement.Q<Button>("browse-code-folder-button");
-            browseCodeFolderbutton.clicked += BrowseCodeFolder;
-
-            var browseExportFolderbutton = rootVisualElement.Q<Button>("browse-export-folder-button");
-            browseExportFolderbutton.clicked += BrowseExportFolder;
 
             // Feature Buttons
             var selectAllButton = rootVisualElement.Q<Button>("select-all-button");
@@ -103,10 +68,7 @@ namespace Physalia.ExcelDataExporter
             var exportButton = rootVisualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
 
-            if (!string.IsNullOrEmpty(gameDatabase.SourceDataPath))
-            {
-                Reload();
-            }
+            Reload();
         }
 
         private void Reload()
@@ -127,67 +89,9 @@ namespace Physalia.ExcelDataExporter
             }
         }
 
-        private void ShowDataFolder()
+        private void OnDropdownExportFlagsChanged(ChangeEvent<int> evt)
         {
-            string fullDataPath = Path.GetFullPath(gameDatabase.SourceDataPath, Application.dataPath + "/../");
-            EditorUtility.RevealInFinder(fullDataPath);
-        }
-
-        private void PingCodeFolder()
-        {
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportScriptPath);
-            EditorGUIUtility.PingObject(folder);
-        }
-
-        private void PingExportFolder()
-        {
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportDataPath);
-            EditorGUIUtility.PingObject(folder);
-        }
-
-        private void BrowseDataFolder()
-        {
-            string fullPath = EditorUtility.OpenFolderPanel("Select Data Folder", Application.dataPath, "");
-            if (string.IsNullOrEmpty(fullPath))
-            {
-                return;
-            }
-
-            gameDatabase.Load(fullPath);
-        }
-
-        private void BrowseCodeFolder()
-        {
-            string fullPath = EditorUtility.OpenFolderPanel("Select Code Folder", Application.dataPath, "");
-            if (string.IsNullOrEmpty(fullPath))
-            {
-                return;
-            }
-
-            string assetPath = fullPath.Replace(Application.dataPath, "Assets");
-            gameDatabase.SetExportScriptPath(assetPath);
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
-        }
-
-        private void BrowseExportFolder()
-        {
-            string fullPath = EditorUtility.OpenFolderPanel("Select Export Folder", Application.dataPath, "");
-            if (string.IsNullOrEmpty(fullPath))
-            {
-                return;
-            }
-
-            string assetPath = fullPath.Replace(Application.dataPath, "Assets");
-            gameDatabase.SetExportDataPath(assetPath);
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
-        }
-
-        private void OnDropdownSettingChanged(ChangeEvent<string> evt)
-        {
-            gameDatabase.SetSettingIndex(_dropdownSetting.index);
-            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.SourceDataPath);
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
+            gameDatabase.SetExportFlags(evt.newValue);
         }
 
         private void SelectAll()
