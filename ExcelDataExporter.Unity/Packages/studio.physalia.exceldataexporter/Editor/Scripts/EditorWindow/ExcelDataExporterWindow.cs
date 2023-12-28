@@ -21,7 +21,7 @@ namespace Physalia.ExcelDataExporter
         private TextField _textFieldExportScriptPath;
         private DropdownField _dropdownSetting;
 
-        [MenuItem("Tools/ExcelDataExporter &2")]
+        [MenuItem("Tools/ExcelDataExporter")]
         private static void Open()
         {
             var window = GetWindow<ExcelDataExporterWindow>();
