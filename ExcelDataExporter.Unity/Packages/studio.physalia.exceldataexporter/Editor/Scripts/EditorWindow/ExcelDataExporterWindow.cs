@@ -59,13 +59,13 @@ namespace Physalia.ExcelDataExporter
 
             // Paths
             _textFieldSourceDataPath = rootVisualElement.Q<TextField>("text-field-source-data-path");
-            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.DataPath);
+            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.SourceDataPath);
 
             _textFieldExportScriptPath = rootVisualElement.Q<TextField>("text-field-export-script-path");
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.CodePath);
+            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
 
             _textFieldExportDataPath = rootVisualElement.Q<TextField>("text-field-export-data-path");
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportPath);
+            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
 
             // Ping Buttons
             var showDataFolderbutton = rootVisualElement.Q<Button>("show-data-folder-button");
@@ -103,7 +103,7 @@ namespace Physalia.ExcelDataExporter
             var exportButton = rootVisualElement.Q<Button>("export-button");
             exportButton.clicked += Export;
 
-            if (!string.IsNullOrEmpty(gameDatabase.DataPath))
+            if (!string.IsNullOrEmpty(gameDatabase.SourceDataPath))
             {
                 Reload();
             }
@@ -129,19 +129,19 @@ namespace Physalia.ExcelDataExporter
 
         private void ShowDataFolder()
         {
-            string fullDataPath = Path.GetFullPath(gameDatabase.DataPath, Application.dataPath + "/../");
+            string fullDataPath = Path.GetFullPath(gameDatabase.SourceDataPath, Application.dataPath + "/../");
             EditorUtility.RevealInFinder(fullDataPath);
         }
 
         private void PingCodeFolder()
         {
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.CodePath);
+            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportScriptPath);
             EditorGUIUtility.PingObject(folder);
         }
 
         private void PingExportFolder()
         {
-            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportPath);
+            Object folder = AssetDatabase.LoadAssetAtPath<Object>(gameDatabase.ExportDataPath);
             EditorGUIUtility.PingObject(folder);
         }
 
@@ -165,8 +165,8 @@ namespace Physalia.ExcelDataExporter
             }
 
             string assetPath = fullPath.Replace(Application.dataPath, "Assets");
-            gameDatabase.SetCodePath(assetPath);
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.CodePath);
+            gameDatabase.SetExportScriptPath(assetPath);
+            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
         }
 
         private void BrowseExportFolder()
@@ -178,16 +178,16 @@ namespace Physalia.ExcelDataExporter
             }
 
             string assetPath = fullPath.Replace(Application.dataPath, "Assets");
-            gameDatabase.SetExportPath(assetPath);
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportPath);
+            gameDatabase.SetExportDataPath(assetPath);
+            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
         }
 
         private void OnDropdownSettingChanged(ChangeEvent<string> evt)
         {
             gameDatabase.SetSettingIndex(_dropdownSetting.index);
-            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.DataPath);
-            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportPath);
-            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.CodePath);
+            _textFieldSourceDataPath.SetValueWithoutNotify(gameDatabase.SourceDataPath);
+            _textFieldExportDataPath.SetValueWithoutNotify(gameDatabase.ExportDataPath);
+            _textFieldExportScriptPath.SetValueWithoutNotify(gameDatabase.ExportScriptPath);
         }
 
         private void SelectAll()
