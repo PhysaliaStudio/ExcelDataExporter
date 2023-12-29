@@ -9,6 +9,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_SystemTypes()
         {
             var sheetRawData = new SheetRawData(3);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2", "field3");
@@ -19,7 +20,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":42,\"field2\":\"abc\",\"field3\":true}\n";
+            string expected = "Test.TestClass\n{\"field1\":42,\"field2\":\"abc\",\"field3\":true}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -28,6 +29,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_SystemTypeArrays()
         {
             var sheetRawData = new SheetRawData(2);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1", "field2");
@@ -38,7 +40,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":[1,2,3],\"field2\":[true,false,true]}\n";
+            string expected = "Test.TestClass\n{\"field1\":[1,2,3],\"field2\":[true,false,true]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -47,6 +49,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_UnityTypes()
         {
             var sheetRawData = new SheetRawData(5);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1.x", "field1.y", "field2.x", "field2.y", "field2.z");
@@ -57,7 +60,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
+            string expected = "Test.TestClass\n{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -66,6 +69,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_Horizontally_UnityTypeArrays()
         {
             var sheetRawData = new SheetRawData(7);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
@@ -76,7 +80,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -85,6 +89,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_Vertically_UnityTypeArrays()
         {
             var sheetRawData = new SheetRawData(5);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test\nlayout=vertical");
             sheetRawData.AddRow("", "field1[0].x", "Vector2Int", "", "1");
             sheetRawData.AddRow("", "field1[0].y", "", "", "2");
@@ -97,7 +102,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -106,6 +111,7 @@ namespace Physalia.ExcelDataExporter.Tests
         public void ExportDataTableToJson_UnityTypeArraysWithNA()
         {
             var sheetRawData = new SheetRawData(7);
+            sheetRawData.SetName("TestClass");
             sheetRawData.SetMetadata("namespace=Test");
             sheetRawData.AddRow();
             sheetRawData.AddRow("field1[0].x", "field1[0].y", "field1[1].x", "field1[1].y", "field2[0].x", "field2[0].y", "field2[0].z");
@@ -116,7 +122,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "{\"field1\":[{\"x\":1,\"y\":2}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }

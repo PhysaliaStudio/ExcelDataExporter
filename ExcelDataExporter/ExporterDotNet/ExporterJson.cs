@@ -13,6 +13,26 @@ namespace Physalia.ExcelDataExporter
 
             var sb = new StringBuilder();
 
+            // Write type name
+            if (string.IsNullOrEmpty(typeData.namespaceName))
+            {
+                sb.Append(typeData.name);
+                if (metadata.GetSheetType() == SheetType.DataTable)
+                {
+                    sb.Append("Table");
+                }
+            }
+            else
+            {
+                sb.Append($"{typeData.namespaceName}.{typeData.name}");
+                if (metadata.GetSheetType() == SheetType.DataTable)
+                {
+                    sb.Append("Table");
+                }
+            }
+            sb.Append('\n');
+
+            // Write each data line as json
             if (metadata.GetSheetLayout() == SheetLayout.Horizontal)
             {
                 for (var i = Const.DataTableStartLine; i < sheetRawData.RowCount; i++)
