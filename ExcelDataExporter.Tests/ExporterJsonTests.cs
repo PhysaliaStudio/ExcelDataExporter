@@ -20,7 +20,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":42,\"field2\":\"abc\",\"field3\":true}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":42,\"field2\":\"abc\",\"field3\":true}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -40,7 +40,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser();
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":[1,2,3],\"field2\":[true,false,true]}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":[1,2,3],\"field2\":[true,false,true]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -60,7 +60,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":{\"x\":1,\"y\":2},\"field2\":{\"x\":3,\"y\":4,\"z\":5}}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -80,7 +80,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -102,7 +102,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":[{\"x\":1,\"y\":2},{\"x\":3,\"y\":4}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -122,7 +122,7 @@ namespace Physalia.ExcelDataExporter.Tests
             var parser = new TypeDataParser(UnityTypes.List);
             TypeData typeData = parser.ExportTypeData(sheetRawData);
 
-            string expected = "Test.TestClass\n{\"field1\":[{\"x\":1,\"y\":2}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
+            string expected = "Test.TestClassTable\n{\"field1\":[{\"x\":1,\"y\":2}],\"field2\":[{\"x\":5,\"y\":6,\"z\":7}]}\n";
             string actual = ExporterJson.Export(typeData, sheetRawData);
             Assert.That(actual, Is.EqualTo(expected));
         }
