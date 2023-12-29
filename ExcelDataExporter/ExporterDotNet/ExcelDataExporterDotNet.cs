@@ -7,6 +7,7 @@ namespace Physalia.ExcelDataExporter
     public class ExcelDataExporterDotNet : Exporter
     {
         private readonly CodeGeneratorCSharpData _codeGeneratorJsonData = new CodeGeneratorCSharpData();
+        private readonly CodeGeneratorCSharpDataTable _codeGeneratorJsonDataTable = new CodeGeneratorCSharpDataTable();
         private readonly CodeGeneratorCSharpSetting _codeGeneratorJsonSetting = new CodeGeneratorCSharpSetting();
 
         protected override List<TypeData> GetAdditionalTypesForDefault()
@@ -97,10 +98,19 @@ namespace Physalia.ExcelDataExporter
 
         protected override void GenerateCodeForDataTable(TypeData typeData, SheetRawData sheetRawData)
         {
-            string scriptText = _codeGeneratorJsonData.Generate(typeData);
-            string relativeDirectory = Path.GetRelativePath(sourceDataDirectory, sheetRawData.ParentDirectory);
-            string fullPath = GetExportScriptPath($"{relativeDirectory}/{sheetRawData.Name}.cs");
-            CreateScriptFile(fullPath, scriptText);
+            {
+                string scriptText = _codeGeneratorJsonData.Generate(typeData);
+                string relativeDirectory = Path.GetRelativePath(sourceDataDirectory, sheetRawData.ParentDirectory);
+                string fullPath = GetExportScriptPath($"{relativeDirectory}/{sheetRawData.Name}.cs");
+                CreateScriptFile(fullPath, scriptText);
+            }
+
+            {
+                string scriptText = _codeGeneratorJsonDataTable.Generate(typeData);
+                string relativeDirectory = Path.GetRelativePath(sourceDataDirectory, sheetRawData.ParentDirectory);
+                string fullPath = GetExportScriptPath($"{relativeDirectory}/{sheetRawData.Name}Table.cs");
+                CreateScriptFile(fullPath, scriptText);
+            }
         }
 
         protected override void GenerateCodeForSettingTable(TypeData typeData, SheetRawData sheetRawData)
