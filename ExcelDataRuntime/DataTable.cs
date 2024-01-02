@@ -70,7 +70,11 @@ namespace Physalia.ExcelDataRuntime
                 {
                     T item = dataList[i];
                     int id = (item as IHasId).Id;
-                    _ = _table.TryAdd(id, item);
+                    bool success = _table.TryAdd(id, item);
+                    if (success)
+                    {
+                        _items.Add(item);
+                    }
                 }
             }
             else
@@ -78,6 +82,7 @@ namespace Physalia.ExcelDataRuntime
                 for (int i = 0; i < dataList.Count; i++)
                 {
                     _table.Add(i, dataList[i]);
+                    _items.Add(dataList[i]);
                 }
             }
         }
