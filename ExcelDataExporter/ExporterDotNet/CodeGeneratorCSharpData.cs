@@ -61,21 +61,26 @@ namespace Physalia.ExcelDataExporter
                     codes.Add($"{tab}/// </summary>{ending}");
                 }
 
-                // Write JsonProperty attribute
-                string jsonPropertyName = fieldData.NameWithCamelCase;
-                codes.Add($"{tab}[JsonProperty(\"{jsonPropertyName}\")]{ending}");
+                if (fieldData.NameWithCamelCase == "id")
+                {
+                    // Write JsonProperty attribute
+                    codes.Add($"{tab}[JsonProperty(\"id\")]{ending}");
 
-                // Write field
-                string fieldName = fieldData.NameWithPascalCase;
-                string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                    // Write Id property
+                    codes.Add($"{tab}public int Id {{ get; set; }}{ending}");
+                }
+                else
+                {
+                    // Write JsonProperty attribute
+                    string jsonPropertyName = fieldData.NameWithCamelCase;
+                    codes.Add($"{tab}[JsonProperty(\"{jsonPropertyName}\")]{ending}");
+
+                    // Write field
+                    string fieldName = fieldData.NameWithPascalCase;
+                    string fieldTypeName = fieldData.TypeName;
+                    codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                }
             }
-
-            codes.Add(ending);
-
-            // Write Id property
-            codes.Add($"{tab}public int Id => id;{ending}");
-
             codes.Add($"}}{ending}");
 
             return codes;
