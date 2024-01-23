@@ -46,7 +46,7 @@ namespace Physalia.ExcelDataExporter
             for (var i = 0; i < typeData.fieldDatas.Count; i++)
             {
                 FieldData fieldData = typeData.fieldDatas[i];
-                string fieldName = fieldData.NameForPrivateField;
+                string fieldName = fieldData.NameWithCamelCaseUnderscore;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}[SerializeField]{ending}");
                 codes.Add($"{tab}private {fieldTypeName} {fieldName};{ending}");
@@ -74,8 +74,8 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 // Write property
-                string fieldName = fieldData.NameForPrivateField;
-                string propertyName = fieldData.NameForProperty;
+                string fieldName = fieldData.NameWithCamelCaseUnderscore;
+                string propertyName = fieldData.NameWithPascalCase;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {propertyName} => {fieldName};{ending}");
             }

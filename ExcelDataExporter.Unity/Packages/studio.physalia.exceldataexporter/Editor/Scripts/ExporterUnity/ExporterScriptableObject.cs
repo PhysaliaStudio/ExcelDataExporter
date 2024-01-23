@@ -87,7 +87,7 @@ namespace Physalia.ExcelDataExporter
 
         private static SerializedProperty FindFieldProperty(SerializedObject @object, FieldData fieldData, bool isRoot)
         {
-            string propertyName = isRoot ? fieldData.NameForPrivateField : fieldData.NameForPublicField;
+            string propertyName = isRoot ? fieldData.NameWithCamelCaseUnderscore : fieldData.NameWithCamelCase;
             SerializedProperty fieldProperty = @object.FindProperty(propertyName);
             if (fieldProperty == null)
             {
@@ -99,7 +99,7 @@ namespace Physalia.ExcelDataExporter
 
         private static SerializedProperty FindFieldProperty(SerializedProperty property, FieldData fieldData, bool isRoot)
         {
-            string propertyName = isRoot ? fieldData.NameForPrivateField : fieldData.NameForPublicField;
+            string propertyName = isRoot ? fieldData.NameWithCamelCaseUnderscore : fieldData.NameWithCamelCase;
             SerializedProperty fieldProperty = property.FindPropertyRelative(propertyName);
             if (fieldProperty == null)
             {
