@@ -30,7 +30,7 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            List<string> namespaces = CollectNamespaces(typeData, "Physalia.ExcelDataRuntime");
+            List<string> namespaces = CollectNamespaces(typeData, "Newtonsoft.Json", "Physalia.ExcelDataRuntime");
             return GenerateUsingBlock(namespaces, ending);
         }
 
@@ -61,17 +61,26 @@ namespace Physalia.ExcelDataExporter
                     codes.Add($"{tab}/// </summary>{ending}");
                 }
 
-                // Write field
-                string fieldName = fieldData.NameForPublicField;
-                string fieldTypeName = fieldData.TypeName;
-                codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                if (fieldData.NameWithCamelCase == "id")
+                {
+                    // Write JsonProperty attribute
+                    codes.Add($"{tab}[JsonProperty(\"id\")]{ending}");
+
+                    // Write Id property
+                    codes.Add($"{tab}public int Id {{ get; set; }}{ending}");
+                }
+                else
+                {
+                    // Write JsonProperty attribute
+                    string jsonPropertyName = fieldData.NameWithCamelCase;
+                    codes.Add($"{tab}[JsonProperty(\"{jsonPropertyName}\")]{ending}");
+
+                    // Write field
+                    string fieldName = fieldData.NameWithPascalCase;
+                    string fieldTypeName = fieldData.TypeName;
+                    codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
+                }
             }
-
-            codes.Add(ending);
-
-            // Write Id property
-            codes.Add($"{tab}public int Id => id;{ending}");
-
             codes.Add($"}}{ending}");
 
             return codes;
