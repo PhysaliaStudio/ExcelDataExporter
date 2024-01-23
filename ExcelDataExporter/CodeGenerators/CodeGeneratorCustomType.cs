@@ -64,7 +64,7 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 // Write field
-                string fieldName = fieldData.NameForPublicField;
+                string fieldName = fieldData.NameWithCamelCase;
                 string fieldTypeName = fieldData.TypeName;
                 codes.Add($"{tab}public {fieldTypeName} {fieldName};{ending}");
             }

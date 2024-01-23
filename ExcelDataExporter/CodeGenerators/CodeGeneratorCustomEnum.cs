@@ -62,7 +62,7 @@ namespace Physalia.ExcelDataExporter
                 }
 
                 // Write member
-                string fieldName = fieldData.NameForEnumMember;
+                string fieldName = fieldData.NameWithPascalCase;
                 int enumValue = fieldData.enumValue;
                 codes.Add($"{tab}{fieldName} = {enumValue},{ending}");
             }

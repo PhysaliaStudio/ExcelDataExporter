@@ -17,10 +17,9 @@ namespace Physalia.ExcelDataExporter
         public string BaseTypeName => typeData.name;
         public string Comment => comment;
 
-        public string NameForPrivateField => name.Length > 1 ? "_" + char.ToLower(name[0]) + name[1..] : "_" + char.ToLower(name[0]).ToString();
-        public string NameForPublicField => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
-        public string NameForProperty => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
-        public string NameForEnumMember => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
+        public string NameWithCamelCaseUnderscore => name.Length > 1 ? "_" + char.ToLower(name[0]) + name[1..] : "_" + char.ToLower(name[0]).ToString();
+        public string NameWithCamelCase => name.Length > 1 ? char.ToLower(name[0]) + name[1..] : char.ToLower(name[0]).ToString();
+        public string NameWithPascalCase => name.Length > 1 ? char.ToUpper(name[0]) + name[1..] : char.ToUpper(name[0]).ToString();
 
         public int EvaluateColumnCount()
         {
