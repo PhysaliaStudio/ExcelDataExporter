@@ -30,7 +30,7 @@ namespace Physalia.ExcelDataExporter
 
         private static List<string> GenerateUsingBlock(TypeData typeData, string ending)
         {
-            List<string> namespaces = CollectNamespaces(typeData, "Physalia.ExcelDataRuntime");
+            List<string> namespaces = CollectNamespaces(typeData, "Newtonsoft.Json", "Physalia.ExcelDataRuntime");
             return GenerateUsingBlock(namespaces, ending);
         }
 
@@ -60,6 +60,10 @@ namespace Physalia.ExcelDataExporter
                     codes.Add($"{tab}/// {comment}{ending}");
                     codes.Add($"{tab}/// </summary>{ending}");
                 }
+
+                // Write JsonProperty attribute
+                string jsonPropertyName = fieldData.NameWithCamelCase;
+                codes.Add($"{tab}[JsonProperty(\"{jsonPropertyName}\")]{ending}");
 
                 // Write field
                 string fieldName = fieldData.NameWithPascalCase;
