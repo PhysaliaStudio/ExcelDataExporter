@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TestGame.BattleSystem
 {
     [Serializable]
-    public class EnemyData : IHasId
+    public partial class EnemyData : IHasId
     {
         [SerializeField]
         private int _id;

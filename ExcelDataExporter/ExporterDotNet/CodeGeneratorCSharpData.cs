@@ -38,7 +38,7 @@ namespace Physalia.ExcelDataExporter
         {
             var codes = new List<string>
             {
-                $"public class {typeData.name} : IHasId{ending}",
+                $"public partial class {typeData.name} : IHasId{ending}",
                 $"{{{ending}",
             };
 
