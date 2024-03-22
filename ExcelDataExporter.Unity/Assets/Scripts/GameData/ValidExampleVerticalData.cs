@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TestGame
 {
     [Serializable]
-    public class ValidExampleVerticalData : IHasId
+    public partial class ValidExampleVerticalData : IHasId
     {
         [SerializeField]
         private int _id;
