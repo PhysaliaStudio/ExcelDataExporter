@@ -24,7 +24,7 @@ namespace TestGame.BattleSystem
         [SerializeField]
         private Vector2Int[] _startPos;
         [SerializeField]
-        private Reward _reward;
+        private Reward[] _reward;
 
         public int Id => _id;
         public string Name => _name;
@@ -48,6 +48,6 @@ namespace TestGame.BattleSystem
         /// <summary>
         /// Fixed Item Drop
         /// </summary>
-        public Reward Reward => _reward;
+        public Reward[] Reward => _reward;
     }
 }
