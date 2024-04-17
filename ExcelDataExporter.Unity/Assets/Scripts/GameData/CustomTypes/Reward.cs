@@ -14,5 +14,6 @@ namespace TestGame
         /// </summary>
         public int itemId;
         public int count;
+        public int[] random;
     }
 }
