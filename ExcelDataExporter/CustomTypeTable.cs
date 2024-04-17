@@ -183,7 +183,16 @@ namespace Physalia.ExcelDataExporter
                     throw new Exception($"Parse type failed! Invalid format. Type: {typeDataToContinued.name}");
                 }
 
-                typeDataToContinued.fieldDatas[i].typeData = table.GetTypeData(typeName); ;
+                FieldData fieldData = typeDataToContinued.fieldDatas[i];
+
+                // If it's an array
+                if (typeName.EndsWith("[]"))
+                {
+                    typeName = typeName[0..^2];
+                    fieldData.isArray = true;
+                }
+
+                fieldData.typeData = table.GetTypeData(typeName);
             }
 
             return true;
