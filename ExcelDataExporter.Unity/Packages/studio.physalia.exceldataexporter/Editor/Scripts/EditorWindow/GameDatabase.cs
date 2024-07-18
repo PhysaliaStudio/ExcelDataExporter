@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -69,7 +70,8 @@ namespace Physalia.ExcelDataExporter
             string sourceDataDirectory = ExporterSettings.Settings[0].sourceDataDirectory;
             string fullDataPath = RelativePathToFullPath(sourceDataDirectory);
             var directoryInfo = new DirectoryInfo(fullDataPath);
-            FileInfo[] fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories);
+            IEnumerable<FileInfo> fileInfos = directoryInfo.GetFiles("*.xlsx", SearchOption.AllDirectories)
+                .Union(directoryInfo.GetFiles("*.xlsm", SearchOption.AllDirectories));
 
             foreach (FileInfo fileInfo in fileInfos)
             {
